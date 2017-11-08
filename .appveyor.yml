@@ -22,4 +22,4 @@ install:
   - ..\build\tools\windows\genie --file=genie\genie.lua %TOOLSET%
 
 build:
-  project: ../.build/windows/$(TOOLSET)/rbase/projects/rapp.sln
+  project: ../.build/windows/$(TOOLSET)/rapp/projects/rapp.sln
