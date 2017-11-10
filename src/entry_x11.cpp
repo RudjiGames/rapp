@@ -58,19 +58,19 @@ namespace rapp
 		uint8_t  number; /* axis/button number */
 	};
 
-	static KeyboardState::Key s_translateButton[] =
+	static GamepadState::Buttons s_translateButton[] =
 	{
-		Key::GamepadA,
-		Key::GamepadB,
-		Key::GamepadX,
-		Key::GamepadY,
-		Key::GamepadShoulderL,
-		Key::GamepadShoulderR,
-		Key::GamepadBack,
-		Key::GamepadStart,
-		Key::GamepadGuide,
-		Key::GamepadThumbL,
-		Key::GamepadThumbR,
+		GamepadState::Buttons::A,
+		GamepadState::Buttons::B,
+		GamepadState::Buttons::X,
+		GamepadState::Buttons::Y,
+		GamepadState::Buttons::LShoulder,
+		GamepadState::Buttons::RShoulder,
+		GamepadState::Buttons::Back,
+		GamepadState::Buttons::Start,
+		GamepadState::Buttons::Guide,
+		GamepadState::Buttons::LThumb,
+		GamepadState::Buttons::RThumb,
 	};
 
 	static GamepadAxis::Enum s_translateAxis[] =
@@ -85,18 +85,18 @@ namespace rapp
 
 	struct AxisDpadRemap
 	{
-		KeyboardState::Key first;
-		KeyboardState::Key second;
+		GamepadState::Buttons first;
+		GamepadState::Buttons second;
 	};
 
 	static AxisDpadRemap s_axisDpad[] =
 	{
-		{ Key::GamepadLeft, Key::GamepadRight },
-		{ Key::GamepadUp,   Key::GamepadDown  },
-		{ Key::None,        Key::None         },
-		{ Key::GamepadLeft, Key::GamepadRight },
-		{ Key::GamepadUp,   Key::GamepadDown  },
-		{ Key::None,        Key::None         },
+		{ GamepadState::Buttons::Left, GamepadState::Buttons::Right },
+		{ GamepadState::Buttons::Up,   GamepadState::Buttons::Down  },
+		{ GamepadState::Buttons::None, GamepadState::Buttons::None  },
+		{ GamepadState::Buttons::Left, GamepadState::Buttons::Right },
+		{ GamepadState::Buttons::Up,   GamepadState::Buttons::Down  },
+		{ GamepadState::Buttons::None, GamepadState::Buttons::None  },
 	};
 	RTM_STATIC_ASSERT(RTM_NUM_ELEMENTS(s_translateAxis) == RTM_NUM_ELEMENTS(s_axisDpad) );
 
@@ -175,7 +175,7 @@ namespace rapp
 					{
 						_eventQueue.postAxisEvent(defaultWindow, handle, axis, value);
 
-						if (Key::None != s_axisDpad[axis].first)
+						if (GamepadState::Buttons::None != s_axisDpad[axis].first)
 						{
 							if (m_value[axis] == 0)
 							{
@@ -218,7 +218,7 @@ namespace rapp
 	KeyboardState::Key fromXk(uint16_t _xk)
 	{
 		_xk += 256;
-		return 512 > _xk ? (KeyboardState::Key)s_translateKey[_xk] : Key::None;
+		return 512 > _xk ? (KeyboardState::Key)s_translateKey[_xk] : KeyboardState::Key::None;
 	}
 
 	struct MainThreadEntry
@@ -460,18 +460,18 @@ namespace rapp
 						case ButtonRelease:
 							{
 								const XButtonEvent& xbutton = event.xbutton;
-								MouseState::Button mb = MouseButton::None;
+								MouseState::Button mb = MouseState::Button::None;
 								switch (xbutton.button)
 								{
-									case Button1: mb = MouseButton::Left;   break;
-									case Button2: mb = MouseButton::Middle; break;
-									case Button3: mb = MouseButton::Right;  break;
+									case Button1: mb = MouseState::Button::Left;   break;
+									case Button2: mb = MouseState::Button::Middle; break;
+									case Button3: mb = MouseState::Button::Right;  break;
 									case Button4: ++m_mz; break;
 									case Button5: --m_mz; break;
 								}
 
 								WindowHandle handle = findHandle(xbutton.window);
-								if (MouseButton::None != mb)
+								if (MouseState::Button::None != mb)
 								{
 									m_eventQueue.postMouseEvent(handle
 										, xbutton.x
@@ -670,7 +670,7 @@ namespace rapp
 		EventQueue m_eventQueue;
 		rtm::Mutex m_lock;
 
-		rtm::Data<Window, ENTRY_CONFIG_MAX_WINDOWS, rtm::Storage::Dense>		m_windows;
+		rtm::Data<Window, RAPP_MAX_WINDOWS, rtm::Storage::Dense>	m_windows;
 
 		int32_t m_depth;
 		Visual* m_visual;
@@ -708,6 +708,7 @@ namespace rapp
 
 	void appRunOnMainThread(App::threadFn _fn, void* _userData)
 	{
+		RTM_UNUSED(_userData);
 		PostMessage(s_ctx.m_hwndRapp, WM_USER_CALL_FUNC, (WPARAM)_fn, (LPARAM)_userData);
 	}
 
