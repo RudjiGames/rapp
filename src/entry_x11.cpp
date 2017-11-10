@@ -58,7 +58,7 @@ namespace rapp
 		uint8_t  number; /* axis/button number */
 	};
 
-	static Key::Enum s_translateButton[] =
+	static KeyboardState::Key s_translateButton[] =
 	{
 		Key::GamepadA,
 		Key::GamepadB,
@@ -85,8 +85,8 @@ namespace rapp
 
 	struct AxisDpadRemap
 	{
-		Key::Enum first;
-		Key::Enum second;
+		KeyboardState::Key first;
+		KeyboardState::Key second;
 	};
 
 	static AxisDpadRemap s_axisDpad[] =
@@ -208,17 +208,17 @@ namespace rapp
 
 	static uint8_t s_translateKey[512];
 
-	static void initTranslateKey(uint16_t _xk, Key::Enum _key)
+	static void initTranslateKey(uint16_t _xk, KeyboardState::Key _key)
 	{
 		_xk += 256;
 		RTM_ASSERT(_xk < RTM_NUM_ELEMENTS(s_translateKey), "Out of bounds %d.", _xk);
 		s_translateKey[_xk&0x1ff] = (uint8_t)_key;
 	}
 
-	Key::Enum fromXk(uint16_t _xk)
+	KeyboardState::Key fromXk(uint16_t _xk)
 	{
 		_xk += 256;
-		return 512 > _xk ? (Key::Enum)s_translateKey[_xk] : Key::None;
+		return 512 > _xk ? (KeyboardState::Key)s_translateKey[_xk] : Key::None;
 	}
 
 	struct MainThreadEntry
@@ -460,7 +460,7 @@ namespace rapp
 						case ButtonRelease:
 							{
 								const XButtonEvent& xbutton = event.xbutton;
-								MouseButton::Enum mb = MouseButton::None;
+								MouseState::Button mb = MouseButton::None;
 								switch (xbutton.button)
 								{
 									case Button1: mb = MouseButton::Left;   break;
@@ -515,14 +515,14 @@ namespace rapp
 								KeySym keysym = XLookupKeysym(&xkey, 0);
 								switch (keysym)
 								{
-								case XK_Meta_L:    setModifier(Modifier::LeftMeta,   KeyPress == event.type); break;
-								case XK_Meta_R:    setModifier(Modifier::RightMeta,  KeyPress == event.type); break;
-								case XK_Control_L: setModifier(Modifier::LeftCtrl,   KeyPress == event.type); break;
-								case XK_Control_R: setModifier(Modifier::RightCtrl,  KeyPress == event.type); break;
-								case XK_Shift_L:   setModifier(Modifier::LeftShift,  KeyPress == event.type); break;
-								case XK_Shift_R:   setModifier(Modifier::RightShift, KeyPress == event.type); break;
-								case XK_Alt_L:     setModifier(Modifier::LeftAlt,    KeyPress == event.type); break;
-								case XK_Alt_R:     setModifier(Modifier::RightAlt,   KeyPress == event.type); break;
+								case XK_Meta_L:    setModifier(KeyboardState::Modifier::LMeta,  KeyPress == event.type); break;
+								case XK_Meta_R:    setModifier(KeyboardState::Modifier::RMeta,  KeyPress == event.type); break;
+								case XK_Control_L: setModifier(KeyboardState::Modifier::LCtrl,  KeyPress == event.type); break;
+								case XK_Control_R: setModifier(KeyboardState::Modifier::RCtrl,  KeyPress == event.type); break;
+								case XK_Shift_L:   setModifier(KeyboardState::Modifier::LShift, KeyPress == event.type); break;
+								case XK_Shift_R:   setModifier(KeyboardState::Modifier::RShift, KeyPress == event.type); break;
+								case XK_Alt_L:     setModifier(KeyboardState::Modifier::LAlt,   KeyPress == event.type); break;
+								case XK_Alt_R:     setModifier(KeyboardState::Modifier::RAlt,   KeyPress == event.type); break;
 
 								default:
 									{
@@ -547,7 +547,7 @@ namespace rapp
 											}
 										}
 
-										Key::Enum key = fromXk(keysym);
+										KeyboardState::Key key = fromXk(keysym);
 										if (Key::None != key)
 										{
 											m_eventQueue.postKeyEvent(handle, key, m_modifiers, KeyPress == event.type);
@@ -741,11 +741,12 @@ namespace rapp
 
 	void windowDestroy(WindowHandle _handle)
 	{
-		if (s_ctx.m_windows.isValid(_handle) )
+		if (s_ctx.m_windows.isValid(_handle.idx))
 		{
 			s_ctx.m_eventQueue.postWindowEvent(_handle, NULL);
-			XUnmapWindow(s_ctx.m_display, s_ctx.m_window[_handle.idx]);
-			XDestroyWindow(s_ctx.m_display, s_ctx.m_window[_handle.idx]);
+			Window w = s_ctx.m_windows.getData(_handle.idx);
+			XUnmapWindow(s_ctx.m_display, w);
+			XDestroyWindow(s_ctx.m_display, w);
 
 			rtm::ScopedMutexLocker scope(s_ctx.m_lock);
 
@@ -756,21 +757,21 @@ namespace rapp
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y)
 	{
 		Display* display = s_ctx.m_display;
-		Window   window  = s_ctx.m_window[_handle.idx];
+		Window   window  = s_ctx.m_windows.getData(_handle.idx);
 		XMoveWindow(display, window, _x, _y);
 	}
 
 	void windowSetSize(WindowHandle _handle, uint32_t _width, uint32_t _height)
 	{
 		Display* display = s_ctx.m_display;
-		Window   window  = s_ctx.m_window[_handle.idx];
+		Window   window  = s_ctx.m_windows.getData(_handle.idx);
 		XResizeWindow(display, window, int32_t(_width), int32_t(_height) );
 	}
 
 	void windowSetTitle(WindowHandle _handle, const char* _title)
 	{
 		Display* display = s_ctx.m_display;
-		Window   window  = s_ctx.m_window[_handle.idx];
+		Window   window  = s_ctx.m_windows.getData(_handle.idx);
 		XStoreName(display, window, _title);
 	}
 
@@ -786,7 +787,7 @@ namespace rapp
 
 	void windowSetMouseLock(WindowHandle _handle, bool _lock)
 	{
-		RTM_UNUSED(_handle, _lock);
+		RTM_UNUSED_2(_handle, _lock);
 	}
 
 } // namespace rapp
