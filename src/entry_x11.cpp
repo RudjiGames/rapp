@@ -255,91 +255,91 @@ namespace rapp
 			, m_exit(false)
 		{
 			memset(s_translateKey, 0, sizeof(s_translateKey) );
-			initTranslateKey(XK_Escape,       Key::Esc);
-			initTranslateKey(XK_Return,       Key::Return);
-			initTranslateKey(XK_Tab,          Key::Tab);
-			initTranslateKey(XK_BackSpace,    Key::Backspace);
-			initTranslateKey(XK_space,        Key::Space);
-			initTranslateKey(XK_Up,           Key::Up);
-			initTranslateKey(XK_Down,         Key::Down);
-			initTranslateKey(XK_Left,         Key::Left);
-			initTranslateKey(XK_Right,        Key::Right);
-			initTranslateKey(XK_Insert,       Key::Insert);
-			initTranslateKey(XK_Delete,       Key::Delete);
-			initTranslateKey(XK_Home,         Key::Home);
-			initTranslateKey(XK_KP_End,       Key::End);
-			initTranslateKey(XK_Page_Up,      Key::PageUp);
-			initTranslateKey(XK_Page_Down,    Key::PageDown);
-			initTranslateKey(XK_Print,        Key::Print);
-			initTranslateKey(XK_equal,        Key::Plus);
-			initTranslateKey(XK_minus,        Key::Minus);
-			initTranslateKey(XK_bracketleft,  Key::LeftBracket);
-			initTranslateKey(XK_bracketright, Key::RightBracket);
-			initTranslateKey(XK_semicolon,    Key::Semicolon);
-			initTranslateKey(XK_apostrophe,   Key::Quote);
-			initTranslateKey(XK_comma,        Key::Comma);
-			initTranslateKey(XK_period,       Key::Period);
-			initTranslateKey(XK_slash,        Key::Slash);
-			initTranslateKey(XK_backslash,    Key::Backslash);
-			initTranslateKey(XK_grave,        Key::Tilde);
-			initTranslateKey(XK_F1,           Key::F1);
-			initTranslateKey(XK_F2,           Key::F2);
-			initTranslateKey(XK_F3,           Key::F3);
-			initTranslateKey(XK_F4,           Key::F4);
-			initTranslateKey(XK_F5,           Key::F5);
-			initTranslateKey(XK_F6,           Key::F6);
-			initTranslateKey(XK_F7,           Key::F7);
-			initTranslateKey(XK_F8,           Key::F8);
-			initTranslateKey(XK_F9,           Key::F9);
-			initTranslateKey(XK_F10,          Key::F10);
-			initTranslateKey(XK_F11,          Key::F11);
-			initTranslateKey(XK_F12,          Key::F12);
-			initTranslateKey(XK_KP_Insert,    Key::NumPad0);
-			initTranslateKey(XK_KP_End,       Key::NumPad1);
-			initTranslateKey(XK_KP_Down,      Key::NumPad2);
-			initTranslateKey(XK_KP_Page_Down, Key::NumPad3);
-			initTranslateKey(XK_KP_Left,      Key::NumPad4);
-			initTranslateKey(XK_KP_Begin,     Key::NumPad5);
-			initTranslateKey(XK_KP_Right,     Key::NumPad6);
-			initTranslateKey(XK_KP_Home,      Key::NumPad7);
-			initTranslateKey(XK_KP_Up,        Key::NumPad8);
-			initTranslateKey(XK_KP_Page_Up,   Key::NumPad9);
-			initTranslateKey('0',             Key::Key0);
-			initTranslateKey('1',             Key::Key1);
-			initTranslateKey('2',             Key::Key2);
-			initTranslateKey('3',             Key::Key3);
-			initTranslateKey('4',             Key::Key4);
-			initTranslateKey('5',             Key::Key5);
-			initTranslateKey('6',             Key::Key6);
-			initTranslateKey('7',             Key::Key7);
-			initTranslateKey('8',             Key::Key8);
-			initTranslateKey('9',             Key::Key9);
-			initTranslateKey('a',             Key::KeyA);
-			initTranslateKey('b',             Key::KeyB);
-			initTranslateKey('c',             Key::KeyC);
-			initTranslateKey('d',             Key::KeyD);
-			initTranslateKey('e',             Key::KeyE);
-			initTranslateKey('f',             Key::KeyF);
-			initTranslateKey('g',             Key::KeyG);
-			initTranslateKey('h',             Key::KeyH);
-			initTranslateKey('i',             Key::KeyI);
-			initTranslateKey('j',             Key::KeyJ);
-			initTranslateKey('k',             Key::KeyK);
-			initTranslateKey('l',             Key::KeyL);
-			initTranslateKey('m',             Key::KeyM);
-			initTranslateKey('n',             Key::KeyN);
-			initTranslateKey('o',             Key::KeyO);
-			initTranslateKey('p',             Key::KeyP);
-			initTranslateKey('q',             Key::KeyQ);
-			initTranslateKey('r',             Key::KeyR);
-			initTranslateKey('s',             Key::KeyS);
-			initTranslateKey('t',             Key::KeyT);
-			initTranslateKey('u',             Key::KeyU);
-			initTranslateKey('v',             Key::KeyV);
-			initTranslateKey('w',             Key::KeyW);
-			initTranslateKey('x',             Key::KeyX);
-			initTranslateKey('y',             Key::KeyY);
-			initTranslateKey('z',             Key::KeyZ);
+			initTranslateKey(XK_Escape,       KeyboardState::Key::Esc);
+			initTranslateKey(XK_Return,       KeyboardState::Key::Return);
+			initTranslateKey(XK_Tab,          KeyboardState::Key::Tab);
+			initTranslateKey(XK_BackSpace,    KeyboardState::Key::Backspace);
+			initTranslateKey(XK_space,        KeyboardState::Key::Space);
+			initTranslateKey(XK_Up,           KeyboardState::Key::Up);
+			initTranslateKey(XK_Down,         KeyboardState::Key::Down);
+			initTranslateKey(XK_Left,         KeyboardState::Key::Left);
+			initTranslateKey(XK_Right,        KeyboardState::Key::Right);
+			initTranslateKey(XK_Insert,       KeyboardState::Key::Insert);
+			initTranslateKey(XK_Delete,       KeyboardState::Key::Delete);
+			initTranslateKey(XK_Home,         KeyboardState::Key::Home);
+			initTranslateKey(XK_KP_End,       KeyboardState::Key::End);
+			initTranslateKey(XK_Page_Up,      KeyboardState::Key::PageUp);
+			initTranslateKey(XK_Page_Down,    KeyboardState::Key::PageDown);
+			initTranslateKey(XK_Print,        KeyboardState::Key::Print);
+			initTranslateKey(XK_equal,        KeyboardState::Key::Plus);
+			initTranslateKey(XK_minus,        KeyboardState::Key::Minus);
+			initTranslateKey(XK_bracketleft,  KeyboardState::Key::LeftBracket);
+			initTranslateKey(XK_bracketright, KeyboardState::Key::RightBracket);
+			initTranslateKey(XK_semicolon,    KeyboardState::Key::Semicolon);
+			initTranslateKey(XK_apostrophe,   KeyboardState::Key::Quote);
+			initTranslateKey(XK_comma,        KeyboardState::Key::Comma);
+			initTranslateKey(XK_period,       KeyboardState::Key::Period);
+			initTranslateKey(XK_slash,        KeyboardState::Key::Slash);
+			initTranslateKey(XK_backslash,    KeyboardState::Key::Backslash);
+			initTranslateKey(XK_grave,        KeyboardState::Key::Tilde);
+			initTranslateKey(XK_F1,           KeyboardState::Key::F1);
+			initTranslateKey(XK_F2,           KeyboardState::Key::F2);
+			initTranslateKey(XK_F3,           KeyboardState::Key::F3);
+			initTranslateKey(XK_F4,           KeyboardState::Key::F4);
+			initTranslateKey(XK_F5,           KeyboardState::Key::F5);
+			initTranslateKey(XK_F6,           KeyboardState::Key::F6);
+			initTranslateKey(XK_F7,           KeyboardState::Key::F7);
+			initTranslateKey(XK_F8,           KeyboardState::Key::F8);
+			initTranslateKey(XK_F9,           KeyboardState::Key::F9);
+			initTranslateKey(XK_F10,          KeyboardState::Key::F10);
+			initTranslateKey(XK_F11,          KeyboardState::Key::F11);
+			initTranslateKey(XK_F12,          KeyboardState::Key::F12);
+			initTranslateKey(XK_KP_Insert,    KeyboardState::Key::NumPad0);
+			initTranslateKey(XK_KP_End,       KeyboardState::Key::NumPad1);
+			initTranslateKey(XK_KP_Down,      KeyboardState::Key::NumPad2);
+			initTranslateKey(XK_KP_Page_Down, KeyboardState::Key::NumPad3);
+			initTranslateKey(XK_KP_Left,      KeyboardState::Key::NumPad4);
+			initTranslateKey(XK_KP_Begin,     KeyboardState::Key::NumPad5);
+			initTranslateKey(XK_KP_Right,     KeyboardState::Key::NumPad6);
+			initTranslateKey(XK_KP_Home,      KeyboardState::Key::NumPad7);
+			initTranslateKey(XK_KP_Up,        KeyboardState::Key::NumPad8);
+			initTranslateKey(XK_KP_Page_Up,   KeyboardState::Key::NumPad9);
+			initTranslateKey('0',             KeyboardState::Key::Key0);
+			initTranslateKey('1',             KeyboardState::Key::Key1);
+			initTranslateKey('2',             KeyboardState::Key::Key2);
+			initTranslateKey('3',             KeyboardState::Key::Key3);
+			initTranslateKey('4',             KeyboardState::Key::Key4);
+			initTranslateKey('5',             KeyboardState::Key::Key5);
+			initTranslateKey('6',             KeyboardState::Key::Key6);
+			initTranslateKey('7',             KeyboardState::Key::Key7);
+			initTranslateKey('8',             KeyboardState::Key::Key8);
+			initTranslateKey('9',             KeyboardState::Key::Key9);
+			initTranslateKey('a',             KeyboardState::Key::KeyA);
+			initTranslateKey('b',             KeyboardState::Key::KeyB);
+			initTranslateKey('c',             KeyboardState::Key::KeyC);
+			initTranslateKey('d',             KeyboardState::Key::KeyD);
+			initTranslateKey('e',             KeyboardState::Key::KeyE);
+			initTranslateKey('f',             KeyboardState::Key::KeyF);
+			initTranslateKey('g',             KeyboardState::Key::KeyG);
+			initTranslateKey('h',             KeyboardState::Key::KeyH);
+			initTranslateKey('i',             KeyboardState::Key::KeyI);
+			initTranslateKey('j',             KeyboardState::Key::KeyJ);
+			initTranslateKey('k',             KeyboardState::Key::KeyK);
+			initTranslateKey('l',             KeyboardState::Key::KeyL);
+			initTranslateKey('m',             KeyboardState::Key::KeyM);
+			initTranslateKey('n',             KeyboardState::Key::KeyN);
+			initTranslateKey('o',             KeyboardState::Key::KeyO);
+			initTranslateKey('p',             KeyboardState::Key::KeyP);
+			initTranslateKey('q',             KeyboardState::Key::KeyQ);
+			initTranslateKey('r',             KeyboardState::Key::KeyR);
+			initTranslateKey('s',             KeyboardState::Key::KeyS);
+			initTranslateKey('t',             KeyboardState::Key::KeyT);
+			initTranslateKey('u',             KeyboardState::Key::KeyU);
+			initTranslateKey('v',             KeyboardState::Key::KeyV);
+			initTranslateKey('w',             KeyboardState::Key::KeyW);
+			initTranslateKey('x',             KeyboardState::Key::KeyX);
+			initTranslateKey('y',             KeyboardState::Key::KeyY);
+			initTranslateKey('z',             KeyboardState::Key::KeyZ);
 
 			m_mx = 0;
 			m_my = 0;
@@ -385,7 +385,7 @@ namespace rapp
 			// Clear window to black.
 			XSetWindowAttributes attr;
 			memset(&attr, 0, sizeof(attr) );
-			XChangeWindowAttributes(m_display, m_window[0], CWBackPixel, &attr);
+			XChangeWindowAttributes(m_display, m_windows.getData(0), CWBackPixel, &attr);
 
 			const char* wmDeleteWindowName = "WM_DELETE_WINDOW";
 			Atom wmDeleteWindow;
@@ -585,7 +585,7 @@ namespace rapp
 			return thread.getExitCode();
 		}
 
-		void setModifier(Modifier::Enum _modifier, bool _set)
+		void setModifier(KeyboardState::Modifier _modifier, bool _set)
 		{
 			m_modifiers &= ~_modifier;
 			m_modifiers |= _set ? _modifier : 0;
@@ -708,8 +708,8 @@ namespace rapp
 
 	void appRunOnMainThread(App::threadFn _fn, void* _userData)
 	{
-		RTM_UNUSED(_userData);
-		PostMessage(s_ctx.m_hwndRapp, WM_USER_CALL_FUNC, (WPARAM)_fn, (LPARAM)_userData);
+		RTM_UNUSED_2(_fn, _userData);
+
 	}
 
 	void windowGetDefaultSize(uint32_t* _width, uint32_t* _height)
@@ -795,7 +795,7 @@ namespace rapp
 
 int main(int _argc, const char* const* _argv)
 {
-	using namespace entry;
+	using namespace rapp;
 	return s_ctx.run(_argc, _argv);
 }
 
