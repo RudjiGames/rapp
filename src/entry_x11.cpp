@@ -26,7 +26,7 @@
 
 #include <fcntl.h>
 
-namespace entry
+namespace rapp
 {
 	static const char* s_applicationName  = "RAPP";
 	static const char* s_applicationClass = "rapp";
@@ -789,7 +789,7 @@ namespace entry
 		RTM_UNUSED(_handle, _lock);
 	}
 
-} // namespace entry
+} // namespace rapp
 
 int main(int _argc, const char* const* _argv)
 {
