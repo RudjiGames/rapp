@@ -21,8 +21,6 @@
 #include <unistd.h> // syscall
 
 #undef None
-#include <bx/os.h>
-#include <bx/handlealloc.h>
 
 #include <string>
 
@@ -371,8 +369,8 @@ namespace entry
 					| StructureNotifyMask
 					;
 
-			m_windowAlloc.alloc();
-			m_window[0] = XCreateWindow(m_display
+			m_windows.allocate();
+			Window w = XCreateWindow(m_display
 									, m_root
 									, 0, 0
 									, 1, 1, 0
@@ -382,6 +380,7 @@ namespace entry
 									, CWBorderPixel|CWEventMask
 									, &m_windowAttrs
 									);
+			m_windows.setData(0, w);
 
 			// Clear window to black.
 			XSetWindowAttributes attr;
@@ -438,7 +437,7 @@ namespace entry
 
 				if (!xpending)
 				{
-					bx::sleep(joystick ? 8 : 16);
+					rtm::Thread::sleep(joystick ? 8 : 16);
 				}
 				else
 				{
@@ -647,10 +646,10 @@ namespace entry
 		{
 			rtm::ScopedMutexLocker scope(m_lock);
 
-			for (uint32_t ii = 0, num = m_windowAlloc.getNumHandles(); ii < num; ++ii)
+			for (uint32_t ii = 0, num = m_windows.size(); ii < num; ++ii)
 			{
-				uint16_t idx = m_windowAlloc.getHandleAt(ii);
-				if (_window == m_window[idx])
+				Window w = m_windows.getData(ii);
+				if (_window == w)
 				{
 					WindowHandle handle = { idx };
 					return handle;
@@ -670,7 +669,8 @@ namespace entry
 
 		EventQueue m_eventQueue;
 		rtm::Mutex m_lock;
-		bx::HandleAllocT<ENTRY_CONFIG_MAX_WINDOWS> m_windowAlloc;
+
+		rtm::Data<Window, ENTRY_CONFIG_MAX_WINDOWS, rtm::Storage::Dense>		m_windows;
 
 		int32_t m_depth;
 		Visual* m_visual;
@@ -679,8 +679,6 @@ namespace entry
 		XSetWindowAttributes m_windowAttrs;
 
 		Display* m_display;
-		Window m_window[ENTRY_CONFIG_MAX_WINDOWS];
-		uint32_t m_flags[ENTRY_CONFIG_MAX_WINDOWS];
 	};
 
 	static Context s_ctx;
@@ -724,7 +722,7 @@ namespace entry
 	WindowHandle windowCreate(int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
 	{
 		rtm::ScopedMutexLocker scope(s_ctx.m_lock);
-		WindowHandle handle = { s_ctx.m_windowAlloc.alloc() };
+		WindowHandle handle = { s_ctx.m_windows.alloc() };
 
 		if (isValid(handle) )
 		{
@@ -743,7 +741,7 @@ namespace entry
 
 	void windowDestroy(WindowHandle _handle)
 	{
-		if (isValid(_handle) )
+		if (s_ctx.m_windows.isValid(_handle) )
 		{
 			s_ctx.m_eventQueue.postWindowEvent(_handle, NULL);
 			XUnmapWindow(s_ctx.m_display, s_ctx.m_window[_handle.idx]);
@@ -751,7 +749,7 @@ namespace entry
 
 			rtm::ScopedMutexLocker scope(s_ctx.m_lock);
 
-			s_ctx.m_windowAlloc.free(_handle.idx);
+			s_ctx.m_windows.free(_handle.idx);
 		}
 	}
 
