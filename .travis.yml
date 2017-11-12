@@ -25,6 +25,7 @@ before_script:
 script:
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libc6-dev-i386 gcc-multilib g++-multilib; fi
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libx11-dev libxext-dev libxpm-dev libxrandr-dev libxrender-dev libxcursor-dev libxi-dev; fi
+    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libx11-dev:i386 libxext-dev:i386 libxpm-dev:i386 libxrandr-dev:i386 libxrender-dev:i386 libxcursor-dev:i386 libxi-dev:i386 libxinerama-dev:i386 libxxf86vm-dev:i386; fi
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then make linux CXX="g++-4.8" CC="gcc-4.8"; fi
 
 #    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then make test; fi
