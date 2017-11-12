@@ -233,7 +233,7 @@ namespace rapp
 	//	RAPP_INPUT_BINDING_END
 	//};
 
-	int main(int _argc, char** _argv)
+	int main(int _argc, const char* const* _argv)
 	{
 		cmdInit();
 		cmdAdd("mouselock", cmdMouseLock);

@@ -320,7 +320,7 @@ namespace rapp
 	struct MainThreadEntry
 	{
 		int m_argc;
-		char** m_argv;
+		const char* const* m_argv;
 		int32_t m_result;
 
 		static int32_t threadFunc(void* _userData);
@@ -467,7 +467,7 @@ namespace rapp
 #endif // RAPP_WITH_BGFX
 		}
 
-		int32_t run(int _argc, char** _argv)
+		int32_t run(int _argc, const char* const* _argv)
 		{
 			SetDllDirectory(".");
 
@@ -1316,7 +1316,7 @@ namespace rapp
 
 } // namespace rapp
 
-int main(int _argc, char** _argv)
+int main(int _argc, const char* const* _argv)
 {
 	return rapp::s_ctx.run(_argc, _argv);
 }

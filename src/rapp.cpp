@@ -219,7 +219,7 @@ int appRun(App* _app, int _argc, const char* const* _argv)
 	return 0;
 }
 
-int rapp_main(int _argc, char** _argv)
+int rapp_main(int _argc, const char* const* _argv)
 {
 	rtmLibInterface* errorHandler = 0;
 	//&RAPP_INSTANCE(CmdLineApp)

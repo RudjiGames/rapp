@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 namespace rapp {
-	int rapp_main(int _argc, char*[]);
+	int rapp_main(int _argc, const char* const*);
 }
 
 struct rtmLibInterface;

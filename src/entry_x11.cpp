@@ -162,7 +162,7 @@ namespace rapp
 			{
 				if (event.number < RTM_NUM_ELEMENTS(s_translateButton) )
 				{
-					_eventQueue.postKeyEvent(defaultWindow, s_translateButton[event.number], 0, 0 != event.value);
+					_eventQueue.postGamepadButtonEvent(defaultWindow, handle, s_translateButton[event.number], 0 != event.value);
 				}
 			}
 			else if (event.type & JS_EVENT_AXIS)
@@ -179,16 +179,18 @@ namespace rapp
 						{
 							if (m_value[axis] == 0)
 							{
-								_eventQueue.postKeyEvent(defaultWindow, s_axisDpad[axis].first,  0, false);
-								_eventQueue.postKeyEvent(defaultWindow, s_axisDpad[axis].second, 0, false);
+								_eventQueue.postAxisEvent(defaultWindow, handle, GamepadAxis::LeftZ, value);
+								_eventQueue.postAxisEvent(defaultWindow, handle, GamepadAxis::LeftZ, value);
+								//_eventQueue.postKeyEvent(defaultWindow, s_axisDpad[axis].first,  0, false);
+								//_eventQueue.postKeyEvent(defaultWindow, s_axisDpad[axis].second, 0, false);
 							}
 							else
 							{
-								_eventQueue.postKeyEvent(defaultWindow
-									, 0 > m_value[axis] ? s_axisDpad[axis].first : s_axisDpad[axis].second
-									, 0
-									, true
-									);
+								//_eventQueue.postKeyEvent(defaultWindow
+								//	, 0 > m_value[axis] ? s_axisDpad[axis].first : s_axisDpad[axis].second
+								//	, 0
+								//	, true
+								//	);
 							}
 						}
 
@@ -251,7 +253,7 @@ namespace rapp
 	struct Context
 	{
 		Context()
-			: m_modifiers(Modifier::None)
+			: m_modifiers(KeyboardState::Modifier::NoMods)
 			, m_exit(false)
 		{
 			memset(s_translateKey, 0, sizeof(s_translateKey) );
@@ -390,15 +392,15 @@ namespace rapp
 			const char* wmDeleteWindowName = "WM_DELETE_WINDOW";
 			Atom wmDeleteWindow;
 			XInternAtoms(m_display, (char **)&wmDeleteWindowName, 1, False, &wmDeleteWindow);
-			XSetWMProtocols(m_display, m_window[0], &wmDeleteWindow, 1);
+			XSetWMProtocols(m_display, m_windows.getData(0), &wmDeleteWindow, 1);
 
-			XMapWindow(m_display, m_window[0]);
-			XStoreName(m_display, m_window[0], s_applicationName);
+			XMapWindow(m_display, m_windows.getData(0));
+			XStoreName(m_display, m_windows.getData(0), s_applicationName);
 
 			XClassHint* hint = XAllocClassHint();
 			hint->res_name  = (char*)s_applicationName;
 			hint->res_class = (char*)s_applicationClass;
-			XSetClassHint(m_display, m_window[0], hint);
+			XSetClassHint(m_display, m_windows.getData(0), hint);
 			XFree(hint);
 
 			XIM im;
@@ -411,12 +413,12 @@ namespace rapp
 					| XIMPreeditNothing
 					| XIMStatusNothing
 					, XNClientWindow
-					, m_window[0]
+					, m_windows.getData(0)
 					, NULL
 					);
 
 			//
-			x11SetDisplayWindow(m_display, m_window[0]);
+			x11SetDisplayWindow(m_display, m_windows.getData(0));
 
 			MainThreadEntry mte;
 			mte.m_argc = _argc;
@@ -473,21 +475,21 @@ namespace rapp
 								WindowHandle handle = findHandle(xbutton.window);
 								if (MouseState::Button::None != mb)
 								{
-									m_eventQueue.postMouseEvent(handle
-										, xbutton.x
-										, xbutton.y
-										, m_mz
-										, mb
-										, event.type == ButtonPress
-										);
+									//m_eventQueue.postMouseEvent(handle
+									//	, xbutton.x
+									//	, xbutton.y
+									//	, m_mz
+									//	, mb
+									//	, event.type == ButtonPress
+									//	);
 								}
 								else
 								{
-									m_eventQueue.postMouseEvent(handle
-											, m_mx
-											, m_my
-											, m_mz
-											);
+									//m_eventQueue.postMouseEvent(handle
+									//		, m_mx
+									//		, m_my
+									//		, m_mz
+									//		);
 								}
 							}
 							break;
@@ -500,11 +502,11 @@ namespace rapp
 								m_mx = xmotion.x;
 								m_my = xmotion.y;
 
-								m_eventQueue.postMouseEvent(handle
-										, m_mx
-										, m_my
-										, m_mz
-										);
+								//m_eventQueue.postMouseEvent(handle
+								//		, m_mx
+								//		, m_my
+								//		, m_mz
+								//		);
 							}
 							break;
 
@@ -548,7 +550,7 @@ namespace rapp
 										}
 
 										KeyboardState::Key key = fromXk(keysym);
-										if (Key::None != key)
+										if (KeyboardState::Key::None != key)
 										{
 											m_eventQueue.postKeyEvent(handle, key, m_modifiers, KeyPress == event.type);
 										}
@@ -579,8 +581,8 @@ namespace rapp
 			XDestroyIC(ic);
 			XCloseIM(im);
 
-			XUnmapWindow(m_display, m_window[0]);
-			XDestroyWindow(m_display, m_window[0]);
+			XUnmapWindow(m_display, m_windows.getData(0));
+			XDestroyWindow(m_display, m_windows.getData(0));
 
 			return thread.getExitCode();
 		}
@@ -606,7 +608,7 @@ namespace rapp
 									, CWBorderPixel|CWEventMask
 									, &m_windowAttrs
 									);
-			m_window[_handle.idx] = window;
+			m_windows.setData(_handle.idx, window);
 
 			// Clear window to black.
 			XSetWindowAttributes attr;
@@ -651,7 +653,7 @@ namespace rapp
 				Window w = m_windows.getData(ii);
 				if (_window == w)
 				{
-					WindowHandle handle = { idx };
+					WindowHandle handle = { ii };
 					return handle;
 				}
 			}
@@ -723,7 +725,7 @@ namespace rapp
 	WindowHandle windowCreate(int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
 	{
 		rtm::ScopedMutexLocker scope(s_ctx.m_lock);
-		WindowHandle handle = { s_ctx.m_windows.alloc() };
+		WindowHandle handle = { s_ctx.m_windows.allocate() };
 
 		if (isValid(handle) )
 		{

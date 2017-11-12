@@ -127,10 +127,10 @@ class ViewProvider final : public winrt::implements<ViewProvider, IFrameworkView
 	bool					m_windowClosed;
 	uint8_t					m_modifiers;
 	int						m_argc;
-	char**					m_argv;
+	const char* const*		m_argv;
 
 public:
-    ViewProvider(int _argc, char** _argv)
+    ViewProvider(int _argc, const char* const* _argv)
 		: m_windowVisible(false)
 		, m_windowClosed(false)
 		, m_modifiers(0)
@@ -517,10 +517,10 @@ protected:
 class ViewProviderFactory final : public winrt::implements<ViewProviderFactory, IFrameworkViewSource>
 {
 	int						m_argc;
-	char**					m_argv;
+	const char* const*		m_argv;
 
 public:
-	ViewProviderFactory(int _argc, char** _argv)
+	ViewProviderFactory(int _argc, const char* const* _argv)
 		: m_argc(_argc)
 		, m_argv(_argv)
 	{}
@@ -607,7 +607,7 @@ namespace rapp
 	}
 }
 
-int main(int _argc, char** _argv)
+int main(int _argc, const char* const* _argv)
 {
 	winrt::init_apartment();
 

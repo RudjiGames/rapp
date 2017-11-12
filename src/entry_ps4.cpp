@@ -54,7 +54,7 @@ namespace rapp
 	struct MainThreadEntry
 	{
 		int m_argc;
-		char** m_argv;
+		const char* const* m_argv;
 		int32_t m_result;
 
 		static int32_t threadFunc(void* _userData);
@@ -532,7 +532,7 @@ namespace rapp
 			}
 		}
 
-		int32_t run(int _argc, char** _argv)
+		int32_t run(int _argc, const char* const*  _argv)
 		{
 			s_input.init();
 
@@ -651,7 +651,7 @@ namespace rapp
 	}
 }
 
-int main(int _argc, char** _argv)
+int main(int _argc, const char* const* _argv)
 {
 	return rapp::getContext().run(_argc, _argv);
 }
