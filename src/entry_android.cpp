@@ -33,27 +33,27 @@ namespace rapp
 {
 	struct GamepadRemap
 	{
-		uint16_t  m_keyCode;
-		Key::Enum m_key;
+		uint16_t				m_keyCode;
+		GamepadState::Buttons	m_key;
 	};
 
 	static GamepadRemap s_gamepadRemap[] =
 	{
-		{ AKEYCODE_DPAD_UP,       Key::GamepadUp        },
-		{ AKEYCODE_DPAD_DOWN,     Key::GamepadDown      },
-		{ AKEYCODE_DPAD_LEFT,     Key::GamepadLeft      },
-		{ AKEYCODE_DPAD_RIGHT,    Key::GamepadRight     },
-		{ AKEYCODE_BUTTON_START,  Key::GamepadStart     },
-		{ AKEYCODE_BACK,          Key::GamepadBack      },
-		{ AKEYCODE_BUTTON_THUMBL, Key::GamepadThumbL    },
-		{ AKEYCODE_BUTTON_THUMBR, Key::GamepadThumbR    },
-		{ AKEYCODE_BUTTON_L1,     Key::GamepadShoulderL },
-		{ AKEYCODE_BUTTON_R1,     Key::GamepadShoulderR },
-		{ AKEYCODE_GUIDE,         Key::GamepadGuide     },
-		{ AKEYCODE_BUTTON_A,      Key::GamepadA         },
-		{ AKEYCODE_BUTTON_B,      Key::GamepadB         },
-		{ AKEYCODE_BUTTON_X,      Key::GamepadX         },
-		{ AKEYCODE_BUTTON_Y,      Key::GamepadY         },
+		{ AKEYCODE_DPAD_UP,       GamepadState::Buttons::Up        },
+		{ AKEYCODE_DPAD_DOWN,     GamepadState::Buttons::Down      },
+		{ AKEYCODE_DPAD_LEFT,     GamepadState::Buttons::Left      },
+		{ AKEYCODE_DPAD_RIGHT,    GamepadState::Buttons::Right     },
+		{ AKEYCODE_BUTTON_START,  GamepadState::Buttons::Start     },
+		{ AKEYCODE_BACK,          GamepadState::Buttons::Back      },
+		{ AKEYCODE_BUTTON_THUMBL, GamepadState::Buttons::LThumb    },
+		{ AKEYCODE_BUTTON_THUMBR, GamepadState::Buttons::RThumb    },
+		{ AKEYCODE_BUTTON_L1,     GamepadState::Buttons::LShoulder },
+		{ AKEYCODE_BUTTON_R1,     GamepadState::Buttons::RShoulder },
+		{ AKEYCODE_GUIDE,         GamepadState::Buttons::Guide     },
+		{ AKEYCODE_BUTTON_A,      GamepadState::Buttons::A         },
+		{ AKEYCODE_BUTTON_B,      GamepadState::Buttons::B         },
+		{ AKEYCODE_BUTTON_X,      GamepadState::Buttons::X         },
+		{ AKEYCODE_BUTTON_Y,      GamepadState::Buttons::Y         },
 	};
 
 	struct GamepadAxisRemap
@@ -307,7 +307,7 @@ namespace rapp
 								, (int32_t)mx
 								, (int32_t)my
 								, 0
-								, 1 == count ? MouseButton::Left : MouseButton::Right
+								, 1 == count ? MouseState::Button::Left : MouseState::Button::Right
 								, false
 								);
 
@@ -317,7 +317,7 @@ namespace rapp
 									, (int32_t)mx
 									, (int32_t)my
 									, 0
-									, 1 == m_count ? MouseButton::Left : MouseButton::Right
+									, 1 == m_count ? MouseState::Button::Left : MouseState::Button::Right
 									, true
 									);
 							}
@@ -427,7 +427,7 @@ namespace rapp
 
 	WindowHandle windowCreate(App* _app, int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
 	{
-		RTM_UNUSED(_x, _y, _width, _height, _flags, _title);
+		RTM_UNUSED_6(_x, _y, _width, _height, _flags, _title);
 		WindowHandle handle = { UINT16_MAX };
 		return handle;
 	}
@@ -439,17 +439,17 @@ namespace rapp
 
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y)
 	{
-		RTM_UNUSED(_handle, _x, _y);
+		RTM_UNUSED_3(_handle, _x, _y);
 	}
 
 	void windowSetSize(WindowHandle _handle, uint32_t _width, uint32_t _height)
 	{
-		RTM_UNUSED(_handle, _width, _height);
+		RTM_UNUSED_3(_handle, _width, _height);
 	}
 
 	void windowSetTitle(WindowHandle _handle, const char* _title)
 	{
-		RTM_UNUSED(_handle, _title);
+		RTM_UNUSED_2(_handle, _title);
 	}
 
 	void windowToggleFrame(WindowHandle _handle)
@@ -464,7 +464,7 @@ namespace rapp
 
 	void windowSetMouseLock(WindowHandle _handle, bool _lock)
 	{
-		RTM_UNUSED(_handle, _lock);
+		RTM_UNUSED_2(_handle, _lock);
 	}
 
 	int32_t MainThreadEntry::threadFunc(void* _userData)

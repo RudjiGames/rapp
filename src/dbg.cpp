@@ -10,6 +10,10 @@
 #include <ctype.h>	// isprint
 #include <alloca.h>	// alloca
 
+#if RTM_PLATFORM_ANDROID
+#include <android/log.h>
+#endif
+
 namespace rapp {
 
 int32_t snprintf(char* _out, int32_t _max, const char* _format, ...)
