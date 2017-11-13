@@ -15,7 +15,7 @@ all:
 	$(GENIE) --gcc=linux-gcc gmake
 
 gmake-linux:
-	$(GENIE) --file=genie/genie.lua --gcc=linux-gcc gmake
+	$(GENIE) --file=genie/genie.lua --gcc=linux-gcc --with-glfw gmake
 linux-debug32: gmake-linux
 	make -R -C ../.build/linux/gcc/rapp/projects config=debug32
 linux-release32: gmake-linux
