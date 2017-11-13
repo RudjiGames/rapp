@@ -722,8 +722,9 @@ namespace rapp
 		*_height	= 1080;
 	}
 
-	WindowHandle windowCreate(int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
+	WindowHandle windowCreate(App* _app, int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
 	{
+		RTM_UNUSED(_app);
 		rtm::ScopedMutexLocker scope(s_ctx.m_lock);
 		WindowHandle handle = { s_ctx.m_windows.allocate() };
 
