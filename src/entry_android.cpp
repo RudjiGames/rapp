@@ -10,7 +10,7 @@
 #if RTM_PLATFORM_ANDROID
 
 #if RAPP_WITH_BGFX
-#include <bgfxplatform.h>
+#include <bgfx/platform.h>
 #endif // RAPP_WITH_BGFX
 
 #include <stdio.h>
@@ -31,6 +31,20 @@ extern "C"
 
 namespace rapp
 {
+	inline void androidSetWindow(::ANativeWindow* _window)
+	{
+		RTM_UNUSED(_window);
+#if RAPP_WITH_BGFX
+		bgfx::PlatformData pd;
+		pd.ndt          = NULL;
+		pd.nwh          = _window;
+		pd.context      = NULL;
+		pd.backBuffer   = NULL;
+		pd.backBufferDS = NULL;
+		bgfx::setPlatformData(pd);
+#endif // RAPP_WITH_BGFX
+	}
+
 	struct GamepadRemap
 	{
 		uint16_t				m_keyCode;
@@ -147,7 +161,7 @@ namespace rapp
 					{
 						m_window = m_app->window;
 #if RAPP_WITH_BGFX
-						bgfx::androidSetWindow(m_window);
+						androidSetWindow(m_window);
 #endif // RAPP_WITH_BGFX
 
 						int32_t width  = ANativeWindow_getWidth(m_window);
@@ -303,23 +317,23 @@ namespace rapp
 
 						if (count != m_count)
 						{
-							m_eventQueue.postMouseEvent(defaultWindow
-								, (int32_t)mx
-								, (int32_t)my
-								, 0
-								, 1 == count ? MouseState::Button::Left : MouseState::Button::Right
-								, false
-								);
+							//m_eventQueue.postMouseEvent(defaultWindow
+							//	, (int32_t)mx
+							//	, (int32_t)my
+							//	, 0
+							//	, 1 == count ? MouseState::Button::Left : MouseState::Button::Right
+							//	, false
+							//	);
 
 							if (0 != m_count)
 							{
-								m_eventQueue.postMouseEvent(defaultWindow
-									, (int32_t)mx
-									, (int32_t)my
-									, 0
-									, 1 == m_count ? MouseState::Button::Left : MouseState::Button::Right
-									, true
-									);
+								//m_eventQueue.postMouseEvent(defaultWindow
+								//	, (int32_t)mx
+								//	, (int32_t)my
+								//	, 0
+								//	, 1 == m_count ? MouseState::Button::Left : MouseState::Button::Right
+								//	, true
+								//	);
 							}
 						}
 
@@ -328,11 +342,11 @@ namespace rapp
 						case AMOTION_EVENT_ACTION_MOVE:
 							if (0 == index)
 							{
-								m_eventQueue.postMouseEvent(defaultWindow
-									, (int32_t)mx
-									, (int32_t)my
-									, 0
-									);
+								//m_eventQueue.postMouseEvent(defaultWindow
+								//	, (int32_t)mx
+								//	, (int32_t)my
+								//	, 0
+								//	);
 							}
 							break;
 
@@ -353,7 +367,7 @@ namespace rapp
 						{
 							if (keyCode == s_gamepadRemap[jj].m_keyCode)
 							{
-								m_eventQueue.postKeyEvent(defaultWindow, s_gamepadRemap[jj].m_key, 0, actionBits == AKEY_EVENT_ACTION_DOWN);
+								//m_eventQueue.postKeyEvent(defaultWindow, s_gamepadRemap[jj].m_key, 0, actionBits == AKEY_EVENT_ACTION_DOWN);
 								break;
 							}
 						}
