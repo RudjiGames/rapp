@@ -87,6 +87,22 @@ namespace rapp
 		{ AMOTION_EVENT_AXIS_RTRIGGER, GamepadAxis::RightZ, false },
 	};
 
+	enum Command : uint8_t
+	{
+		None,
+		RunFunc,
+		Quit
+	};
+
+	static rtm::SpScQueue<>		s_channel(1024);
+
+	#define RAPP_CMD_READ(_type, _name)		\
+		_type _name;						\
+		while (!s_channel.read(&_name))
+
+	#define RAPP_CMD_WRITE(_val)			\
+		while (!s_channel.write(_val));
+
 	struct MainThreadEntry
 	{
 		int m_argc;
@@ -130,6 +146,32 @@ namespace rapp
 			
 			while (0 == m_app->destroyRequested)
 			{
+				uintptr_t cmd = 0;
+				if (s_channel.read(&cmd))
+				{
+					switch (cmd)
+					{
+						case Command::RunFunc:
+							{
+								RAPP_CMD_READ(rapp::App::threadFn,	fn);
+								RAPP_CMD_READ(void*,				userData);
+
+								fn(userData);
+							}
+							break;
+
+						case Command::Quit:
+							{
+								RAPP_CMD_READ(rapp::App*, app);
+								app->quit();
+							}
+							break;
+
+					default:
+						RTM_ASSERT(false, "Invalid command!");
+					};
+				}
+
 				int32_t num;
 				android_poll_source* source;
 				/*int32_t id =*/ ALooper_pollAll(-1, NULL, &num, (void**)&source);
@@ -429,6 +471,9 @@ namespace rapp
 
 	void appRunOnMainThread(App::threadFn _fn, void* _userData)
 	{
+		RAPP_CMD_WRITE(Command::RunFunc);
+		RAPP_CMD_WRITE(_fn);
+		RAPP_CMD_WRITE(_userData);
 	}
 
 	void windowGetDefaultSize(uint32_t* _width, uint32_t* _height)

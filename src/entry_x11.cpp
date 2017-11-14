@@ -479,7 +479,6 @@ namespace rapp
 					};
 				}
 
-
 				if (!xpending)
 				{
 					rtm::Thread::sleep(joystick ? 8 : 16);
