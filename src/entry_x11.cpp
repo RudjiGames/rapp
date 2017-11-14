@@ -223,6 +223,22 @@ namespace rapp
 		return 512 > _xk ? (KeyboardState::Key)s_translateKey[_xk] : KeyboardState::Key::None;
 	}
 
+	enum Command : uint8_t
+	{
+		None,
+		RunFunc,
+		Quit
+	};
+
+	static rtm::SpScQueue<>		s_channel(1024);
+
+	#define RAPP_CMD_READ(_type, _name)		\
+		_type _name;						\
+		while (!s_channel.read(&_name))
+
+	#define RAPP_CMD_WRITE(_val)			\
+		while (!s_channel.write(_val));
+
 	struct MainThreadEntry
 	{
 		int32_t m_argc;
@@ -436,6 +452,33 @@ namespace rapp
 			{
 				bool joystick = s_joystick.update(m_eventQueue);
 				bool xpending = XPending(m_display);
+
+				uintptr_t cmd = 0;
+				if (s_channel.read(&cmd))
+				{
+					switch (cmd)
+					{
+						case Command::RunFunc:
+							{
+								RAPP_CMD_READ(rapp::App::threadFn,	fn);
+								RAPP_CMD_READ(void*,				userData);
+
+								fn(userData);
+							}
+							break;
+
+						case Command::Quit:
+							{
+								RAPP_CMD_READ(rapp::App*, app);
+								app->quit();
+							}
+							break;
+
+					default:
+						RTM_ASSERT(false, "Invalid command!");
+					};
+				}
+
 
 				if (!xpending)
 				{
@@ -710,8 +753,9 @@ namespace rapp
 
 	void appRunOnMainThread(App::threadFn _fn, void* _userData)
 	{
-		RTM_UNUSED_2(_fn, _userData);
-
+		RAPP_CMD_WRITE(Command::RunFunc);
+		RAPP_CMD_WRITE(_fn);
+		RAPP_CMD_WRITE(_userData);
 	}
 
 	void windowGetDefaultSize(uint32_t* _width, uint32_t* _height)
