@@ -46,7 +46,8 @@ Platform support
 X - Not yet implemented  
 ? - Not supported  
 
-Platforms with partial implementations or not tested: **iOS, OSX, UWP, FreeBSD**
+Platforms with partial implementations or not tested: **iOS, OSX, UWP, FreeBSD**  
+Input (KMG) stands for Keyboard, Mouse and Gamepad  
 
 Source Code
 ======
