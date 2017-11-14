@@ -39,12 +39,14 @@ Platform support
 | **Windows**      | ✓✓✓        |  ✓        | ✓      |    ✓     |
 | **Xbox One**     | ✓✓✓        |  ✓        | ✓      |    ✓     |
 | **PlayStation 4**| ✓✓✓        |  ✓        | ✓      |    ✓     |
+| **Linux**        | ✓XX         |  ✓        | ✓      |    ✓     |
+| **Android**      | XXX         |  ✓        | ?      |    ✓     |
 
 ✓ - Working  
 X - Not yet implemented  
 ? - Not supported  
 
-Platforms with partial implementations or not tested: **Linux, iOS, OSX, Android, UWP**
+Platforms with partial implementations or not tested: **iOS, OSX, UWP, FreeBSD**
 
 Source Code
 ======
