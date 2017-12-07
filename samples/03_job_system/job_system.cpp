@@ -6,7 +6,7 @@
 #include <job_system_pch.h>
 
 #include <atomic>
-static std::atomic_int s_numTiles = 0;
+static std::atomic<int> s_numTiles = 0;
 
 struct JobSystemApp : public rapp::App
 {
