@@ -10,6 +10,7 @@
 #define RTM_DEFINE_STL_TYPES
 #include <rbase/inc/platform.h>
 
+#include <rbase/inc/atomic.h>
 #include <rbase/inc/itc.h>
 #include <rbase/inc/console.h>
 #include <rbase/inc/containers.h>
@@ -21,6 +22,7 @@
 #include <rbase/inc/mutex.h>
 #include <rbase/inc/path.h>
 #include <rbase/inc/queue.h>
+#include <rbase/inc/random.h>
 #include <rbase/inc/stringfn.h>
 #include <rbase/inc/thread.h>
 #include <rbase/inc/uint32_t.h>

@@ -460,7 +460,7 @@ namespace rapp
 					{
 						case Command::RunFunc:
 							{
-								RAPP_CMD_READ(rapp::App::threadFn,	fn);
+								RAPP_CMD_READ(rapp::ThreadFn,	fn);
 								RAPP_CMD_READ(void*,				userData);
 
 								fn(userData);
@@ -750,7 +750,7 @@ namespace rapp
 		s_ctx.m_eventQueue.release(_event);
 	}
 
-	void appRunOnMainThread(App::threadFn _fn, void* _userData)
+	void appRunOnMainThread(ThreadFn _fn, void* _userData)
 	{
 		RAPP_CMD_WRITE(Command::RunFunc);
 		RAPP_CMD_WRITE(_fn);

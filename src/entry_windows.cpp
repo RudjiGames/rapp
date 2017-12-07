@@ -793,7 +793,7 @@ namespace rapp
 
 				case WM_USER_CALL_FUNC:
 					{
-						App::threadFn fn = (App::threadFn)_wparam;
+						ThreadFn fn = (ThreadFn)_wparam;
 						void* userData = (void*)_lparam;
 						fn(userData);
 					}
@@ -1225,7 +1225,7 @@ namespace rapp
 		s_ctx.m_eventQueue.release(_event);
 	}
 
-	void appRunOnMainThread(App::threadFn _fn, void* _userData)
+	void appRunOnMainThread(ThreadFn _fn, void* _userData)
 	{
 		PostMessage(s_ctx.m_hwndRapp, WM_USER_CALL_FUNC, (WPARAM)_fn, (LPARAM)_userData);
 	}

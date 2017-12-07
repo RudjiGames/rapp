@@ -8,19 +8,20 @@ newoption {
 	value	= "Job scheduler type",
 	description = "Choose type of job scheduler",
 	allowed = {
-		{ "none",  "Serial execution"  },
-		{ "tbb",  "Intel Thread Building Blocks"  }
+		{ "rapp", "Built-in job scheduler" },
+		{ "tbb",  "Intel Thread Building Blocks" }
 	}
 }
 
 if  _OPTIONS["scheduler"] == nil then
-	_OPTIONS["scheduler"] = "tbb"
+	_OPTIONS["scheduler"] = "rapp"
 end
 
-
 function add_scheduler_defines(definesToAppend)
-	if  _OPTIONS["scheduler"] == "tbb" then
-		return mergeTables(definesToAppend, {"RAPP_WITH_TBB=1"})
+	if  _OPTIONS["scheduler"] == "rapp" then
+		return mergeTables(definesToAppend, {"RAPP_JOBS_INTERNAL=1"})
+	elseif  _OPTIONS["scheduler"] == "tbb" then
+		return mergeTables(definesToAppend, {"RAPP_JOBS_TBB=1"})
 	end
 	return definesToAppend
 end
@@ -36,8 +37,6 @@ end
 function projectAdd_rapp() 
 	addProject_lib("rapp", Lib.Runtime, false, nil, nil, nil, nil, add_scheduler_defines())
 end
-
-
 
 function projectDependencies_rapp_bgfx()
 	return mergeTables( projectDependencies_rapp(), { "bx", "bimg", "bgfx" } )

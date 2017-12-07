@@ -14,6 +14,7 @@
 #include <rapp/src/entry_p.h>
 #include <rapp/src/cmd.h>
 #include <rapp/src/input.h>
+#include <rapp/src/job.h>
 
 #if RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
@@ -21,6 +22,8 @@
 
 namespace rapp
 {
+	int rapp_main(int _argc, const char* const*);
+
 	struct CmdContext;
 
 #if RAPP_WITH_BGFX
@@ -212,26 +215,26 @@ namespace rapp
 	}
 #endif
 
-	//static const InputBinding s_bindings[] =
-	//{
-	//	{ NULL, "exit",                              1, { KeyboardState::Key::KeyQ,   KeyboardState::Modifier::LCtrl  }},
-	//	{ NULL, "exit",                              1, { KeyboardState::Key::KeyQ,   KeyboardState::Modifier::RCtrl  }},
-	//	{ NULL, "graphics fullscreen",               1, { KeyboardState::Key::KeyF,   KeyboardState::Modifier::LCtrl  }},
-	//	{ NULL, "graphics fullscreen",               1, { KeyboardState::Key::KeyF,   KeyboardState::Modifier::RCtrl  }},
-	//	{ NULL, "graphics fullscreen",               1, { KeyboardState::Key::F11,    KeyboardState::Modifier::NoMods }},
-	//	{ NULL, "graphics stats",                    1, { KeyboardState::Key::F1,     KeyboardState::Modifier::NoMods }},
-	//	{ NULL, "graphics stats 0\ngraphics text 0", 1, { KeyboardState::Key::F1,     KeyboardState::Modifier::LShift }},
-	//	{ NULL, "graphics wireframe",                1, { KeyboardState::Key::F3,     KeyboardState::Modifier::NoMods }},
-	//	{ NULL, "graphics hmd",                      1, { KeyboardState::Key::F4,     KeyboardState::Modifier::NoMods }},
-	//	{ NULL, "graphics hmdrecenter",              1, { KeyboardState::Key::F4,     KeyboardState::Modifier::LShift }},
-	//	{ NULL, "graphics hmddbg",                   1, { KeyboardState::Key::F4,     KeyboardState::Modifier::LCtrl  }},
-	//	{ NULL, "graphics vsync",                    1, { KeyboardState::Key::F7,     KeyboardState::Modifier::NoMods }},
-	//	{ NULL, "graphics msaa16",                   1, { KeyboardState::Key::F8,     KeyboardState::Modifier::NoMods }},
-	//	{ NULL, "graphics flush",                    1, { KeyboardState::Key::F9,     KeyboardState::Modifier::NoMods }},
-	//	{ NULL, "graphics screenshot",               1, { KeyboardState::Key::Print,  KeyboardState::Modifier::NoMods }},
+#if RAPP_WITH_BGFX
+	static const InputBinding s_bindingsGraphics[] =
+	{
+		{ NULL, "graphics fullscreen",               1, { KeyboardState::Key::KeyF,   KeyboardState::Modifier::LCtrl  }},
+		{ NULL, "graphics fullscreen",               1, { KeyboardState::Key::KeyF,   KeyboardState::Modifier::RCtrl  }},
+		{ NULL, "graphics fullscreen",               1, { KeyboardState::Key::F11,    KeyboardState::Modifier::NoMods }},
+		{ NULL, "graphics stats",                    1, { KeyboardState::Key::F1,     KeyboardState::Modifier::NoMods }},
+		{ NULL, "graphics stats 0\ngraphics text 0", 1, { KeyboardState::Key::F1,     KeyboardState::Modifier::LShift }},
+		{ NULL, "graphics wireframe",                1, { KeyboardState::Key::F3,     KeyboardState::Modifier::NoMods }},
+		{ NULL, "graphics hmd",                      1, { KeyboardState::Key::F4,     KeyboardState::Modifier::NoMods }},
+		{ NULL, "graphics hmdrecenter",              1, { KeyboardState::Key::F4,     KeyboardState::Modifier::LShift }},
+		{ NULL, "graphics hmddbg",                   1, { KeyboardState::Key::F4,     KeyboardState::Modifier::LCtrl  }},
+		{ NULL, "graphics vsync",                    1, { KeyboardState::Key::F7,     KeyboardState::Modifier::NoMods }},
+		{ NULL, "graphics msaa16",                   1, { KeyboardState::Key::F8,     KeyboardState::Modifier::NoMods }},
+		{ NULL, "graphics flush",                    1, { KeyboardState::Key::F9,     KeyboardState::Modifier::NoMods }},
+		{ NULL, "graphics screenshot",               1, { KeyboardState::Key::Print,  KeyboardState::Modifier::NoMods }},
 
-	//	RAPP_INPUT_BINDING_END
-	//};
+		RAPP_INPUT_BINDING_END
+	};
+#endif
 
 	int main(int _argc, const char* const* _argv)
 	{
@@ -239,7 +242,9 @@ namespace rapp
 		cmdAdd("mouselock", cmdMouseLock);
 #if RAPP_WITH_BGFX
 		cmdAdd("graphics",  cmdGraphics);
+		rapp::inputAddBindings("graphics", s_bindingsGraphics);
 #endif
+		rapp::jobInit();
 
 		WindowHandle defaultWindow = { 0 };
 
@@ -248,6 +253,10 @@ namespace rapp
 
 		int32_t result = rapp::rapp_main(_argc, _argv);
 
+		rapp::jobShutdown();
+#if RAPP_WITH_BGFX
+		rapp::inputRemoveBindings("graphics");
+#endif
 		cmdShutdown();
 	
 		return result;

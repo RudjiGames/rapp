@@ -8,10 +8,6 @@
 
 #include <stdint.h>
 
-namespace rapp {
-	int rapp_main(int _argc, const char* const*);
-}
-
 struct rtmLibInterface;
 
 #define RAPP_CLASS(_appClass)												\
@@ -159,6 +155,7 @@ namespace rapp {
 	#define RAPP_WINDOW_FLAG_MAIN_WINDOW	0x8
 
 	typedef int(*ConsoleFn)(void* _userData, int _argc, char const* const* _argv);
+	typedef void(*ThreadFn)(void* _userData);
 
 	struct InputBinding;
 
@@ -238,8 +235,6 @@ namespace rapp {
 		uint32_t	m_width;
 		uint32_t	m_height;
 
-		typedef void(*threadFn)(void* _userData);
-
 		App(const char* _name, const char* _description = 0);
 		virtual ~App() {}
 
@@ -252,6 +247,8 @@ namespace rapp {
 		virtual void	draw()				= 0;
 		virtual void	shutDown()			= 0;
 	};
+
+	struct JobHandle  { uint32_t idx; };
 
 	// ------------------------------------------------
 	/// Initialization functions
@@ -277,7 +274,7 @@ namespace rapp {
 	int appRun(App* _app, int _argc, const char* const* _argv);
 
 	///
-	void appRunOnMainThread(App::threadFn _fn, void* _userData);
+	void appRunOnMainThread(ThreadFn _fn, void* _userData);
 
 	// ------------------------------------------------
 	/// Debug output functions
@@ -294,7 +291,7 @@ namespace rapp {
 	// ------------------------------------------------
 
 	///
-	void cmdAdd(const char* _name, ConsoleFn _fn, void* _userData);
+	void cmdAdd(const char* _name, ConsoleFn _fn, void* _userData = 0);
 
 	///
 	void cmdRemove(const char* _name);
@@ -334,14 +331,26 @@ namespace rapp {
 	void windowSetMouseLock(WindowHandle _handle, bool _lock);
 
 	// ------------------------------------------------
-	/// Custom command functions
+	/// Job system functions
 	// ------------------------------------------------
 
 	///
-	void cmdAdd(const char* _name, ConsoleFn _fn, void* _userData = 0);
+	JobHandle jobCreate(ThreadFn _func, void* _userData);
 
 	///
-	void cmdExec(const char* _cmd);
+	JobHandle jobCreateGroup(ThreadFn _func, void* _userData, uint32_t _dataStride, uint32_t _numJobs);
+
+	///
+	JobHandle jobCreateChild(JobHandle _parent, ThreadFn _func, void* _userData);
+
+	///
+	void jobRun(JobHandle _job);
+
+	/// 
+	void jobWait(JobHandle _job);
+
+	///
+	uint32_t jobStatus(JobHandle _job);
 
 	// ------------------------------------------------
 	/// Input functions
