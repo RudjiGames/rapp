@@ -200,7 +200,7 @@ Job*		JobThread::s_jobAllocator;
 
 JobHandle jobToHandle(Job* _job)
 {
-	return { (uintptr_t)(_job - JobThread::s_jobAllocator) & 0xffffffff };
+	return { (uint32_t)((uintptr_t)(_job - JobThread::s_jobAllocator) & 0xffffffff) };
 }
 
 Job* jobFromHandle(JobHandle _job)
