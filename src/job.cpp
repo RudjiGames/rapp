@@ -18,10 +18,10 @@ struct Job
 {
 	struct Data
 	{
-		ThreadFn		m_function;
-		void*			m_userData;
-		Job*			m_parent;
-		std::atomic_int	m_jobCount;
+		ThreadFn			m_function;
+		void*				m_userData;
+		Job*				m_parent;
+		std::atomic<int>	m_jobCount;
 	};
 
 	Data		m_data;
@@ -33,9 +33,9 @@ struct Job
 struct JobThread : public rtm::Thread
 {
 	int32_t					m_index;
-	std::atomic_uint32_t	m_bottom;
-	std::atomic_uint32_t	m_top;
-	std::atomic_bool		m_active;
+	std::atomic<uint32_t>	m_bottom;
+	std::atomic<uint32_t>	m_top;
+	std::atomic<bool>		m_active;
 	rtm::Random				m_random;
 	Job**					m_jobsQueue;
 	Job*					m_jobsPool;
