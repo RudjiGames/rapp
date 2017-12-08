@@ -13,6 +13,10 @@ configuration:
   - Release
   - Retail
 
+clone_script:
+  - cmd: git clone -q --recursive --branch=master https://github.com/milostosic/rapp.git rapp
+  - cmd: git checkout master
+
 install:
   - ls -l
   - git submodule update --init --recursive
