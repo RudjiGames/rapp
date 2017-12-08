@@ -39,7 +39,7 @@ function projectAdd_rapp()
 end
 
 function projectDependencies_rapp_bgfx()
-	return mergeTables( projectDependencies_rapp(), { "bx", "bimg", "bgfx" } )
+	return mergeTables( projectDependencies_rapp(), { "bx", "bimg", "bgfx", "imgui", "nanovg" } )
 end
 
 function projectAdd_rapp_bgfx()
