@@ -43,7 +43,22 @@ function projectDependencies_rapp_bgfx()
 end
 
 function projectAdd_rapp_bgfx()
-	addProject_lib("rapp", Lib.Runtime, false, nil, nil, nil, nil, add_scheduler_defines({ "RAPP_WITH_BGFX=1" }), "_bgfx")
+	local bgfxPath = find3rdPartyProject("bgfx")
+	local extraFiles = {
+		bgfxPath .. "examples/common/imgui/*.h",
+		bgfxPath .. "examples/common/imgui/*.cpp",
+		bgfxPath .. "examples/common/nanovg/*.h",
+		bgfxPath .. "examples/common/nanovg/*.cpp",
+	}
+
+	local extraIncludes = {
+		bgfxPath .. "3rdparty/"
+	}
+
+	addProject_lib("rapp", Lib.Runtime, false, nil, nil, 
+						extraFiles, 
+						extraIncludes, 
+						add_scheduler_defines({ "RAPP_WITH_BGFX=1" }), "_bgfx")
 end
 
 
