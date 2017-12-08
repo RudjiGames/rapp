@@ -57,6 +57,10 @@ You can get the latest source code by cloning it from github:
 
       git clone https://github.com/milostosic/rapp.git 
 	  
+After cloning, make sure to run this command to populate the dependencies:
+
+      git submodule update --init --recursive
+	  
 Dependencies
 ======
 
