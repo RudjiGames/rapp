@@ -14,12 +14,9 @@ configuration:
   - Retail
 
 clone_script:
-  - cmd: git clone -q --recursive --branch=master https://github.com/milostosic/rapp.git rapp
-  - cmd: git checkout master
+  - cmd: git clone -q --recursive --branch=master https://github.com/milostosic/rapp.git ..\rapp
 
 install:
-  - ls -l
-  - git submodule update --init --recursive
   - git clone --depth 1 https://github.com/milostosic/build ..\build
   - git clone --depth 1 https://github.com/milostosic/rbase ..\rbase
   - git clone --depth 1 https://github.com/bkaradzic/bx.git   ..\bx
