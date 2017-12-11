@@ -45,7 +45,6 @@ struct bgfxApp : public rapp::App
 
 		rtm::Console::custom(255, 255, 0, 1, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
 
-		/*
 		// Set view 0 default viewport.
 		bgfx::setViewRect(0, 0, 0, (uint16_t)m_width, (uint16_t)m_height);
 
@@ -57,7 +56,6 @@ struct bgfxApp : public rapp::App
 		bgfx::dbgTextClear();
 		bgfx::dbgTextPrintf(0, 1, 0x4f, "rapp/samples/bgfx");
 		bgfx::dbgTextPrintf(0, 2, 0x6f, m_description);
-		*/
 
 		// debug input
 		rapp::inputDgbGamePads();
