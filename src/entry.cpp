@@ -374,6 +374,7 @@ namespace rapp
 
 		bool ret = _app->m_exitCode != -1;
 
+#if RAPP_WITH_BGFX
 		if (!ret)
 		{
 			MouseState ms;
@@ -389,6 +390,8 @@ namespace rapp
 
 			imguiEndFrame();
 		}
+#endif
+
 		return ret;
 	}
 

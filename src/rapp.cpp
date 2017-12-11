@@ -226,6 +226,8 @@ int appRun(App* _app, int _argc, const char* const* _argv)
 
 WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 {
+	RTM_UNUSED_3(_app, _width, _height);
+
 #if RAPP_WITH_BGFX
 	WindowHandle win = rapp::windowCreate(	_app, 0, 0, _width, _height,
 											RAPP_WINDOW_FLAG_ASPECT_RATIO	|
@@ -253,6 +255,8 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 
 void appGraphicsShutdown(WindowHandle _mainWindow)
 {
+	RTM_UNUSED(_mainWindow);
+
 #if RAPP_WITH_BGFX
 	imguiDestroy();
 	bgfx::shutdown();
