@@ -262,7 +262,7 @@ namespace rapp
 	
 		return result;
 	}
-	
+
 	bool processEvents(App* _app)
 	{
 		uint32_t debug = s_debug;
@@ -372,27 +372,7 @@ namespace rapp
 
 		s_debug = debug;
 
-		bool ret = _app->m_exitCode != -1;
-
-#if RAPP_WITH_BGFX
-		if (ret && _app->m_width && _app->m_height)
-		{
-			MouseState ms;
-			inputGetMouseState(ms);
-			imguiBeginFrame(ms.m_absolute[0], ms.m_absolute[1]
-				, (ms.m_buttons[MouseState::Button::Left  ] ? IMGUI_MBUT_LEFT   : 0)
-				| (ms.m_buttons[MouseState::Button::Right ] ? IMGUI_MBUT_RIGHT  : 0)
-				| (ms.m_buttons[MouseState::Button::Middle] ? IMGUI_MBUT_MIDDLE : 0)
-				,  ms.m_absolute[2]
-				, uint16_t(_app->m_width)
-				, uint16_t(_app->m_height)
-				);
-
-			imguiEndFrame();
-		}
-#endif
-
-		return ret;
+		return _app->m_exitCode != -1;
 	}
 
 } // namespace rapp

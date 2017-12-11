@@ -24,10 +24,11 @@ Features
 * Input controllers (mouse, keyboard, gamepad, etc.) with input binding callbacks and debug visualizations
 * Ability to run code on main/message loop thread
 * Job scheduler with job stealing for fine grained parallelism
+* [ImGui](https://github.com/ocornut/imgui) integration
 * Custom commands
 * Window functions
 
-**rapp** is in an early stage and there will be more features and platform support coming, like: multiple applications, imgui/NanoVG integration, Quake like console...
+**rapp** is in an early stage and there will be more features and platform support coming, like: multiple applications, NanoVG integration, Quake like console...
 
 Here's a screenshot of a [bgfx](https://github.com/bkaradzic/bgfx) sample showing input debugging:  
 <img src="https://github.com/milostosic/rapp/blob/master/img/input_debug.png">

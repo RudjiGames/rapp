@@ -31,6 +31,7 @@ struct Command
 		Resume,
 		Update,
 		Draw,
+		DrawGUI,
 		Shutdown,
 		RunFunc,
 
@@ -95,6 +96,29 @@ int32_t rappThreadFunc(void* _userData)
 					RAPP_CMD_READ(App*, app);
 					app->draw();
 				}
+				break;
+
+			case Command::DrawGUI:
+				{
+					RAPP_CMD_READ(App*, app);
+					RTM_UNUSED(app);
+#if RAPP_WITH_BGFX
+					MouseState ms;
+					inputGetMouseState(ms);
+					imguiBeginFrame(ms.m_absolute[0], ms.m_absolute[1]
+						, (ms.m_buttons[MouseState::Button::Left  ] ? IMGUI_MBUT_LEFT   : 0)
+						| (ms.m_buttons[MouseState::Button::Right ] ? IMGUI_MBUT_RIGHT  : 0)
+						| (ms.m_buttons[MouseState::Button::Middle] ? IMGUI_MBUT_MIDDLE : 0)
+						,  ms.m_absolute[2]
+						, uint16_t(app->m_width)
+						, uint16_t(app->m_height)
+						);
+
+					app->drawGUI();
+				
+					imguiEndFrame();
+#endif
+			}
 				break;
 
 			case Command::Shutdown:
@@ -199,6 +223,12 @@ void appDraw(App* _app)
 	s_commChannel.write(_app);
 }
 
+void appDrawGUI(App* _app)
+{
+	s_commChannel.write(Command::DrawGUI);
+	s_commChannel.write(_app);
+}
+
 bool processEvents(App* _app);
 
 ///
@@ -214,6 +244,9 @@ int appRun(App* _app, int _argc, const char* const* _argv)
 			float time = fs.step();
 			appUpdate(_app, time);
 		}
+
+		if (_app->m_width && _app->m_height)
+			appDrawGUI(_app);
 
 		appDraw(_app);
 		s_commChannel.frame();

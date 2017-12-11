@@ -8,6 +8,11 @@
 
 #include <stdint.h>
 
+#if RAPP_WITH_BGFX
+#include <bgfx/bgfx.h>
+#include "../examples/common/imgui/imgui.h"
+#endif
+
 struct rtmLibInterface;
 
 #define RAPP_CLASS(_appClass)												\
@@ -245,6 +250,7 @@ namespace rapp {
 		virtual void	resume()			= 0;
 		virtual void	update(float _time)	= 0;
 		virtual void	draw()				= 0;
+		virtual void	drawGUI() {}
 		virtual void	shutDown()			= 0;
 	};
 

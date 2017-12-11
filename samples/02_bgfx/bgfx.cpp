@@ -4,7 +4,6 @@
 //--------------------------------------------------------------------------//
 
 #include <bgfx_pch.h>
-#include <bgfx/bgfx.h>
 
 struct bgfxApp : public rapp::App
 {
@@ -68,6 +67,16 @@ struct bgfxApp : public rapp::App
 		bgfx::frame();
 	}
 
+	void drawGUI()
+	{
+		ImGui::SetNextWindowPos(ImVec2(10.0f, 60.0f), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(300.0f, 80.0f), ImGuiCond_FirstUseEver);
+		ImGui::Begin("ImGui dialog");
+		ImGui::Separator();
+		ImGui::Button("Button", ImVec2(180.0f,23.0f));
+		ImGui::End();
+	}
+	
 	void shutDown()
 	{
 		rtm::Console::custom(255, 255, 0, 1, "Shutting down app\n", (uint32_t)rtm::Thread::getThreadID());
