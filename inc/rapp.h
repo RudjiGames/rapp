@@ -276,6 +276,12 @@ namespace rapp {
 	///
 	void appRunOnMainThread(ThreadFn _fn, void* _userData);
 
+	///
+	WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height);
+
+	///
+	void appGraphicsShutdown(WindowHandle _mainWindow);
+
 	// ------------------------------------------------
 	/// Debug output functions
 	// ------------------------------------------------

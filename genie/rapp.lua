@@ -39,20 +39,23 @@ function projectAdd_rapp()
 end
 
 function projectDependencies_rapp_bgfx()
-	return mergeTables( projectDependencies_rapp(), { "bx", "bimg", "bgfx", "imgui", "nanovg" } )
+	return mergeTables( projectDependencies_rapp(), { "bx", "bimg", "bgfx", "nanovg" } )
 end
 
 function projectAdd_rapp_bgfx()
 	local bgfxPath = find3rdPartyProject("bgfx")
 	local extraFiles = {
-		bgfxPath .. "examples/common/imgui/*.h",
-		bgfxPath .. "examples/common/imgui/*.cpp",
+		bgfxPath .. "examples/common/imgui/**.h",
+		bgfxPath .. "examples/common/imgui/**.cpp",
+		bgfxPath .. "examples/common/imgui/**.inl",
+		bgfxPath .. "3rdparty/ocornut-imgui/**.*",
 		bgfxPath .. "examples/common/nanovg/*.h",
 		bgfxPath .. "examples/common/nanovg/*.cpp",
 	}
 
 	local extraIncludes = {
-		bgfxPath .. "3rdparty/"
+		bgfxPath .. "3rdparty/",
+		bgfxPath .. "examples/"
 	}
 
 	addProject_lib("rapp", Lib.Runtime, false, nil, nil, 

@@ -9,6 +9,11 @@
 #include <rapp/src/cmd.h>
 #include <rapp/src/entry_p.h>
 
+#if RAPP_WITH_BGFX
+#include <bgfx/bgfx.h>
+#include <common/imgui/imgui.h>
+#endif
+
 #define RAPP_CMD_READ(_type, _name)		\
 	_type _name;						\
 	cc->read(_name)
@@ -218,6 +223,43 @@ int appRun(App* _app, int _argc, const char* const* _argv)
 
 	return 0;
 }
+
+WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
+{
+#if RAPP_WITH_BGFX
+	WindowHandle win = rapp::windowCreate(	_app, 0, 0, _width, _height,
+											RAPP_WINDOW_FLAG_ASPECT_RATIO	|
+											RAPP_WINDOW_FLAG_FRAME			|
+											RAPP_WINDOW_FLAG_RENDERING		|
+											RAPP_WINDOW_FLAG_MAIN_WINDOW,
+											_app->m_name);
+
+	bgfx::init();
+	bgfx::reset(_width, _height, BGFX_RESET_VSYNC);
+
+	// Enable debug text.
+	bgfx::setDebug(BGFX_DEBUG_TEXT);
+
+	// Set view 0 clear state.
+	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
+
+	imguiCreate();
+
+	return win;
+#else
+	return {0};
+#endif
+}
+
+void appGraphicsShutdown(WindowHandle _mainWindow)
+{
+#if RAPP_WITH_BGFX
+	imguiDestroy();
+	bgfx::shutdown();
+	rapp::windowDestroy(_mainWindow);
+#endif
+}
+
 
 int rapp_main(int _argc, const char* const* _argv)
 {

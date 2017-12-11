@@ -18,6 +18,7 @@
 
 #if RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
+#include <common/imgui/imgui.h>
 #endif
 
 namespace rapp
@@ -371,7 +372,24 @@ namespace rapp
 
 		s_debug = debug;
 
-		return _app->m_exitCode != -1;
+		bool ret = _app->m_exitCode != -1;
+
+		if (!ret)
+		{
+			MouseState ms;
+			inputGetMouseState(ms);
+			imguiBeginFrame(ms.m_absolute[0], ms.m_absolute[1]
+				, (ms.m_buttons[MouseState::Button::Left  ] ? IMGUI_MBUT_LEFT   : 0)
+				| (ms.m_buttons[MouseState::Button::Right ] ? IMGUI_MBUT_RIGHT  : 0)
+				| (ms.m_buttons[MouseState::Button::Middle] ? IMGUI_MBUT_MIDDLE : 0)
+				,  ms.m_absolute[2]
+				, uint16_t(_app->m_width)
+				, uint16_t(_app->m_height)
+				);
+
+			imguiEndFrame();
+		}
+		return ret;
 	}
 
 } // namespace rapp

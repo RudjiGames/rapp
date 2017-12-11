@@ -31,21 +31,7 @@ struct bgfxApp : public rapp::App
 		m_width		= width;
 		m_height	= height;
 
-		m_window = rapp::windowCreate(this, 0, 0, m_width, m_height,
-											RAPP_WINDOW_FLAG_ASPECT_RATIO	|
-											RAPP_WINDOW_FLAG_FRAME			|
-											RAPP_WINDOW_FLAG_RENDERING		|
-											RAPP_WINDOW_FLAG_MAIN_WINDOW,
-											m_name);
-
-		bgfx::init();
-		bgfx::reset(m_width, m_height, BGFX_RESET_VSYNC);
-
-		// Enable debug text.
-		bgfx::setDebug(BGFX_DEBUG_TEXT);
-
-		// Set view 0 clear state.
-		bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
+		m_window = rapp::appGraphicsInit(this, m_width, m_height);
 		return 0;
 	}
 
@@ -85,9 +71,7 @@ struct bgfxApp : public rapp::App
 	void shutDown()
 	{
 		rtm::Console::custom(255, 255, 0, 1, "Shutting down app\n", (uint32_t)rtm::Thread::getThreadID());
-		bgfx::shutdown();
-
-		rapp::windowDestroy(m_window);
+		rapp::appGraphicsShutdown(m_window);
 		rapp::inputRemoveBindings("bindings");
 	}
 
