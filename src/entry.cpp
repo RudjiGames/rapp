@@ -375,7 +375,7 @@ namespace rapp
 		bool ret = _app->m_exitCode != -1;
 
 #if RAPP_WITH_BGFX
-		if (ret)
+		if (ret && _app->m_width && _app->m_height)
 		{
 			MouseState ms;
 			inputGetMouseState(ms);
