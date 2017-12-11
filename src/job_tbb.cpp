@@ -7,7 +7,7 @@
 #include <rapp/src/rapp_config.h>
 #include <rapp/src/job.h>
 
-#if RAPP_JOBS_TBB
+#ifdef RAPP_JOBS_TBB
 #include <tbb/tbb.h>
 
 namespace rapp {
