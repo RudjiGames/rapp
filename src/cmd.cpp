@@ -7,6 +7,7 @@
 
 #include <rapp/inc/rapp.h>
 #include <rapp/src/cmd.h>
+#include <rapp/src/console.h>
 #include <rapp/src/entry_p.h>
 
 #include <ctype.h>  // isspace
@@ -156,86 +157,50 @@ namespace rapp {
 		return curr;
 	}
 
-struct CmdContext
+void CmdContext::add(const char* _name, ConsoleFn _fn, void* _userData, const char* _description)
 {
-	CmdContext()
-	{
-	}
+	uint32_t cmd = rtm::hashMurmur3(_name, (uint32_t)strlen(_name) );
+	RTM_ASSERT(m_lookup.end() == m_lookup.find(cmd), "Command \"%s\" already exist!", _name);
+	Func fn = { _fn, _userData, _name, _description };
+	m_lookup.insert(std::make_pair(cmd, fn) );
+}
 
-	~CmdContext()
-	{
-	}
+void CmdContext::remove(const char* _name)
+{
+	uint32_t cmd = rtm::hashMurmur3(_name, (uint32_t)strlen(_name) );
+	CmdLookup::iterator it = m_lookup.find(cmd);
+	RTM_ASSERT(m_lookup.end() != it, "Command \"%s\" does not exist!", _name);
+	m_lookup.erase(it);
+}
 
-	void add(const char* _name, ConsoleFn _fn, void* _userData)
+bool CmdContext::exec(const char* _cmd, int* _errorCode)
+{
+	for (const char* next = _cmd; '\0' != *next; _cmd = next)
 	{
-		uint32_t cmd = rtm::hashMurmur3(_name, (uint32_t)strlen(_name) );
-		RTM_ASSERT(m_lookup.end() == m_lookup.find(cmd), "Command \"%s\" already exist!", _name);
-		Func fn = { _fn, _userData };
-		m_lookup.insert(std::make_pair(cmd, fn) );
-	}
-
-	void remove(const char* _name)
-	{
-		uint32_t cmd = rtm::hashMurmur3(_name, (uint32_t)strlen(_name) );
-		CmdLookup::iterator it = m_lookup.find(cmd);
-		RTM_ASSERT(m_lookup.end() != it, "Command \"%s\" does not exist!", _name);
-		m_lookup.erase(it);
-	}
-
-	void exec(const char* _cmd)
-	{
-		for (const char* next = _cmd; '\0' != *next; _cmd = next)
+		char commandLine[1024];
+		uint32_t size = sizeof(commandLine);
+		int argc;
+		char* argv[64];
+		next = tokenizeCommandLine(_cmd, commandLine, size, argc, argv, RTM_NUM_ELEMENTS(argv), '\n');
+		if (argc > 0)
 		{
-			char commandLine[1024];
-			uint32_t size = sizeof(commandLine);
-			int argc;
-			char* argv[64];
-			next = tokenizeCommandLine(_cmd, commandLine, size, argc, argv, RTM_NUM_ELEMENTS(argv), '\n');
-			if (argc > 0)
+			int err = -1;
+			uint32_t cmd = rtm::hashMurmur3(argv[0], (uint32_t)strlen(argv[0]) );
+			CmdLookup::iterator it = m_lookup.find(cmd);
+			if (it != m_lookup.end() )
 			{
-				int err = -1;
-				uint32_t cmd = rtm::hashMurmur3(argv[0], (uint32_t)strlen(argv[0]) );
-				CmdLookup::iterator it = m_lookup.find(cmd);
-				if (it != m_lookup.end() )
-				{
-					Func& fn = it->second;
-					err = fn.m_fn(fn.m_userData, argc, argv);
-				}
-
-				switch (err)
-				{
-				case 0:
-					break;
-
-				case -1:
-					{
-						rtm_string tmp(_cmd, next-_cmd - (*next == '\0' ? 0 : 1) );
-						RAPP_DBG("Command '%s' doesn't exist.", tmp.c_str() );
-					}
-					break;
-
-				default:
-					{
-						rtm_string tmp(_cmd, next-_cmd - (*next == '\0' ? 0 : 1) );
-						RAPP_DBG("Failed '%s' err: %d.", tmp.c_str(), err);
-					}
-					break;
-				}
+				Func& fn = it->second;
+				err = fn.m_fn(fn.m_userData, argc, argv);
+				if (_errorCode)
+					*_errorCode = err;
+				return true;
 			}
 		}
 	}
+	return false;
+}
 
-	struct Func
-	{
-		ConsoleFn	m_fn;
-		void*		m_userData;
-	};
-
-	typedef rtm_unordered_map<uint32_t, Func> CmdLookup;
-	CmdLookup m_lookup;
-};
-
-static CmdContext* s_cmdContext;
+static CmdContext* s_cmdContext = 0;
 
 void cmdInit()
 {
@@ -245,11 +210,17 @@ void cmdInit()
 void cmdShutdown()
 {
 	rtm_delete<CmdContext>(s_cmdContext);
+	s_cmdContext = 0;
 }
 
-void cmdAdd(const char* _name, ConsoleFn _fn, void* _userData)
+CmdContext* cmdGetContext()
 {
-	s_cmdContext->add(_name, _fn, _userData);
+	return s_cmdContext;
+}
+
+void cmdAdd(const char* _name, ConsoleFn _fn, void* _userData, const char* _description)
+{
+	s_cmdContext->add(_name, _fn, _userData, _description);
 }
 
 void cmdRemove(const char* _name)
@@ -257,9 +228,24 @@ void cmdRemove(const char* _name)
 	s_cmdContext->remove(_name);
 }
 
-void cmdExec(const char* _cmd)
+bool cmdExec(const char* _cmd, int* _errorCode)
 {
-	s_cmdContext->exec(_cmd);
+	return s_cmdContext->exec(_cmd, _errorCode);
+}
+
+void cmdConsoleToggle(App* _app)
+{
+	RTM_UNUSED(_app);
+#if RAPP_WITH_BGFX
+	_app->m_console->toggleVisibility();
+#endif // RAPP_WITH_BGFX
+}
+
+float g_consoleToggleTime = 0.23f;
+void cmdConsoleSetToggleTime(float _time)
+{
+	RTM_ASSERT(_time < 3.0f, "Really?");
+	g_consoleToggleTime = _time;
 }
 
 } // namespace rapp

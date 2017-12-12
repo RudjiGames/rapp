@@ -7,6 +7,7 @@
 
 #include <rapp/src/rapp_timer.h>
 #include <rapp/src/cmd.h>
+#include <rapp/src/console.h>
 #include <rapp/src/entry_p.h>
 
 #if RAPP_WITH_BGFX
@@ -115,10 +116,10 @@ int32_t rappThreadFunc(void* _userData)
 						);
 
 					app->drawGUI();
-				
+					app->m_console->draw(app);
 					imguiEndFrame();
 #endif
-			}
+				}
 				break;
 
 			case Command::Shutdown:
@@ -161,6 +162,8 @@ App::App(const char* _name, const char* _description)
 	, m_exitCode(0)
 	, m_width(0)
 	, m_height(0)
+	, m_console(0)
+
 {
 	appRegister(this);
 }
@@ -280,17 +283,22 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 
 	imguiCreate();
 
+	_app->m_console = new Console();
+
 	return win;
 #else
 	return {0};
 #endif
 }
 
-void appGraphicsShutdown(WindowHandle _mainWindow)
+void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 {
-	RTM_UNUSED(_mainWindow);
+	RTM_UNUSED_2(_app, _mainWindow);
 
 #if RAPP_WITH_BGFX
+
+	delete _app->m_console;
+
 	imguiDestroy();
 	bgfx::shutdown();
 	rapp::windowDestroy(_mainWindow);

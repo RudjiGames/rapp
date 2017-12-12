@@ -65,7 +65,7 @@ function projectAdd_rapp_bgfx()
 end
 
 
-function projectDependencyConfig_02_bgfx(_dependency)
+function projectDependencyConfig_03_bgfx(_dependency)
 	if _dependency == "rapp" then return {"rapp", "bgfx"} end
 	return "rapp"
 end

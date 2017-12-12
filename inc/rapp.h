@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
 #include "../examples/common/imgui/imgui.h"
 #endif
@@ -232,6 +232,8 @@ namespace rapp {
 
 	#define RAPP_INPUT_BINDING_END		{ 0 }
 
+	struct Console;
+
 	struct App
 	{
 		const char*	m_name;
@@ -239,6 +241,7 @@ namespace rapp {
 		int32_t		m_exitCode;
 		uint32_t	m_width;
 		uint32_t	m_height;
+		Console*	m_console;
 
 		App(const char* _name, const char* _description = 0);
 		virtual ~App() {}
@@ -286,7 +289,7 @@ namespace rapp {
 	WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height);
 
 	///
-	void appGraphicsShutdown(WindowHandle _mainWindow);
+	void appGraphicsShutdown(App* _app, WindowHandle _mainWindow);
 
 	// ------------------------------------------------
 	/// Debug output functions
@@ -303,13 +306,19 @@ namespace rapp {
 	// ------------------------------------------------
 
 	///
-	void cmdAdd(const char* _name, ConsoleFn _fn, void* _userData = 0);
+	void cmdAdd(const char* _name, ConsoleFn _fn, void* _userData = 0, const char* _description = "");
 
 	///
 	void cmdRemove(const char* _name);
 
 	///
-	void cmdExec(const char* _cmd);
+	bool cmdExec(const char* _cmd, int* _errorCode);
+
+	///
+	void cmdConsoleToggle(App* _app);
+
+	///
+	void cmdConsoleSetToggleTime(float _time);
 
 	// ------------------------------------------------
 	/// Window functions

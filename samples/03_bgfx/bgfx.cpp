@@ -19,11 +19,13 @@ struct bgfxApp : public rapp::App
 		{
 			{ NULL, "exit", 1, { rapp::KeyboardState::Key::KeyQ,   rapp::KeyboardState::Modifier::LCtrl  }},
 			{ NULL, "exit", 1, { rapp::KeyboardState::Key::KeyQ,   rapp::KeyboardState::Modifier::RCtrl  }},
+			{ NULL, "hide", 1, { rapp::KeyboardState::Key::Tilde,  rapp::KeyboardState::Modifier::NoMods }},
 			RAPP_INPUT_BINDING_END
 		};
 
 		rapp::inputAddBindings("bindings", bindings);
 		rapp::cmdAdd("exit", cmdExit, this);
+		rapp::cmdAdd("hide", cmdHideConsole, this);
 
 		uint32_t width, height;
 		rapp::windowGetDefaultSize(&width, &height);
@@ -69,7 +71,7 @@ struct bgfxApp : public rapp::App
 
 	void drawGUI()
 	{
-		ImGui::SetNextWindowPos(ImVec2(10.0f, 60.0f), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(10.0f, 666.0f), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(300.0f, 80.0f), ImGuiCond_FirstUseEver);
 		ImGui::Begin("ImGui dialog");
 		ImGui::Separator();
@@ -80,7 +82,7 @@ struct bgfxApp : public rapp::App
 	void shutDown()
 	{
 		rtm::Console::custom(255, 255, 0, 1, "Shutting down app\n", (uint32_t)rtm::Thread::getThreadID());
-		rapp::appGraphicsShutdown(m_window);
+		rapp::appGraphicsShutdown(this, m_window);
 		rapp::inputRemoveBindings("bindings");
 	}
 
@@ -94,6 +96,14 @@ struct bgfxApp : public rapp::App
 		RTM_UNUSED_2(_argv, _argc);
 		App* app = (App*)_userData;
 		app->quit();
+		return 0;
+	}
+
+	static int cmdHideConsole(void* _userData, int _argc, char const* const* _argv)
+	{
+		RTM_UNUSED_2(_argv, _argc);
+		App* app = (App*)_userData;
+		rapp::cmdConsoleToggle(app);
 		return 0;
 	}
 };

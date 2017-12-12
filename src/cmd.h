@@ -8,11 +8,32 @@
 
 namespace rapp {
 
+	struct CmdContext
+	{
+		void add(const char* _name, ConsoleFn _fn, void* _userData, const char* _description);
+		void remove(const char* _name);
+		bool exec(const char* _cmd, int* _errorCode);
+
+		struct Func
+		{
+			ConsoleFn	m_fn;
+			void*		m_userData;
+			const char*	m_name;
+			const char*	m_description;
+		};
+
+		typedef rtm_unordered_map<uint32_t, Func> CmdLookup;
+		CmdLookup m_lookup;
+	};
+
 	///
 	void cmdInit();
 
 	///
 	void cmdShutdown();
+
+	///
+	CmdContext* cmdGetContext();
 
 } // namespace rtm
 

@@ -13,6 +13,7 @@
 #include <rbase/inc/atomic.h>
 #include <rbase/inc/itc.h>
 #include <rbase/inc/console.h>
+#include <rbase/inc/cpu.h>
 #include <rbase/inc/containers.h>
 #include <rbase/inc/datastore.h>
 #include <rbase/inc/handlepool.h>

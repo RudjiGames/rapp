@@ -16,11 +16,6 @@
 #include <rapp/src/input.h>
 #include <rapp/src/job.h>
 
-#if RAPP_WITH_BGFX
-#include <bgfx/bgfx.h>
-#include <common/imgui/imgui.h>
-#endif
-
 namespace rapp
 {
 	int rapp_main(int _argc, const char* const*);
@@ -244,6 +239,24 @@ namespace rapp
 #if RAPP_WITH_BGFX
 		cmdAdd("graphics",  cmdGraphics);
 		rapp::inputAddBindings("graphics", s_bindingsGraphics);
+
+		ImGui::GetIO().KeyMap[ImGuiKey_Tab]			= KeyboardState::Key::Tab;
+		ImGui::GetIO().KeyMap[ImGuiKey_LeftArrow]	= KeyboardState::Key::Left;
+		ImGui::GetIO().KeyMap[ImGuiKey_RightArrow]	= KeyboardState::Key::Right;
+		ImGui::GetIO().KeyMap[ImGuiKey_UpArrow]		= KeyboardState::Key::Up;
+		ImGui::GetIO().KeyMap[ImGuiKey_DownArrow]	= KeyboardState::Key::Down;
+		ImGui::GetIO().KeyMap[ImGuiKey_Home]		= KeyboardState::Key::Home;
+		ImGui::GetIO().KeyMap[ImGuiKey_End]			= KeyboardState::Key::End;
+		ImGui::GetIO().KeyMap[ImGuiKey_Delete]		= KeyboardState::Key::Delete;
+		ImGui::GetIO().KeyMap[ImGuiKey_Backspace]	= KeyboardState::Key::Backspace;
+		ImGui::GetIO().KeyMap[ImGuiKey_Enter]		= KeyboardState::Key::Return;
+		ImGui::GetIO().KeyMap[ImGuiKey_Escape]		= KeyboardState::Key::Esc;
+		ImGui::GetIO().KeyMap[ImGuiKey_A]			= KeyboardState::Key::KeyA;
+		ImGui::GetIO().KeyMap[ImGuiKey_C]			= KeyboardState::Key::KeyC;
+		ImGui::GetIO().KeyMap[ImGuiKey_V]			= KeyboardState::Key::KeyV;
+		ImGui::GetIO().KeyMap[ImGuiKey_X]			= KeyboardState::Key::KeyX;
+		ImGui::GetIO().KeyMap[ImGuiKey_Y]			= KeyboardState::Key::KeyY;
+		ImGui::GetIO().KeyMap[ImGuiKey_Z]			= KeyboardState::Key::KeyZ;
 #endif
 		rapp::jobInit();
 
@@ -291,6 +304,11 @@ namespace rapp
 					{
 						const CharEvent* chev = static_cast<const CharEvent*>(ev);
 						inputChar(chev->m_len, chev->m_char);
+#if RAPP_WITH_BGFX
+						if (ImGui::GetIO().WantCaptureKeyboard)
+						ImGui::GetIO().AddInputCharactersUTF8((const char*)chev->m_char);
+#endif // RAPP_WITH_BGFX
+
 					}
 					break;
 
@@ -333,6 +351,9 @@ namespace rapp
 						const KeyEvent* key = static_cast<const KeyEvent*>(ev);
 						handle = key->m_handle;
 						inputSetKeyState(key->m_key, key->m_modifiers, key->m_down);
+#if RAPP_WITH_BGFX
+						ImGui::GetIO().KeysDown[key->m_key] = key->m_down;
+#endif // RAPP_WITH_BGFX
 					}
 					break;
 

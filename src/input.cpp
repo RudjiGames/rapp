@@ -313,7 +313,7 @@ struct Input
 	{
 		if (NULL == _binding->m_fn)
 		{
-			cmdExec( (const char*)_binding->m_userData);
+			cmdExec((const char*)_binding->m_userData, 0);
 		}
 		else
 		{
