@@ -233,6 +233,38 @@ bool cmdExec(const char* _cmd, int* _errorCode)
 	return s_cmdContext->exec(_cmd, _errorCode);
 }
 
+void cmdConsoleLog(App* _app, const char* _fmt, ...)
+{
+	RTM_UNUSED_2(_app, _fmt);
+
+#if RAPP_WITH_BGFX
+    char buf[2048];
+    va_list args;
+    va_start(args, _fmt);
+    vsnprintf(buf, RTM_NUM_ELEMENTS(buf), _fmt, args);
+    buf[RTM_NUM_ELEMENTS(buf)-1] = 0;
+    va_end(args);
+
+	_app->m_console->addLog(buf);
+#endif // RAPP_WITH_BGFX
+}
+
+void cmdConsoleLogRGB(uint8_t _r, uint8_t _g, uint8_t _b, App* _app, const char* _fmt, ...)
+{
+	RTM_UNUSED_5(_r, _g, _b, _app, _fmt);
+
+#if RAPP_WITH_BGFX
+    char buf[2048];
+    va_list args;
+    va_start(args, _fmt);
+    vsnprintf(buf, RTM_NUM_ELEMENTS(buf), _fmt, args);
+    buf[RTM_NUM_ELEMENTS(buf)-1] = 0;
+    va_end(args);
+
+	_app->m_console->addLog(_r, _g, _b, buf);
+#endif // RAPP_WITH_BGFX
+}
+
 void cmdConsoleToggle(App* _app)
 {
 	RTM_UNUSED(_app);

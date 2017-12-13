@@ -8,27 +8,7 @@
 
 #include <stdint.h>
 
-#ifdef RAPP_WITH_BGFX
-#include <bgfx/bgfx.h>
-#include "../examples/common/imgui/imgui.h"
-#endif
-
 struct rtmLibInterface;
-
-#define RAPP_CLASS(_appClass)												\
-	_appClass(const char* _name, const char* _description = 0)				\
-		: App(_name, _description) {}
-
-#define RAPP_INSTANCE(_appClass)											\
-	s_ ## _appClass ## _app
-
-#define RAPP_REGISTER(_appClass, _name, _description)						\
-	_appClass RAPP_INSTANCE(_appClass) (_name, _description);
-
-#define RAPP_DBG_STRINGIZE(_x) RAPP_DBG_STRINGIZE_(_x)
-#define RAPP_DBG_STRINGIZE_(_x) #_x
-#define RAPP_DBG_FILE_LINE_LITERAL "" __FILE__ "(" RAPP_DBG_STRINGIZE(__LINE__) "): "
-#define RAPP_DBG(_format, ...) rapp::dbgPrintf(RAPP_DBG_FILE_LINE_LITERAL "" _format "\n", ##__VA_ARGS__)
 
 namespace rapp {
 
@@ -315,6 +295,12 @@ namespace rapp {
 	bool cmdExec(const char* _cmd, int* _errorCode);
 
 	///
+	void cmdConsoleLog(App* _app, const char* _fmt, ...);
+
+	///
+	void cmdConsoleLogRGB(uint8_t _r, uint8_t _g, uint8_t _b, App* _app, const char* _fmt, ...);
+
+	///
 	void cmdConsoleToggle(App* _app);
 
 	///
@@ -414,5 +400,25 @@ namespace rapp {
 	void inputDgbTouch();
 
 } // namespace rapp
+
+#ifdef RAPP_WITH_BGFX
+#include <bgfx/bgfx.h>
+#include "../examples/common/imgui/imgui.h"
+#endif
+
+#define RAPP_CLASS(_appClass)												\
+	_appClass(const char* _name, const char* _description = 0)				\
+		: App(_name, _description) {}
+
+#define RAPP_INSTANCE(_appClass)											\
+	s_ ## _appClass ## _app
+
+#define RAPP_REGISTER(_appClass, _name, _description)						\
+	_appClass RAPP_INSTANCE(_appClass) (_name, _description);
+
+#define RAPP_DBG_STRINGIZE(_x) RAPP_DBG_STRINGIZE_(_x)
+#define RAPP_DBG_STRINGIZE_(_x) #_x
+#define RAPP_DBG_FILE_LINE_LITERAL "" __FILE__ "(" RAPP_DBG_STRINGIZE(__LINE__) "): "
+#define RAPP_DBG(_format, ...) rapp::dbgPrintf(RAPP_DBG_FILE_LINE_LITERAL "" _format "\n", ##__VA_ARGS__)
 
 #endif // RTM_RAPP_H

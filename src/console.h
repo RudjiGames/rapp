@@ -11,12 +11,16 @@ namespace rapp {
 
 struct Console
 {
-	char					m_inputBuf[256];
-	char**					m_items;
-	uint32_t				m_itemsStart;
-	uint32_t				m_itemsEnd;
 	static const uint32_t	s_bufferHeight	= (1 << 12);
 	static const uint32_t	s_bufferMask	= s_bufferHeight - 1;
+
+	struct Color { uint8_t r, g, b; };
+
+	char					m_inputBuf[256];
+	char**					m_items;
+	Color*					m_itemColors;
+	uint32_t				m_itemsStart;
+	uint32_t				m_itemsEnd;
 
 	bool					m_scrollToBottom;
 	ImVector<char*>			m_history;
@@ -29,7 +33,8 @@ struct Console
 	~Console();
 
 	void clearLog();
-	void addLog(const char* fmt, ...) IM_FMTARGS(2);
+	void addLog(const char* fmt, ...);
+	void addLog(uint8_t _r, uint8_t _g, uint8_t _b, const char* fmt, ...);
 	void draw(App* _app);
 	void execCommand(const char* command_line);
     int  textEditCallback(ImGuiTextEditCallbackData* data);

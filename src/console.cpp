@@ -28,9 +28,12 @@ Console::Console()
 	m_visible			= 1.0f;
 
 	m_items				= (char**)rtm_alloc(sizeof(char*) * s_bufferHeight);
+	m_itemColors		= (Color*)rtm_alloc(sizeof(Color) * s_bufferHeight);
 	m_itemsStart		= 0;
 	m_itemsEnd			= 0;
-	memset(m_items, 0, sizeof(char*) * s_bufferHeight);
+
+	memset(m_items,			0, sizeof(char*) * s_bufferHeight);
+	memset(m_itemColors, 0xff, sizeof(Color) * s_bufferHeight);
 
     memset(m_inputBuf, 0, sizeof(m_inputBuf));
     m_historyPos = -1;
@@ -44,6 +47,7 @@ Console::~Console()
     for (int i = 0; i < m_history.Size; i++)
         rtm_free(m_history[i]);
 	rtm_free(m_items);
+	rtm_free(m_itemColors);
 }
 
 void Console::clearLog()
@@ -66,8 +70,20 @@ void Console::addLog(const char* fmt, ...)
     char buf[2048];
     va_list args;
     va_start(args, fmt);
-    vsnprintf(buf, IM_ARRAYSIZE(buf), fmt, args);
-    buf[IM_ARRAYSIZE(buf)-1] = 0;
+    vsnprintf(buf, RTM_NUM_ELEMENTS(buf), fmt, args);
+    buf[RTM_NUM_ELEMENTS(buf)-1] = 0;
+    va_end(args);
+
+	addLog(255, 255, 255, buf);
+}
+
+void Console::addLog(uint8_t _r, uint8_t _g, uint8_t _b, const char* fmt, ...)
+{
+    char buf[2048];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, RTM_NUM_ELEMENTS(buf), fmt, args);
+    buf[RTM_NUM_ELEMENTS(buf)-1] = 0;
     va_end(args);
 
 	bool isFull = ((m_itemsEnd - m_itemsStart) & s_bufferMask) == s_bufferMask;
@@ -79,6 +95,9 @@ void Console::addLog(const char* fmt, ...)
 		rtm_free(m_items[m_itemsEnd]);
 
 	m_items[m_itemsEnd] = strdup(buf);
+	m_itemColors[m_itemsEnd].r = _r;
+	m_itemColors[m_itemsEnd].g = _g;
+	m_itemColors[m_itemsEnd].b = _b;
 	m_itemsEnd = (m_itemsEnd + 1) & s_bufferMask;
 
     m_scrollToBottom = true;
@@ -141,9 +160,10 @@ void Console::draw(App* _app)
 	{
 		uint32_t index = (m_itemsStart + i) & s_bufferMask;
 		const char* item = m_items[index];
-		ImVec4 col = ImVec4(1.0f,1.0f,1.0f,1.0f); // A better implementation may store a type per-item. For the sample let's just parse the text.
-		if (rtm::stristr(item, "[ERROR]")) col = ImColor(1.0f,0.4f,0.4f,1.0f);
-		else if (rtm::strncmp(item, "$> ", 2) == 0) col = ImColor(0.58f,1.0f,0.58f,1.0f);
+		ImVec4 col = ImColor(	float(m_itemColors[index].r)/255.0f,
+								float(m_itemColors[index].g)/255.0f,
+								float(m_itemColors[index].b)/255.0f,
+								1.0f);
 		ImGui::PushStyleColor(ImGuiCol_Text, col);
 		ImGui::TextUnformatted(item);
 		ImGui::PopStyleColor();
@@ -162,7 +182,7 @@ void Console::draw(App* _app)
 
     // Command-line
 	if (m_visible == 0.0f || m_visible == 1.0f)
-    if (ImGui::InputText("<$", m_inputBuf, IM_ARRAYSIZE(m_inputBuf), ImGuiInputTextFlags_EnterReturnsTrue|ImGuiInputTextFlags_CallbackCompletion|ImGuiInputTextFlags_CallbackHistory, &textEditCallbackStub, (void*)this))
+    if (ImGui::InputText("<$", m_inputBuf, RTM_NUM_ELEMENTS(m_inputBuf), ImGuiInputTextFlags_EnterReturnsTrue|ImGuiInputTextFlags_CallbackCompletion|ImGuiInputTextFlags_CallbackHistory, &textEditCallbackStub, (void*)this))
     {
         char* input_end = m_inputBuf+strlen(m_inputBuf);
         while (input_end > m_inputBuf && input_end[-1] == ' ') { input_end--; } *input_end = 0;
@@ -180,7 +200,7 @@ void Console::draw(App* _app)
 
 void Console::execCommand(const char* command_line)
 {
-    addLog("$> %s\n", command_line);
+    addLog(147, 255, 147, "$> %s\n", command_line);
 
     // Insert into history. First find match and delete it so it can be pushed to the back. This isn't trying to be smart or optimal.
     m_historyPos = -1;
