@@ -12,7 +12,12 @@ namespace rapp {
 struct Console
 {
 	char					m_inputBuf[256];
-	ImVector<char*>			m_items;
+	char**					m_items;
+	uint32_t				m_itemsStart;
+	uint32_t				m_itemsEnd;
+	static const uint32_t	s_bufferHeight	= (1 << 12);
+	static const uint32_t	s_bufferMask	= s_bufferHeight - 1;
+
 	bool					m_scrollToBottom;
 	ImVector<char*>			m_history;
 	int						m_historyPos;    // -1: new line, 0..History.Size-1 browsing history.

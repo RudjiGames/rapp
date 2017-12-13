@@ -244,7 +244,7 @@ void cmdConsoleToggle(App* _app)
 float g_consoleToggleTime = 0.23f;
 void cmdConsoleSetToggleTime(float _time)
 {
-	RTM_ASSERT(_time < 3.0f, "Really?");
+	RTM_ASSERT(_time > 0.0f && _time < 3.0f, "Really?");
 	g_consoleToggleTime = _time;
 }
 
