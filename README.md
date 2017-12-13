@@ -31,7 +31,7 @@ Features
 
 **rapp** is in an early stage and there will be more features and platform support coming, like: multiple applications, NanoVG integration...
 
-Here's a screenshot of a [bgfx](https://github.com/bkaradzic/bgfx) sample showing input debugging:  
+Here's a screenshot of a [bgfx](https://github.com/bkaradzic/bgfx) sample showing input debugging, [ImGui](https://github.com/ocornut/imgui) dialog and Quake like console:  
 <img src="https://github.com/milostosic/rapp/blob/master/img/input_debug.png">
 
 Platform support
