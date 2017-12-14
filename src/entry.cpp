@@ -307,6 +307,14 @@ namespace rapp
 		const Event* ev;
 		do
 		{
+#if RAPP_WITH_BGFX
+			bool keysBindings =
+#endif // RAPP_WITH_BGFX
+			inputProcess(_app);
+
+			inputResetMouseMovement();
+			inputResetGamepadAxisMovement();
+
 			struct SE { const Event* m_ev; SE() : m_ev(poll() ) {} ~SE() { if (NULL != m_ev) { release(m_ev); } } } scopeEvent;
 			ev = scopeEvent.m_ev;
 
@@ -326,7 +334,7 @@ namespace rapp
 						const CharEvent* chev = static_cast<const CharEvent*>(ev);
 						inputChar(chev->m_len, chev->m_char);
 #if RAPP_WITH_BGFX
-						if (ImGui::GetIO().WantCaptureKeyboard)
+						if (ImGui::GetIO().WantCaptureKeyboard && (keysBindings == false))
 						ImGui::GetIO().AddInputCharactersUTF8((const char*)chev->m_char);
 #endif // RAPP_WITH_BGFX
 
@@ -395,11 +403,6 @@ namespace rapp
 					break;
 				}
 			}
-
-			inputProcess(_app);
-
-			inputResetMouseMovement();
-			inputResetGamepadAxisMovement();
 
 		} while (NULL != ev);
 

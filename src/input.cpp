@@ -321,8 +321,9 @@ struct Input
 		}
 	}
 
-	void process(App* _app, const InputBinding* _bindings)
+	bool process(App* _app, const InputBinding* _bindings)
 	{
+		bool keyBindings = false;
 		for (const InputBinding* binding = _bindings; binding->m_type != InputBinding::Count; ++binding)
 		{
 			switch (binding->m_type)
@@ -341,6 +342,7 @@ struct Input
 							{
 								execBinding(_app, binding);
 								m_keyboard.m_once[binding->m_bindingKeyboard.m_key] = true;
+								keyBindings = true;
 							}
 						}
 						else
@@ -354,6 +356,7 @@ struct Input
 						&&  modifiers == binding->m_bindingKeyboard.m_modifiers)
 						{
 							execBinding(_app, binding);
+							keyBindings = true;
 						}
 					}
 				}
@@ -480,14 +483,17 @@ struct Input
 			};
 
 		}
+		return keyBindings;
 	}
 
-	void process(App* _app)
+	bool process(App* _app)
 	{
+		bool keyEvents = false;
 		for (InputBindingMap::const_iterator it = m_inputBindingsMap.begin(); it != m_inputBindingsMap.end(); ++it)
 		{
-			process(_app, it->second);
+			keyEvents = keyEvents || process(_app, it->second);
 		}
+		return keyEvents;
 	}
 
 	void reset()
@@ -531,9 +537,9 @@ void inputRemoveBindings(const char* _name)
 	getInput().removeBindings(_name);
 }
 
-void inputProcess(App* _app)
+bool inputProcess(App* _app)
 {
-	getInput().process(_app);
+	return getInput().process(_app);
 }
 
 void inputSetMouseResolution(uint16_t _width, uint16_t _height)
