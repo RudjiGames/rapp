@@ -163,6 +163,7 @@ void CmdContext::add(const char* _name, ConsoleFn _fn, void* _userData, const ch
 	RTM_ASSERT(m_lookup.end() == m_lookup.find(cmd), "Command \"%s\" already exist!", _name);
 	Func fn = { _fn, _userData, _name, _description };
 	m_lookup.insert(std::make_pair(cmd, fn) );
+	updateMaxLen();
 }
 
 void CmdContext::remove(const char* _name)
@@ -171,9 +172,21 @@ void CmdContext::remove(const char* _name)
 	CmdLookup::iterator it = m_lookup.find(cmd);
 	RTM_ASSERT(m_lookup.end() != it, "Command \"%s\" does not exist!", _name);
 	m_lookup.erase(it);
+	updateMaxLen();
 }
 
-bool CmdContext::exec(const char* _cmd, int* _errorCode)
+void CmdContext::updateMaxLen()
+{
+	size_t len = 0;
+	for (auto& cmd : m_lookup)
+	{
+		size_t clen = strlen(cmd.second.m_name);
+		if (clen > len) len = clen;
+	}
+	m_maxCommandLength = (uint32_t)len;
+}
+
+bool CmdContext::exec(App* _app, const char* _cmd, int* _errorCode)
 {
 	for (const char* next = _cmd; '\0' != *next; _cmd = next)
 	{
@@ -190,7 +203,7 @@ bool CmdContext::exec(const char* _cmd, int* _errorCode)
 			if (it != m_lookup.end() )
 			{
 				Func& fn = it->second;
-				err = fn.m_fn(fn.m_userData, argc, argv);
+				err = fn.m_fn(_app, fn.m_userData, argc, argv);
 				if (_errorCode)
 					*_errorCode = err;
 				return true;
@@ -228,9 +241,9 @@ void cmdRemove(const char* _name)
 	s_cmdContext->remove(_name);
 }
 
-bool cmdExec(const char* _cmd, int* _errorCode)
+bool cmdExec(App* _app, const char* _cmd, int* _errorCode)
 {
-	return s_cmdContext->exec(_cmd, _errorCode);
+	return s_cmdContext->exec(_app, _cmd, _errorCode);
 }
 
 void cmdConsoleLog(App* _app, const char* _fmt, ...)

@@ -37,8 +37,8 @@ struct JobSystemApp : public rapp::App
 		};
 
 		rapp::inputAddBindings("bindings", bindings);
-		rapp::cmdAdd("exit",         cmdExit, this);
-		rapp::cmdAdd("switch", cmdSwitchMode, this);
+		rapp::cmdAdd("exit",         cmdExit);
+		rapp::cmdAdd("switch", cmdSwitchMode);
 
 		m_runMode = Mode::Parallel;
 		return 0;
@@ -131,18 +131,17 @@ struct JobSystemApp : public rapp::App
 		}
 	}
 
-	static int cmdExit(void* _userData, int _argc, char const* const* _argv)
+	static int cmdExit(App* _app, void* _userData, int _argc, char const* const* _argv)
 	{
-		RTM_UNUSED_2(_argv, _argc);
-		App* app = (App*)_userData;
-		app->quit();
+		RTM_UNUSED_3(_userData, _argv, _argc);
+		_app->quit();
 		return 0;
 	}
 
-	static int cmdSwitchMode(void* _userData, int _argc, char const* const* _argv)
+	static int cmdSwitchMode(App* _app, void* _userData, int _argc, char const* const* _argv)
 	{
-		RTM_UNUSED_2(_argv, _argc);
-		JobSystemApp* app = (JobSystemApp*)_userData;
+		RTM_UNUSED_3(_userData, _argv, _argc);
+		JobSystemApp* app = (JobSystemApp*)_app;
 		app->m_runMode = (app->m_runMode == Mode::Parallel) ? Mode::Serial : Mode::Parallel;
 		return 0;
 	}

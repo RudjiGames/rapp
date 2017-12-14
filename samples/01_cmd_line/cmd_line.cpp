@@ -21,7 +21,7 @@ struct CmdLineApp : public rapp::App
 		};
 
 		rapp::inputAddBindings("bindings", bindings);
-		rapp::cmdAdd("exit", cmdExit, this);
+		rapp::cmdAdd("exit", cmdExit);
 
 		return 0;
 	}
@@ -50,11 +50,10 @@ struct CmdLineApp : public rapp::App
 		rtm::Console::custom(0, 255, 0, 1, "Printing from main thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
 	}
 
-	static int cmdExit(void* _userData, int _argc, char const* const* _argv)
+	static int cmdExit(App* _app, void* _userData, int _argc, char const* const* _argv)
 	{
-		RTM_UNUSED_2(_argv, _argc);
-		App* app = (App*)_userData;
-		app->quit();
+		RTM_UNUSED_3(_userData, _argv, _argc);
+		_app->quit();
 		return 0;
 	}
 };

@@ -10,9 +10,14 @@ namespace rapp {
 
 	struct CmdContext
 	{
+		CmdContext()
+			: m_maxCommandLength(0)
+		{}
+
 		void add(const char* _name, ConsoleFn _fn, void* _userData, const char* _description);
 		void remove(const char* _name);
-		bool exec(const char* _cmd, int* _errorCode);
+		void updateMaxLen();
+		bool exec(App* _app, const char* _cmd, int* _errorCode);
 
 		struct Func
 		{
@@ -23,7 +28,8 @@ namespace rapp {
 		};
 
 		typedef rtm_unordered_map<uint32_t, Func> CmdLookup;
-		CmdLookup m_lookup;
+		CmdLookup	m_lookup;
+		uint32_t	m_maxCommandLength;
 	};
 
 	///

@@ -38,7 +38,7 @@ namespace rapp {
 	void inputShutdown();
 
 	///
-	void inputProcess();
+	void inputProcess(App* _app);
 
 	///
 	void inputSetKeyState(KeyboardState::Key _key, uint8_t _modifiers, bool _down);

@@ -309,11 +309,11 @@ struct Input
 	{
 	}
 
-	void execBinding(const InputBinding* _binding)
+	void execBinding(App* _app, const InputBinding* _binding)
 	{
 		if (NULL == _binding->m_fn)
 		{
-			cmdExec((const char*)_binding->m_userData, 0);
+			cmdExec(_app, (const char*)_binding->m_userData, 0);
 		}
 		else
 		{
@@ -321,7 +321,7 @@ struct Input
 		}
 	}
 
-	void process(const InputBinding* _bindings)
+	void process(App* _app, const InputBinding* _bindings)
 	{
 		for (const InputBinding* binding = _bindings; binding->m_type != InputBinding::Count; ++binding)
 		{
@@ -339,7 +339,7 @@ struct Input
 							if (modifiers == binding->m_bindingKeyboard.m_modifiers
 							&&  !m_keyboard.m_once[binding->m_bindingKeyboard.m_key])
 							{
-								execBinding(binding);
+								execBinding(_app, binding);
 								m_keyboard.m_once[binding->m_bindingKeyboard.m_key] = true;
 							}
 						}
@@ -353,7 +353,7 @@ struct Input
 						if (down
 						&&  modifiers == binding->m_bindingKeyboard.m_modifiers)
 						{
-							execBinding(binding);
+							execBinding(_app, binding);
 						}
 					}
 				}
@@ -371,7 +371,7 @@ struct Input
 							(m_mouse.m_absolute[0] != m_mouse.m_absoluteOld[0]) ||
 							(m_mouse.m_absolute[0] != m_mouse.m_absoluteOld[0]))
 						{
-							execBinding(binding);
+							execBinding(_app, binding);
 						}
 						break;
 					}
@@ -385,7 +385,7 @@ struct Input
 							if (modifiers == binding->m_bindingMouse.m_modifiers
 							&&  !m_mouse.m_once[button])
 							{
-								execBinding(binding);
+								execBinding(_app, binding);
 								m_mouse.m_once[binding->m_bindingMouse.m_button] = true;
 							}
 						}
@@ -398,7 +398,7 @@ struct Input
 					{
 						if (down && (modifiers == binding->m_bindingMouse.m_modifiers))
 						{
-							execBinding(binding);
+							execBinding(_app, binding);
 						}
 					}
 				}
@@ -419,23 +419,23 @@ struct Input
 						case InputBindingGamepad::LeftStick:
 							if ((gp.m_axis[GamepadAxis::LeftX] != gp.m_axisOld[GamepadAxis::LeftX]) ||
 								(gp.m_axis[GamepadAxis::LeftY] != gp.m_axisOld[GamepadAxis::LeftY]))
-								execBinding(binding);
+								execBinding(_app, binding);
 							break;
 
 						case InputBindingGamepad::LeftTrigger:
 							if ((gp.m_axis[GamepadAxis::LeftZ] != gp.m_axisOld[GamepadAxis::LeftZ]))
-								execBinding(binding);
+								execBinding(_app, binding);
 							break;
 
 						case InputBindingGamepad::RightStick:
 							if ((gp.m_axis[GamepadAxis::RightX] != gp.m_axisOld[GamepadAxis::RightX]) ||
 								(gp.m_axis[GamepadAxis::RightY] != gp.m_axisOld[GamepadAxis::RightY]))
-								execBinding(binding);
+								execBinding(_app, binding);
 							break;
 
 						case InputBindingGamepad::RightTrigger:
 							if ((gp.m_axis[GamepadAxis::RightZ] != gp.m_axisOld[GamepadAxis::RightZ]))
-								execBinding(binding);
+								execBinding(_app, binding);
 							break;
 
 						default: RTM_ASSERT(false, "");
@@ -452,7 +452,7 @@ struct Input
 						{
 							if (!(gp.m_once & button))
 							{
-								execBinding(binding);
+								execBinding(_app, binding);
 								gp.m_once |= button;
 							}
 						}
@@ -465,7 +465,7 @@ struct Input
 					{
 						if (down)
 						{
-							execBinding(binding);
+							execBinding(_app, binding);
 						}
 					}
 				}
@@ -482,11 +482,11 @@ struct Input
 		}
 	}
 
-	void process()
+	void process(App* _app)
 	{
 		for (InputBindingMap::const_iterator it = m_inputBindingsMap.begin(); it != m_inputBindingsMap.end(); ++it)
 		{
-			process(it->second);
+			process(_app, it->second);
 		}
 	}
 
@@ -531,9 +531,9 @@ void inputRemoveBindings(const char* _name)
 	getInput().removeBindings(_name);
 }
 
-void inputProcess()
+void inputProcess(App* _app)
 {
-	getInput().process();
+	getInput().process(_app);
 }
 
 void inputSetMouseResolution(uint16_t _width, uint16_t _height)

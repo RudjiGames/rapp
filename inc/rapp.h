@@ -139,9 +139,6 @@ namespace rapp {
 	#define RAPP_WINDOW_FLAG_RENDERING		0x4
 	#define RAPP_WINDOW_FLAG_MAIN_WINDOW	0x8
 
-	typedef int(*ConsoleFn)(void* _userData, int _argc, char const* const* _argv);
-	typedef void(*ThreadFn)(void* _userData);
-
 	struct InputBinding;
 
 	typedef void (*InputBindingFn)(const void* _userData, const InputBinding* _binding);
@@ -237,6 +234,9 @@ namespace rapp {
 		virtual void	shutDown()			= 0;
 	};
 
+	typedef int(*ConsoleFn)(App* _app, void* _userData, int _argc, char const* const* _argv);
+	typedef void(*ThreadFn)(void* _userData);
+
 	struct JobHandle  { uint32_t idx; };
 
 	// ------------------------------------------------
@@ -292,7 +292,7 @@ namespace rapp {
 	void cmdRemove(const char* _name);
 
 	///
-	bool cmdExec(const char* _cmd, int* _errorCode);
+	bool cmdExec(App* _app, const char* _cmd, int* _errorCode);
 
 	///
 	void cmdConsoleLog(App* _app, const char* _fmt, ...);

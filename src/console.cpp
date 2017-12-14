@@ -22,7 +22,8 @@ static char* strdup(const char *str)
 	return (char*)memcpy(buff, (const void*)str, len);
 }
 
-Console::Console()
+Console::Console(App* _app)
+	: m_app(_app)
 {
 	m_hide				= false;
 	m_visible			= 1.0f;
@@ -105,7 +106,7 @@ void Console::addLog(uint8_t _r, uint8_t _g, uint8_t _b, const char* fmt, ...)
 
 extern float g_consoleToggleTime;
 
-void Console::draw(App* _app)
+void Console::draw()
 {
 	static float lastDrawTime = rtm::CPU::time();
 
@@ -126,9 +127,9 @@ void Console::draw(App* _app)
 
 	lastDrawTime = currDrawTime;
 
-	float posY = -(1.0f - m_visible) * float(_app->m_height/2);
-	ImGui::SetNextWindowPos(ImVec2(float(_app->m_width/5), posY), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(float(_app->m_width*6/10), float(_app->m_height/2)), ImGuiCond_Always);
+	float posY = -(1.0f - m_visible) * float(m_app->m_height/2);
+	ImGui::SetNextWindowPos(ImVec2(float(m_app->m_width/5), posY), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(float(m_app->m_width*6/10), float(m_app->m_height/2)), ImGuiCond_Always);
 	bool p_open;
     if (!ImGui::Begin("", &p_open,	ImGuiWindowFlags_NoTitleBar |
 									ImGuiWindowFlags_NoResize	|
@@ -150,6 +151,8 @@ void Console::draw(App* _app)
     }
 
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4,1)); // Tighten spacing
+	ImGui::PushFont(ImGui::Font::Mono);
+
     if (copy_to_clipboard)
         ImGui::LogToClipboard();
 
@@ -176,6 +179,7 @@ void Console::draw(App* _app)
         ImGui::SetScrollHere();
 
     m_scrollToBottom = false;
+    ImGui::PopFont();
     ImGui::PopStyleVar();
     ImGui::EndChild();
     ImGui::Separator();
@@ -223,7 +227,11 @@ void Console::execCommand(const char* command_line)
     {
         addLog("Available commands:");
         for (int i = 0; i < m_commands.Size; i++)
-            addLog("- %s", m_commands[i]);
+		{
+			addLog("> %-*s - %s",	cmdGetContext()->m_maxCommandLength + 3,
+								m_commands[i].m_name,
+								m_commands[i].m_description);
+		}
     }
     else if (rtm::strincmp(command_line, "HISTORY") == 0)
     {
@@ -234,7 +242,7 @@ void Console::execCommand(const char* command_line)
     else
     {
 		int error;
-		if (!cmdExec(command_line, &error))
+		if (!cmdExec(m_app, command_line, &error))
 	        addLog("Unknown command: '%s'\n", command_line);
 		else
 		{
@@ -272,8 +280,8 @@ int Console::textEditCallback(ImGuiTextEditCallbackData* data)
             // Build a list of candidates
             ImVector<const char*> candidates;
             for (int i = 0; i < m_commands.Size; i++)
-                if (rtm::strincmp(m_commands[i], word_start, (int)(word_end-word_start)) == 0)
-                    candidates.push_back(m_commands[i]);
+                if (rtm::strincmp(m_commands[i].m_name, word_start, (int)(word_end-word_start)) == 0)
+                    candidates.push_back(m_commands[i].m_name);
 
             if (candidates.Size == 0)
             {
@@ -357,17 +365,15 @@ void Console::toggleVisibility()
 void Console::updateCommands()
 {
 	m_commands.clear();
-    m_commands.push_back("clear");
-    m_commands.push_back("history");
+	m_commands.push_back({0, 0, "clear",	"Clears the console buffer"});
+	m_commands.push_back({0, 0, "history",	"Lists history of entered commands"});
 
 	CmdContext* context = cmdGetContext();
 
 	if (!context) return;
 
 	for (auto& i : context->m_lookup)
-	{
-		m_commands.push_back(i.second.m_name);
-	}
+		m_commands.push_back(i.second);
 }
 
 } // namespace rapp

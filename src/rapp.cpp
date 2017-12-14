@@ -116,7 +116,7 @@ int32_t rappThreadFunc(void* _userData)
 						);
 
 					app->drawGUI();
-					app->m_console->draw(app);
+					app->m_console->draw();
 					imguiEndFrame();
 #endif
 				}
@@ -283,7 +283,7 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 
 	imguiCreate();
 
-	_app->m_console = new Console();
+	_app->m_console = new Console(_app);
 
 	return win;
 #else
@@ -304,7 +304,6 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 	rapp::windowDestroy(_mainWindow);
 #endif
 }
-
 
 int rapp_main(int _argc, const char* const* _argv)
 {

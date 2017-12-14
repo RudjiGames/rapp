@@ -141,7 +141,7 @@ namespace rapp
 		return false;
 	}
 
-	int cmdMouseLock(void* /*_userData*/, int _argc, char const* const* _argv)
+	int cmdMouseLock(App* /*_app*/, void* /*_userData*/, int _argc, char const* const* _argv)
 	{
 		if (_argc > 1)
 		{
@@ -153,10 +153,31 @@ namespace rapp
 	}
 
 #if RAPP_WITH_BGFX
-	int cmdGraphics(void* /*_userData*/, int _argc, char const* const* _argv)
+	int cmdGraphics(App* _app, void* /*_userData*/, int _argc, char const* const* _argv)
 	{
 		if (_argc > 1)
 		{
+			if (rtm::strincmp(_argv[1], "help") == 0)
+			{
+				cmdConsoleLog(_app, "graphics vsync       - toggle vsync on/off");
+				cmdConsoleLog(_app, "graphics maxaniso    - set maximum anisotropy");
+				cmdConsoleLog(_app, "graphics hmd         - HMD stereo rendering");
+				cmdConsoleLog(_app, "graphics hmddbg      - HMD stereo rendering debug mode");
+				cmdConsoleLog(_app, "graphics hmdrecenter - HMD calibration");
+				cmdConsoleLog(_app, "graphics msaa4       - MSAA 4x mode");
+				cmdConsoleLog(_app, "graphics msaa8       - MSAA 8x mode");
+				cmdConsoleLog(_app, "graphics msaa16      - MSAA 16x mode");
+				cmdConsoleLog(_app, "graphics flush       - flush rendering after submitting to GPU");
+				cmdConsoleLog(_app, "graphics flip        - toggle flip before (default) and after rendering new frame");
+				cmdConsoleLog(_app, "graphics stats       - display rendering statistics");
+				cmdConsoleLog(_app, "graphics ifh         - toggle 'infinitely fast hardware', no draw calls submitted to driver");
+				cmdConsoleLog(_app, "graphics text        - toggle vsync on/off");
+				cmdConsoleLog(_app, "graphics wireframe   - toggle wireframe for all primitives");
+				cmdConsoleLog(_app, "graphics screenshot  - take screenshot and save it to disk");
+				cmdConsoleLog(_app, "graphics fullscreen  - toggle fullscreen");
+				return 0;
+			}
+
 			if (setOrToggle(s_reset, "vsync",       BGFX_RESET_VSYNC,              1, _argc, _argv)
 			||  setOrToggle(s_reset, "maxaniso",    BGFX_RESET_MAXANISOTROPY,      1, _argc, _argv)
 			||  setOrToggle(s_reset, "hmd",         BGFX_RESET_HMD,                1, _argc, _argv)
@@ -235,9 +256,9 @@ namespace rapp
 	int main(int _argc, const char* const* _argv)
 	{
 		cmdInit();
-		cmdAdd("mouselock", cmdMouseLock);
+		cmdAdd("mouselock", cmdMouseLock, 0, "locks mouse to window");
 #if RAPP_WITH_BGFX
-		cmdAdd("graphics",  cmdGraphics);
+		cmdAdd("graphics",  cmdGraphics,  0, "Graphics related commands, type 'graphics help' for list of options");
 		rapp::inputAddBindings("graphics", s_bindingsGraphics);
 
 		ImGui::GetIO().KeyMap[ImGuiKey_Tab]			= KeyboardState::Key::Tab;
@@ -375,7 +396,7 @@ namespace rapp
 				}
 			}
 
-			inputProcess();
+			inputProcess(_app);
 
 			inputResetMouseMovement();
 			inputResetGamepadAxisMovement();
