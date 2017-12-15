@@ -229,8 +229,8 @@ void Console::execCommand(const char* command_line)
         for (int i = 0; i < m_commands.Size; i++)
 		{
 			addLog("> %-*s - %s",	cmdGetContext()->m_maxCommandLength + 3,
-								m_commands[i].m_name,
-								m_commands[i].m_description);
+									m_commands[i].m_name,
+									m_commands[i].m_description);
 		}
     }
     else if (rtm::strincmp(command_line, "HISTORY") == 0)
@@ -252,7 +252,7 @@ void Console::execCommand(const char* command_line)
     }
 }
 
-int Console::textEditCallbackStub(ImGuiTextEditCallbackData* data) // In C++11 you are better off using lambdas for this sort of forwarding callbacks
+int Console::textEditCallbackStub(ImGuiTextEditCallbackData* data)
 {
     Console* console = (Console*)data->UserData;
     return console->textEditCallback(data);
@@ -278,10 +278,10 @@ int Console::textEditCallback(ImGuiTextEditCallbackData* data)
             }
 
             // Build a list of candidates
-            ImVector<const char*> candidates;
+            ImVector<CmdContext::Func*> candidates;
             for (int i = 0; i < m_commands.Size; i++)
                 if (rtm::strincmp(m_commands[i].m_name, word_start, (int)(word_end-word_start)) == 0)
-                    candidates.push_back(m_commands[i].m_name);
+                    candidates.push_back(&m_commands[i]);
 
             if (candidates.Size == 0)
             {
@@ -292,7 +292,7 @@ int Console::textEditCallback(ImGuiTextEditCallbackData* data)
             {
                 // Single match. Delete the beginning of the word and replace it entirely so we've got nice casing
                 data->DeleteChars((int)(word_start-data->Buf), (int)(word_end-word_start));
-                data->InsertChars(data->CursorPos, candidates[0]);
+                data->InsertChars(data->CursorPos, candidates[0]->m_name);
                 data->InsertChars(data->CursorPos, " ");
             }
             else
@@ -305,8 +305,8 @@ int Console::textEditCallback(ImGuiTextEditCallbackData* data)
                     bool all_candidates_matches = true;
                     for (int i = 0; i < candidates.Size && all_candidates_matches; i++)
                         if (i == 0)
-                            c = toupper(candidates[i][match_len]);
-                        else if (c == 0 || c != toupper(candidates[i][match_len]))
+                            c = toupper(candidates[i]->m_name[match_len]);
+                        else if (c == 0 || c != toupper(candidates[i]->m_name[match_len]))
                             all_candidates_matches = false;
                     if (!all_candidates_matches)
                         break;
@@ -316,13 +316,15 @@ int Console::textEditCallback(ImGuiTextEditCallbackData* data)
                 if (match_len > 0)
                 {
                     data->DeleteChars((int)(word_start - data->Buf), (int)(word_end-word_start));
-                    data->InsertChars(data->CursorPos, candidates[0], candidates[0] + match_len);
+                    data->InsertChars(data->CursorPos, candidates[0]->m_name, candidates[0]->m_name + match_len);
                 }
 
                 // List matches
                 addLog("Possible matches:\n");
                 for (int i = 0; i < candidates.Size; i++)
-                    addLog("- %s\n", candidates[i]);
+					addLog("> %-*s - %s",	cmdGetContext()->m_maxCommandLength + 3,
+											candidates[i]->m_name,
+											candidates[i]->m_description);
             }
 
             break;

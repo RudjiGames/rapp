@@ -64,8 +64,12 @@ function projectAdd_rapp_bgfx()
 						add_scheduler_defines({ "RAPP_WITH_BGFX=1" }), "_bgfx")
 end
 
-
 function projectDependencyConfig_03_bgfx(_dependency)
+	if _dependency == "rapp" then return {"rapp", "bgfx"} end
+	return "rapp"
+end
+
+function projectDependencyConfig_04_multi_app(_dependency)
 	if _dependency == "rapp" then return {"rapp", "bgfx"} end
 	return "rapp"
 end

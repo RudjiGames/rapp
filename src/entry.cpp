@@ -4,7 +4,6 @@
 //--------------------------------------------------------------------------//
 
 #include <rapp_pch.h>
-#include <time.h>
 #include <inttypes.h>
 
 #define RTM_LIBHANDLER_DEFINE
@@ -23,11 +22,11 @@ namespace rapp
 	struct CmdContext;
 
 #if RAPP_WITH_BGFX
-	static uint32_t s_debug = BGFX_DEBUG_TEXT;
-	static uint32_t s_reset = BGFX_RESET_VSYNC;
+	extern uint32_t g_debug;
+	extern uint32_t g_reset;
 #else
-	static uint32_t s_debug = 0;
-	static uint32_t s_reset = 0;
+	extern uint32_t g_debug;
+	extern uint32_t g_reset;
 #endif
 
 	static const char* s_keyName[] =
@@ -74,163 +73,6 @@ namespace rapp
 		RTM_ASSERT(_key < KeyboardState::Key::Count, "Invalid key %d.", _key);
 		return s_keyName[_key];
 	}
-
-	inline bool toBool(const char* _str)
-	{
-		char ch = rtm::toLower(_str[0]);
-		return ch == 't' ||  ch == '1';
-	}
-
-	char keyToAscii(KeyboardState::Key _key, uint8_t _modifiers)
-	{
-		const bool isAscii = (KeyboardState::Key::Key0 <= _key && _key <= KeyboardState::Key::KeyZ)
-						  || (KeyboardState::Key::Esc  <= _key && _key <= KeyboardState::Key::Minus);
-		if (!isAscii)
-		{
-			return '\0';
-		}
-
-		const bool isNumber = (KeyboardState::Key::Key0 <= _key && _key <= KeyboardState::Key::Key9);
-		if (isNumber)
-		{
-			return '0' + (char)(_key - KeyboardState::Key::Key0);
-		}
-
-		const bool isChar = (KeyboardState::Key::KeyA <= _key && _key <= KeyboardState::Key::KeyZ);
-		if (isChar)
-		{
-			enum { ShiftMask = KeyboardState::Modifier::LShift | KeyboardState::Modifier::RShift };
-
-			const bool shift = !!(_modifiers&ShiftMask);
-			return (shift ? 'A' : 'a') + (char)(_key - KeyboardState::Key::KeyA);
-		}
-
-		switch (_key)
-		{
-		case KeyboardState::Key::Esc:       return 0x1b;
-		case KeyboardState::Key::Return:    return '\n';
-		case KeyboardState::Key::Tab:       return '\t';
-		case KeyboardState::Key::Space:     return ' ';
-		case KeyboardState::Key::Backspace: return 0x08;
-		case KeyboardState::Key::Plus:      return '+';
-		case KeyboardState::Key::Minus:     return '-';
-		default:             break;
-		}
-
-		return '\0';
-	}
-
-	bool setOrToggle(uint32_t& _flags, const char* _name, uint32_t _bit, int _first, int _argc, char const* const* _argv)
-	{
-		if (0 == strcmp(_argv[_first], _name) )
-		{
-			int arg = _first+1;
-			if (_argc > arg)
-			{
-				_flags &= ~_bit;
-				_flags |= toBool(_argv[arg]) ? _bit : 0;
-			}
-			else
-			{
-				_flags ^= _bit;
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	int cmdMouseLock(App* /*_app*/, void* /*_userData*/, int _argc, char const* const* _argv)
-	{
-		if (_argc > 1)
-		{
-			inputSetMouseLock(_argc > 1 ? toBool(_argv[1]) : !inputIsMouseLocked() );
-			return 0;
-		}
-
-		return 1;
-	}
-
-#if RAPP_WITH_BGFX
-	int cmdGraphics(App* _app, void* /*_userData*/, int _argc, char const* const* _argv)
-	{
-		if (_argc > 1)
-		{
-			if (rtm::strincmp(_argv[1], "help") == 0)
-			{
-				cmdConsoleLog(_app, "graphics vsync       - toggle vsync on/off");
-				cmdConsoleLog(_app, "graphics maxaniso    - set maximum anisotropy");
-				cmdConsoleLog(_app, "graphics hmd         - HMD stereo rendering");
-				cmdConsoleLog(_app, "graphics hmddbg      - HMD stereo rendering debug mode");
-				cmdConsoleLog(_app, "graphics hmdrecenter - HMD calibration");
-				cmdConsoleLog(_app, "graphics msaa4       - MSAA 4x mode");
-				cmdConsoleLog(_app, "graphics msaa8       - MSAA 8x mode");
-				cmdConsoleLog(_app, "graphics msaa16      - MSAA 16x mode");
-				cmdConsoleLog(_app, "graphics flush       - flush rendering after submitting to GPU");
-				cmdConsoleLog(_app, "graphics flip        - toggle flip before (default) and after rendering new frame");
-				cmdConsoleLog(_app, "graphics stats       - display rendering statistics");
-				cmdConsoleLog(_app, "graphics ifh         - toggle 'infinitely fast hardware', no draw calls submitted to driver");
-				cmdConsoleLog(_app, "graphics text        - toggle vsync on/off");
-				cmdConsoleLog(_app, "graphics wireframe   - toggle wireframe for all primitives");
-				cmdConsoleLog(_app, "graphics screenshot  - take screenshot and save it to disk");
-				cmdConsoleLog(_app, "graphics fullscreen  - toggle fullscreen");
-				return 0;
-			}
-
-			if (setOrToggle(s_reset, "vsync",       BGFX_RESET_VSYNC,              1, _argc, _argv)
-			||  setOrToggle(s_reset, "maxaniso",    BGFX_RESET_MAXANISOTROPY,      1, _argc, _argv)
-			||  setOrToggle(s_reset, "hmd",         BGFX_RESET_HMD,                1, _argc, _argv)
-			||  setOrToggle(s_reset, "hmddbg",      BGFX_RESET_HMD_DEBUG,          1, _argc, _argv)
-			||  setOrToggle(s_reset, "hmdrecenter", BGFX_RESET_HMD_RECENTER,       1, _argc, _argv)
-			||	setOrToggle(s_reset, "msaa4",		BGFX_RESET_MSAA_X4,			   1, _argc, _argv)
-			||	setOrToggle(s_reset, "msaa8",		BGFX_RESET_MSAA_X8,			   1, _argc, _argv)
-			||  setOrToggle(s_reset, "msaa16",      BGFX_RESET_MSAA_X16,           1, _argc, _argv)
-			||  setOrToggle(s_reset, "flush",       BGFX_RESET_FLUSH_AFTER_RENDER, 1, _argc, _argv)
-			||  setOrToggle(s_reset, "flip",        BGFX_RESET_FLIP_AFTER_RENDER,  1, _argc, _argv)
-			   )
-			{
-				return 0;
-			}
-			else if (setOrToggle(s_debug, "stats",     BGFX_DEBUG_STATS,     1, _argc, _argv)
-				 ||  setOrToggle(s_debug, "ifh",       BGFX_DEBUG_IFH,       1, _argc, _argv)
-				 ||  setOrToggle(s_debug, "text",      BGFX_DEBUG_TEXT,      1, _argc, _argv)
-				 ||  setOrToggle(s_debug, "wireframe", BGFX_DEBUG_WIREFRAME, 1, _argc, _argv) )
-			{
-				bgfx::setDebug(s_debug);
-				return 0;
-			}
-			else if (0 == strcmp(_argv[1], "screenshot") )
-			{
-				bgfx::FrameBufferHandle fbh = BGFX_INVALID_HANDLE; 
-
-				if (_argc > 2)
-				{
-					bgfx::requestScreenShot(fbh, _argv[2]);
-				}
-				else
-				{
-					time_t tt;
-					time(&tt);
-
-					char filePath[256];
-					::snprintf(filePath, sizeof(filePath), "temp/screenshot-%" PRId64 "", (uint64_t)tt);
-					bgfx::requestScreenShot(fbh, filePath);
-				}
-
-				return 0;
-			}
-			else if (0 == strcmp(_argv[1], "fullscreen") )
-			{
-				WindowHandle window = { 0 };
-				windowToggleFullscreen(window);
-				return 0;
-			}
-		}
-
-		return 1;
-	}
-#endif
 
 #if RAPP_WITH_BGFX
 	static const InputBinding s_bindingsGraphics[] =
@@ -299,8 +141,8 @@ namespace rapp
 
 	bool processEvents(App* _app)
 	{
-		uint32_t debug = s_debug;
-		uint32_t reset = s_reset;
+		uint32_t debug = g_debug;
+		uint32_t reset = g_reset;
 
 		WindowHandle handle = { UINT16_MAX };
 
@@ -392,7 +234,7 @@ namespace rapp
 						handle  = size->m_handle;
 						_app->m_width  = size->m_width;
 						_app->m_height = size->m_height;
-						reset  = !s_reset; // force reset
+						reset  = !g_reset; // force reset
 					}
 					break;
 
@@ -406,16 +248,16 @@ namespace rapp
 
 		} while (NULL != ev);
 
-		if ((handle.idx == 0) && (reset != s_reset))
+		if ((handle.idx == 0) && (reset != g_reset))
 		{
-			reset = s_reset;
+			reset = g_reset;
 #if RAPP_WITH_BGFX
 			bgfx::reset(_app->m_width, _app->m_height, reset);
 #endif
 			inputSetMouseResolution((uint16_t)_app->m_width, (uint16_t)_app->m_height);
 		}
 
-		s_debug = debug;
+		g_debug = debug;
 
 		return _app->m_exitCode != -1;
 	}

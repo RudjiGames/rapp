@@ -21,15 +21,14 @@ Features
 **rapp** currently has the following functionality:
 * Applications written as classes with init/shutdown/suspend/resume functionality
 * Command line (tools, unit tests, etc.) or graphics applications (games, etc.)
+* Custom commands
 * Input controllers (mouse, keyboard, gamepad, etc.) with input binding callbacks and debug visualizations
 * Ability to run code on main/message loop thread
 * Job scheduler with job stealing for fine grained parallelism
 * [ImGui](https://github.com/ocornut/imgui) integration
 * Quake like console - [ImGui](https://github.com/ocornut/imgui) based
-* Custom commands
+* Multiple applications
 * Window functions
-
-**rapp** is in an early stage and there will be more features and platform support coming, like: multiple applications, NanoVG integration...
 
 Here's a screenshot of a [bgfx](https://github.com/bkaradzic/bgfx) sample showing input debugging, [ImGui](https://github.com/ocornut/imgui) dialog and Quake like console:  
 <img src="https://github.com/milostosic/rapp/blob/master/img/input_debug.png">

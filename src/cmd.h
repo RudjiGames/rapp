@@ -41,6 +41,11 @@ namespace rapp {
 	///
 	CmdContext* cmdGetContext();
 
+
+	int cmdMouseLock(App* _app, void* _userData, int _argc, char const* const* _argv);
+	int cmdGraphics(App* _app, void* _userData, int _argc, char const* const* _argv);
+	int cmdApp(App* _app, void* _userData, int _argc, char const* const* _argv);
+
 } // namespace rtm
 
 #endif // RTM_RAPP_CMD_H

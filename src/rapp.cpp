@@ -13,6 +13,7 @@
 #if RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
 #include <common/imgui/imgui.h>
+#include <ocornut-imgui/imgui_internal.h>
 #endif
 
 #define RAPP_CMD_READ(_type, _name)		\
@@ -34,7 +35,6 @@ struct Command
 		Draw,
 		DrawGUI,
 		Shutdown,
-		RunFunc,
 
 		Count
 	};
@@ -42,7 +42,7 @@ struct Command
 
 static rtm::CommandBuffer	s_commChannel;		// rapp_main to app class thread communication
 
-rtm_vector<App*>& getApps()
+rtm_vector<App*>& appGetRegistered()
 {
 	static rtm_vector<App*> apps;
 	return apps;
@@ -144,6 +144,9 @@ void init(rtmLibInterface* _libInterface)
 
 	inputInit();
 
+	if (appGetRegistered().size() > 1)
+		cmdAdd("app", cmdApp, 0, "Application management commands, type 'app help' for more info");
+
 	s_commChannel.init(rappThreadFunc);
 }
 
@@ -163,28 +166,27 @@ App::App(const char* _name, const char* _description)
 	, m_width(0)
 	, m_height(0)
 	, m_console(0)
-
 {
 	appRegister(this);
 }
 
 void appRegister(App* _app)
 {
-	getApps().push_back(_app);
+	appGetRegistered().push_back(_app);
 }
 
 ///
 App* appGet(uint32_t _index)
 {
 	if (_index < appGetCount())
-		return getApps()[_index];
+		return appGetRegistered()[_index];
 	return 0;
 }
 
 ///
 uint32_t appGetCount()
 {
-	return (uint32_t)getApps().size();
+	return (uint32_t)appGetRegistered().size();
 }
 
 void appInit(App* _app, int _argc, const char* const* _argv)
@@ -232,34 +234,6 @@ void appDrawGUI(App* _app)
 	s_commChannel.write(_app);
 }
 
-bool processEvents(App* _app);
-
-///
-int appRun(App* _app, int _argc, const char* const* _argv)
-{
-	appInit(_app, _argc, _argv);
-
-	FrameStep fs;
-	while (processEvents(_app))
-	{
-		while (fs.update())
-		{
-			float time = fs.step();
-			appUpdate(_app, time);
-		}
-
-		if (_app->m_width && _app->m_height)
-			appDrawGUI(_app);
-
-		appDraw(_app);
-		s_commChannel.frame();
-	}
-
-	appShutDown(_app);
-
-	return 0;
-}
-
 WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 {
 	RTM_UNUSED_3(_app, _width, _height);
@@ -275,8 +249,10 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 	bgfx::init();
 	bgfx::reset(_width, _height, BGFX_RESET_VSYNC);
 
+//#if !RTM_RETAIL
 	// Enable debug text.
 	bgfx::setDebug(BGFX_DEBUG_TEXT);
+//#endif
 
 	// Set view 0 clear state.
 	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
@@ -299,10 +275,57 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 
 	delete _app->m_console;
 
+	ImGui::ClearActiveID();
 	imguiDestroy();
+
 	bgfx::shutdown();
 	rapp::windowDestroy(_mainWindow);
 #endif
+}
+
+App* g_next_app = 0;
+
+void appSwitch(App* _app)
+{
+	rtm::interlockedSet((intptr_t*)&g_next_app, (intptr_t)_app);
+}
+
+bool processEvents(App* _app);
+
+///
+int appRun(App* _app, int _argc, const char* const* _argv)
+{
+	appInit(_app, _argc, _argv);
+
+	FrameStep fs;
+	while (processEvents(_app))
+	{
+		while (fs.update())
+		{
+			float time = fs.step();
+			appUpdate(_app, time);
+		}
+
+		appDraw(_app);
+
+		if (_app->m_width && _app->m_height)
+			appDrawGUI(_app);
+
+		if (g_next_app)
+		{
+			appShutDown(_app);
+			_app = g_next_app;
+
+			appInit(_app, _argc, _argv);
+			g_next_app = 0;
+		}
+
+		s_commChannel.frame();
+	}
+
+	appShutDown(_app);
+
+	return 0;
 }
 
 int rapp_main(int _argc, const char* const* _argv)
@@ -310,7 +333,7 @@ int rapp_main(int _argc, const char* const* _argv)
 	rtmLibInterface* errorHandler = 0;
 	//&RAPP_INSTANCE(CmdLineApp)
 	rapp::init(errorHandler);
-	int ret = rapp::appRun(rapp::getApps()[0], _argc, _argv);
+	int ret = rapp::appRun(rapp::appGetRegistered()[0], _argc, _argv);
 	rapp::shutDown();
 
 	return ret;

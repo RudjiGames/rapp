@@ -21,8 +21,6 @@ namespace rapp
 {
 	int main(int _argc, const char* const* _argv);
 
-	char keyToAscii(KeyboardState::Key _key, uint8_t _modifiers);
-
 	struct Event
 	{
 		enum Enum

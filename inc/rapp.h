@@ -213,12 +213,12 @@ namespace rapp {
 
 	struct App
 	{
-		const char*	m_name;
-		const char*	m_description;
-		int32_t		m_exitCode;
-		uint32_t	m_width;
-		uint32_t	m_height;
-		Console*	m_console;
+		const char*		m_name;
+		const char*		m_description;
+		int32_t			m_exitCode;
+		uint32_t		m_width;
+		uint32_t		m_height;
+		Console*		m_console;
 
 		App(const char* _name, const char* _description = 0);
 		virtual ~App() {}

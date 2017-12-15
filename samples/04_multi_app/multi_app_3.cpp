@@ -3,15 +3,15 @@
 /// License: http://www.opensource.org/licenses/BSD-2-Clause               ///
 //--------------------------------------------------------------------------//
 
-#include <bgfx_pch.h>
+#include <multi_app_pch.h>
 
-struct bgfxApp : public rapp::App
+struct app3 : public rapp::App
 {
-	RAPP_CLASS(bgfxApp)
+	RAPP_CLASS(app3)
 
 	rapp::WindowHandle	m_window;
 
-	virtual ~bgfxApp() {}
+	virtual ~app3() {}
 
 	int init(int32_t /*_argc*/, const char* const* /*_argv*/, rtmLibInterface* /*_libInterface = 0*/)
 	{
@@ -32,7 +32,7 @@ struct bgfxApp : public rapp::App
 		m_width		= width;
 		m_height	= height;
 
-		rapp::appGraphicsInit(this, m_width, m_height);
+		m_window = rapp::appGraphicsInit(this, m_width, m_height);
 		return 0;
 	}
 
@@ -42,10 +42,6 @@ struct bgfxApp : public rapp::App
 
 	void draw()
 	{
-		appRunOnMainThread(mainThreadFunc, this);
-
-		rtm::Console::custom(255, 255, 0, 1, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
-
 		// Set view 0 default viewport.
 		bgfx::setViewRect(0, 0, 0, (uint16_t)m_width, (uint16_t)m_height);
 
@@ -55,7 +51,7 @@ struct bgfxApp : public rapp::App
 
 		// Use debug font to print information about this example.
 		bgfx::dbgTextClear();
-		bgfx::dbgTextPrintf(0, 1, 0x4f, "rapp/samples/bgfx");
+		bgfx::dbgTextPrintf(0, 1, 0x4f, "rapp/samples/multi_app");
 		bgfx::dbgTextPrintf(0, 2, 0x6f, m_description);
 
 		// debug input
@@ -86,11 +82,6 @@ struct bgfxApp : public rapp::App
 		rapp::inputRemoveBindings("bindings");
 	}
 
-	static void mainThreadFunc(void* /*_appClass*/)
-	{
-		rtm::Console::custom(0, 255, 0, 1, "Printing from main thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
-	}
-
 	static int cmdExit(rapp::App* _app, void* _userData, int _argc, char const* const* _argv)
 	{
 		RTM_UNUSED_3(_userData, _argv, _argc);
@@ -106,4 +97,4 @@ struct bgfxApp : public rapp::App
 	}
 };
 
-RAPP_REGISTER(bgfxApp, "bgfx", "Example of bgfx based application");
+RAPP_REGISTER(app3, "app3", "Application 3");
