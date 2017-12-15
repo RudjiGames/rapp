@@ -27,7 +27,7 @@ Features
 * Job scheduler with job stealing for fine grained parallelism
 * [ImGui](https://github.com/ocornut/imgui) integration
 * Quake like console - [ImGui](https://github.com/ocornut/imgui) based
-* Multiple applications
+* Multiple applications in one binary
 * Window functions
 
 Here's a screenshot of a [bgfx](https://github.com/bkaradzic/bgfx) sample showing input debugging, [ImGui](https://github.com/ocornut/imgui) dialog and Quake like console:  
