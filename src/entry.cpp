@@ -102,24 +102,6 @@ namespace rapp
 #if RAPP_WITH_BGFX
 		cmdAdd("graphics",  cmdGraphics,  0, "Graphics related commands, type 'graphics help' for list of options");
 		rapp::inputAddBindings("graphics", s_bindingsGraphics);
-
-		ImGui::GetIO().KeyMap[ImGuiKey_Tab]			= KeyboardState::Key::Tab;
-		ImGui::GetIO().KeyMap[ImGuiKey_LeftArrow]	= KeyboardState::Key::Left;
-		ImGui::GetIO().KeyMap[ImGuiKey_RightArrow]	= KeyboardState::Key::Right;
-		ImGui::GetIO().KeyMap[ImGuiKey_UpArrow]		= KeyboardState::Key::Up;
-		ImGui::GetIO().KeyMap[ImGuiKey_DownArrow]	= KeyboardState::Key::Down;
-		ImGui::GetIO().KeyMap[ImGuiKey_Home]		= KeyboardState::Key::Home;
-		ImGui::GetIO().KeyMap[ImGuiKey_End]			= KeyboardState::Key::End;
-		ImGui::GetIO().KeyMap[ImGuiKey_Delete]		= KeyboardState::Key::Delete;
-		ImGui::GetIO().KeyMap[ImGuiKey_Backspace]	= KeyboardState::Key::Backspace;
-		ImGui::GetIO().KeyMap[ImGuiKey_Enter]		= KeyboardState::Key::Return;
-		ImGui::GetIO().KeyMap[ImGuiKey_Escape]		= KeyboardState::Key::Esc;
-		ImGui::GetIO().KeyMap[ImGuiKey_A]			= KeyboardState::Key::KeyA;
-		ImGui::GetIO().KeyMap[ImGuiKey_C]			= KeyboardState::Key::KeyC;
-		ImGui::GetIO().KeyMap[ImGuiKey_V]			= KeyboardState::Key::KeyV;
-		ImGui::GetIO().KeyMap[ImGuiKey_X]			= KeyboardState::Key::KeyX;
-		ImGui::GetIO().KeyMap[ImGuiKey_Y]			= KeyboardState::Key::KeyY;
-		ImGui::GetIO().KeyMap[ImGuiKey_Z]			= KeyboardState::Key::KeyZ;
 #endif
 		rapp::jobInit();
 
@@ -131,6 +113,7 @@ namespace rapp
 		int32_t result = rapp::rapp_main(_argc, _argv);
 
 		rapp::jobShutdown();
+
 #if RAPP_WITH_BGFX
 		rapp::inputRemoveBindings("graphics");
 #endif

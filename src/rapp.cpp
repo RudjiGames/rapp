@@ -259,6 +259,24 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 
 	imguiCreate();
 
+	ImGui::GetIO().KeyMap[ImGuiKey_Tab]			= KeyboardState::Key::Tab;
+	ImGui::GetIO().KeyMap[ImGuiKey_LeftArrow]	= KeyboardState::Key::Left;
+	ImGui::GetIO().KeyMap[ImGuiKey_RightArrow]	= KeyboardState::Key::Right;
+	ImGui::GetIO().KeyMap[ImGuiKey_UpArrow]		= KeyboardState::Key::Up;
+	ImGui::GetIO().KeyMap[ImGuiKey_DownArrow]	= KeyboardState::Key::Down;
+	ImGui::GetIO().KeyMap[ImGuiKey_Home]		= KeyboardState::Key::Home;
+	ImGui::GetIO().KeyMap[ImGuiKey_End]			= KeyboardState::Key::End;
+	ImGui::GetIO().KeyMap[ImGuiKey_Delete]		= KeyboardState::Key::Delete;
+	ImGui::GetIO().KeyMap[ImGuiKey_Backspace]	= KeyboardState::Key::Backspace;
+	ImGui::GetIO().KeyMap[ImGuiKey_Enter]		= KeyboardState::Key::Return;
+	ImGui::GetIO().KeyMap[ImGuiKey_Escape]		= KeyboardState::Key::Esc;
+	ImGui::GetIO().KeyMap[ImGuiKey_A]			= KeyboardState::Key::KeyA;
+	ImGui::GetIO().KeyMap[ImGuiKey_C]			= KeyboardState::Key::KeyC;
+	ImGui::GetIO().KeyMap[ImGuiKey_V]			= KeyboardState::Key::KeyV;
+	ImGui::GetIO().KeyMap[ImGuiKey_X]			= KeyboardState::Key::KeyX;
+	ImGui::GetIO().KeyMap[ImGuiKey_Y]			= KeyboardState::Key::KeyY;
+	ImGui::GetIO().KeyMap[ImGuiKey_Z]			= KeyboardState::Key::KeyZ;
+
 	_app->m_console = new Console(_app);
 
 	return win;
