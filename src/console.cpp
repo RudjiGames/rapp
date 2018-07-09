@@ -11,7 +11,7 @@
 
 #if RAPP_WITH_BGFX
 
-#include <ocornut-imgui/imgui.h>
+#include <dear-imgui/imgui.h>
 
 namespace rapp {
 

@@ -13,7 +13,7 @@
 #if RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
 #include <common/imgui/imgui.h>
-#include <ocornut-imgui/imgui_internal.h>
+#include <dear-imgui/imgui_internal.h>
 #endif
 
 #define RAPP_CMD_READ(_type, _name)		\
