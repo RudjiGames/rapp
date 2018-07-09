@@ -25,6 +25,7 @@ before_script:
     - git clone --depth 1 https://github.com/bkaradzic/bgfx.git ../bgfx
     - git clone --depth 1 https://github.com/glfw/glfw ../glfw
     - git clone --depth 1 https://github.com/01org/tbb.git ../tbb
+    - git clone --depth 1 https://github.com/memononen/nanovg.git ..\nanovg
 
 script:
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libc6-dev-i386 gcc-multilib g++-multilib; fi
