@@ -39,7 +39,7 @@ function projectAdd_rapp()
 end
 
 function projectDependencies_rapp_bgfx()
-	return mergeTables( projectDependencies_rapp(), { "bx", "bimg", "bgfx", "nanovg" } )
+	return mergeTables( projectDependencies_rapp(), { "bx", "bimg", "bgfx" } )
 end
 
 function projectAdd_rapp_bgfx()
@@ -48,9 +48,10 @@ function projectAdd_rapp_bgfx()
 		bgfxPath .. "examples/common/imgui/**.h",
 		bgfxPath .. "examples/common/imgui/**.cpp",
 		bgfxPath .. "examples/common/imgui/**.inl",
-		bgfxPath .. "3rdparty/ocornut-imgui/**.*",
+		bgfxPath .. "3rdparty/dear-imgui/**.*",
+		bgfxPath .. "3rdparty/ib-compress/**.*",
 		bgfxPath .. "examples/common/nanovg/*.h",
-		bgfxPath .. "examples/common/nanovg/*.cpp",
+		bgfxPath .. "examples/common/nanovg/*.cpp"
 	}
 
 	local extraIncludes = {
