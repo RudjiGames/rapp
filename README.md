@@ -25,7 +25,7 @@ Features
 * Input controllers (mouse, keyboard, gamepad, etc.) with input binding callbacks and debug visualizations
 * Ability to run code on main/message loop thread
 * Job scheduler with job stealing for fine grained parallelism
-* [ImGui](https://github.com/ocornut/imgui) integration
+* [ImGui](https://github.com/ocornut/imgui) and [NanoVG](https://github.com/memononen/nanovg) integration
 * Quake like console - [ImGui](https://github.com/ocornut/imgui) based
 * Multiple applications in one binary
 * Window functions
