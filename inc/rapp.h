@@ -209,7 +209,7 @@ namespace rapp {
 
 	#define RAPP_INPUT_BINDING_END		{ 0 }
 
-	struct Console;
+	struct AppData;
 
 	struct App
 	{
@@ -218,7 +218,7 @@ namespace rapp {
 		int32_t			m_exitCode;
 		uint32_t		m_width;
 		uint32_t		m_height;
-		Console*		m_console;
+		AppData*		m_data;
 
 		App(const char* _name, const char* _description = 0);
 		virtual ~App() {}
@@ -270,6 +270,9 @@ namespace rapp {
 
 	///
 	void appGraphicsShutdown(App* _app, WindowHandle _mainWindow);
+
+	///
+	void* appGetNanoVGctx(App* _app);
 
 	// ------------------------------------------------
 	/// Debug output functions
@@ -404,6 +407,7 @@ namespace rapp {
 #ifdef RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
 #include "../examples/common/imgui/imgui.h"
+#include "../examples/common/nanovg/nanovg.h"
 #endif
 
 #define RAPP_CLASS(_appClass)												\

@@ -9,6 +9,7 @@
 #include <rapp/src/cmd.h>
 #include <rapp/src/console.h>
 #include <rapp/src/entry_p.h>
+#include <rapp/src/app_data.h>
 
 #if RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
@@ -115,8 +116,12 @@ int32_t rappThreadFunc(void* _userData)
 						, uint16_t(app->m_height)
 						);
 
+					nvgBeginFrame(app->m_data->m_nvg, app->m_width, app->m_height, 1.0f);
+
 					app->drawGUI();
-					app->m_console->draw();
+					app->m_data->m_console->draw();
+
+					nvgEndFrame(app->m_data->m_nvg);
 					imguiEndFrame();
 #endif
 				}
@@ -165,7 +170,7 @@ App::App(const char* _name, const char* _description)
 	, m_exitCode(0)
 	, m_width(0)
 	, m_height(0)
-	, m_console(0)
+	, m_data(0)
 {
 	appRegister(this);
 }
@@ -277,7 +282,9 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 	ImGui::GetIO().KeyMap[ImGuiKey_Y]			= KeyboardState::Key::KeyY;
 	ImGui::GetIO().KeyMap[ImGuiKey_Z]			= KeyboardState::Key::KeyZ;
 
-	_app->m_console = new Console(_app);
+	_app->m_data			= new AppData;
+	_app->m_data->m_console = new Console(_app);
+	_app->m_data->m_nvg		= nvgCreate(1, 0); 
 
 	return win;
 #else
@@ -291,7 +298,9 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 
 #if RAPP_WITH_BGFX
 
-	delete _app->m_console;
+	delete _app->m_data->m_console;
+
+	nvgDelete(_app->m_data->m_nvg);
 
 	ImGui::ClearActiveID();
 	imguiDestroy();
@@ -299,6 +308,15 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 	bgfx::shutdown();
 	rapp::windowDestroy(_mainWindow);
 #endif
+}
+
+void* appGetNanoVGctx(App* _app)
+{
+	RTM_UNUSED(_app);
+#if RAPP_WITH_BGFX
+	return _app->m_data->m_nvg;
+#endif
+	return 0;
 }
 
 App* g_next_app = 0;

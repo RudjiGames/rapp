@@ -3,6 +3,9 @@
 /// License: http://www.opensource.org/licenses/BSD-2-Clause               ///
 //--------------------------------------------------------------------------//
 
+#ifndef RTM_RAPP_CONSOLE_H
+#define RTM_RAPP_CONSOLE_H
+
 #if RAPP_WITH_BGFX
 
 #include <dear-imgui/imgui.h>
@@ -48,3 +51,5 @@ struct Console
 } // namespace rapp
 
 #endif // RAPP_WITH_BGFX
+
+#endif // RTM_RAPP_CONSOLE_H

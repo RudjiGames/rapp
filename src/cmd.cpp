@@ -7,7 +7,7 @@
 
 #include <rapp/inc/rapp.h>
 #include <rapp/src/cmd.h>
-#include <rapp/src/console.h>
+#include <rapp/src/app_data.h>
 #include <rapp/src/entry_p.h>
 
 #include <time.h>	// time
@@ -262,7 +262,7 @@ void cmdConsoleLog(App* _app, const char* _fmt, ...)
     buf[RTM_NUM_ELEMENTS(buf)-1] = 0;
     va_end(args);
 
-	_app->m_console->addLog(buf);
+	_app->m_data->m_console->addLog(buf);
 #endif // RAPP_WITH_BGFX
 }
 
@@ -278,7 +278,7 @@ void cmdConsoleLogRGB(uint8_t _r, uint8_t _g, uint8_t _b, App* _app, const char*
     buf[RTM_NUM_ELEMENTS(buf)-1] = 0;
     va_end(args);
 
-	_app->m_console->addLog(_r, _g, _b, buf);
+	_app->m_data->m_console->addLog(_r, _g, _b, buf);
 #endif // RAPP_WITH_BGFX
 }
 
@@ -286,7 +286,7 @@ void cmdConsoleToggle(App* _app)
 {
 	RTM_UNUSED(_app);
 #if RAPP_WITH_BGFX
-	_app->m_console->toggleVisibility();
+	_app->m_data->m_console->toggleVisibility();
 #endif // RAPP_WITH_BGFX
 }
 
