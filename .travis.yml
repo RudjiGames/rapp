@@ -31,8 +31,7 @@ script:
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libx11-dev libxext-dev libxpm-dev libxrandr-dev libxrender-dev libxcursor-dev libxi-dev libxinerama-dev; fi
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd .. && mkdir glfwbuild && cd glfwbuild && cmake ../glfw && make -j4 && sudo make install && cd ../rapp; fi
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then make linux CXX="g++-5" CC="gcc-5"; fi
-
-    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then make test; fi
+    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then make osx; fi
 
 branches:
   only:
