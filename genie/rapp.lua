@@ -27,12 +27,27 @@ function add_scheduler_defines(definesToAppend)
 end
 
 function projectDependencies_rapp()
-	if _OPTIONS["scheduler"] ~= "tbb" then
-		return { "rbase" }
-	else
-		return { "rbase", "tbb" }
+	local dependencies = { "rbase" }
+	if _OPTIONS["scheduler"] == "tbb" then
+		table.insert(dependencies, "tbb")
+	end
+
+	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
+		table.insert(dependencies, "X11")
 	end
 end
+
+function projectDependencies_bgfx()
+	local dependencies = { "bx", "bimg" }
+	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
+		table.insert(dependencies, "X11")
+		if _OPTIONS["with-glfw"] then
+			table.insert(dependencies, "GL")
+		end
+	end
+	return dependencies
+end 
+
 
 function projectAdd_rapp() 
 	addProject_lib("rapp", Lib.Runtime, false, nil, nil, nil, nil, add_scheduler_defines())
