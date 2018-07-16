@@ -315,8 +315,9 @@ void* appGetNanoVGctx(App* _app)
 	RTM_UNUSED(_app);
 #if RAPP_WITH_BGFX
 	return _app->m_data->m_nvg;
-#endif
+#else
 	return 0;
+#endif
 }
 
 App* g_next_app = 0;
