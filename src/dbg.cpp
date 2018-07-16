@@ -21,6 +21,7 @@
 #include <CoreFoundation/CFString.h> 
 extern "C" void NSLog(CFStringRef _format, ...); 
 #endif
+#endif
 
 namespace rapp {
 
