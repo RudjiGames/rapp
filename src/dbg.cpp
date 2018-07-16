@@ -19,6 +19,7 @@
 #import <Foundation/NSObjCRuntime.h>
 #else
 #include <CoreFoundation/CFString.h> 
+extern "C" void NSLog(CFStringRef _format, ...); 
 #endif
 
 namespace rapp {
