@@ -467,7 +467,7 @@ int cmdApp(App* _app, void* _userData, int _argc, char const* const* _argv)
 			if (_argc != 3)
 				return 1;
 
-			int appIndex = atoi(_argv[2]);
+			uint32_t appIndex = (uint32_t)atoi(_argv[2]);
 			if (appIndex < 1 || appIndex > apps.size())
 			{
 				// try by name

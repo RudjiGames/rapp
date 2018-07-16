@@ -14,6 +14,13 @@
 #include <android/log.h>
 #endif
 
+#if RTM_PLATFORM_IOS || RTM_PLATFORM_OSX
+#if defined(__OBJC__)
+#import <Foundation/NSObjCRuntime.h>
+#else
+#include <CoreFoundation/CFString.h> 
+#endif
+
 namespace rapp {
 
 int32_t snprintf(char* _out, int32_t _max, const char* _format, ...)
