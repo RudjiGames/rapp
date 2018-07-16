@@ -15,9 +15,7 @@
 #include <bgfxplatform.h>
 #endif
 
-#include <bx/uint32_t.h>
-#include <bx/os.h>
-#include <bx/handlealloc.h>
+#include <rbase/inc/uint32_t.h>
 
 @interface AppDelegate : NSObject<NSApplicationDelegate>
 {
