@@ -14,7 +14,11 @@ addons:
     - gcc-5
     - g++-5
     - clang
-#    - libglfw3
+    - libxrandr-dev
+    - libxinerama-dev
+    - libxcursor-dev
+    - libxi-dev
+    - libegl1-mesa-dev
 
 before_script:
     - git submodule update --init --recursive
@@ -27,8 +31,6 @@ before_script:
     - git clone --depth 1 https://github.com/01org/tbb.git ../tbb
 
 script:
-    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libc6-dev-i386 gcc-5-multilib g++-5-multilib; fi
-    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libx11-dev libxext-dev libxpm-dev libxrandr-dev libxrender-dev libxcursor-dev libxi-dev libxinerama-dev; fi
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd .. && mkdir glfwbuild && cd glfwbuild && cmake ../glfw && make -j4 && sudo make install && cd ../rapp; fi
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then make linux CXX="g++-5" CC="gcc-5"; fi
 #    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then make osx; fi
