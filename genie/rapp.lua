@@ -31,11 +31,6 @@ function projectDependencies_rapp()
 	if _OPTIONS["scheduler"] == "tbb" then
 		table.insert(dependencies, "tbb")
 	end
-
-	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
-		table.insert(dependencies, "X11")
-	end
-
 	return dependencies
 end
 
@@ -44,7 +39,11 @@ function projectAdd_rapp()
 end
 
 function projectDependencies_rapp_bgfx()
-	return mergeTables( projectDependencies_rapp(), { "bx", "bimg", "bgfx" } )
+	local dependencies = projectDependencies_rapp()
+	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
+		table.insert(dependencies, "X11")
+	end
+	return mergeTables( dependencies, { "bx", "bimg", "bgfx" } )
 end
 
 function projectAdd_rapp_bgfx()
