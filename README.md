@@ -30,7 +30,7 @@ Features
 * Multiple applications in one binary
 * Window functions
 
-Here's a screenshot of a [bgfx](https://github.com/bkaradzic/bgfx) sample showing input debugging, [ImGui](https://github.com/ocornut/imgui) dialog and Quake like console:  
+Here's a screenshot of a [bgfx](https://github.com/bkaradzic/bgfx) sample showing input debugging, [ImGui](https://github.com/ocornut/imgui) dialog and Quake like console as well as [NanoVG](https://github.com/memononen/nanovg) shape (eyes):  
 <img src="https://github.com/milostosic/rapp/blob/master/img/input_debug.png">
 
 Platform support
