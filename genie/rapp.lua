@@ -35,19 +35,9 @@ function projectDependencies_rapp()
 	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
 		table.insert(dependencies, "X11")
 	end
-end
 
-function projectDependencies_bgfx()
-	local dependencies = { "bx", "bimg" }
-	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
-		table.insert(dependencies, "X11")
-		if _OPTIONS["with-glfw"] then
-			table.insert(dependencies, "GL")
-		end
-	end
 	return dependencies
-end 
-
+end
 
 function projectAdd_rapp() 
 	addProject_lib("rapp", Lib.Runtime, false, nil, nil, nil, nil, add_scheduler_defines())
