@@ -62,8 +62,8 @@ struct bgfxApp : public rapp::App
 
 		// Use debug font to print information about this example.
 		bgfx::dbgTextClear();
-		bgfx::dbgTextPrintf(0, 1, 0x4f, "rapp/samples/bgfx");
-		bgfx::dbgTextPrintf(0, 2, 0x6f, m_description);
+		bgfx::dbgTextPrintf(0, 1, 0x17, "rapp/samples/bgfx");
+		bgfx::dbgTextPrintf(0, 2, 0x37, m_description);
 
 		// debug input
 		rapp::inputDgbGamePads();

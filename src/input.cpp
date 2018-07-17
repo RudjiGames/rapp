@@ -741,20 +741,20 @@ void displayGamePadDbg(uint16_t _x, uint16_t _y, const GamepadState& _gp)
 #if RAPP_WITH_BGFX
 	if (_gp.m_buttons & GamepadState::Connected)
 	{
-		bgfx::dbgTextPrintf(_x, _y+0, 0x8e, "Tr[   ] S[ ]  Back Start Tr[   ]  S[ ]");
-		bgfx::dbgTextPrintf(_x, _y+1, 0x8e, "X[      ]   [^]   X[      ]    [Y]    ");
-		bgfx::dbgTextPrintf(_x, _y+2, 0x8e, "Y[      ] [<   >] Y[      ] [X]   [B] ");
-		bgfx::dbgTextPrintf(_x, _y+3, 0x8e, "T[ ]        [v]   T[ ]         [A]    ");
+		bgfx::dbgTextPrintf(_x, _y+0, 0x8b, "Tr[   ] S[ ]  Back Start Tr[   ]  S[ ]");
+		bgfx::dbgTextPrintf(_x, _y+1, 0x8b, "X[      ]   [^]   X[      ]    [Y]    ");
+		bgfx::dbgTextPrintf(_x, _y+2, 0x8b, "Y[      ] [<   >] Y[      ] [X]   [B] ");
+		bgfx::dbgTextPrintf(_x, _y+3, 0x8b, "T[ ]        [v]   T[ ]         [A]    ");
 
-		if (_gp.m_buttons & GamepadState::X)			bgfx::dbgTextPrintf(_x+28, _y+2, 0, "\x1b[14;4m[X]");
-		if (_gp.m_buttons & GamepadState::Y)			bgfx::dbgTextPrintf(_x+31, _y+1, 0, "\x1b[11;3m[Y]");
-		if (_gp.m_buttons & GamepadState::A)			bgfx::dbgTextPrintf(_x+31, _y+3, 0, "\x1b[10;2m[A]");
-		if (_gp.m_buttons & GamepadState::B)			bgfx::dbgTextPrintf(_x+34, _y+2, 0, "\x1b[9;1m[B]");
+		if (_gp.m_buttons & GamepadState::X)			bgfx::dbgTextPrintf(_x+28, _y+2, 0, "\x1b[7;1m[X]");
+		if (_gp.m_buttons & GamepadState::Y)			bgfx::dbgTextPrintf(_x+31, _y+1, 0, "\x1b[7;6m[Y]");
+		if (_gp.m_buttons & GamepadState::A)			bgfx::dbgTextPrintf(_x+31, _y+3, 0, "\x1b[7;2m[A]");
+		if (_gp.m_buttons & GamepadState::B)			bgfx::dbgTextPrintf(_x+34, _y+2, 0, "\x1b[7;4m[B]");
 
-		if (_gp.m_buttons & GamepadState::Up)			bgfx::dbgTextPrintf(_x+12, _y+1, 0xe6, "[^]");
-		if (_gp.m_buttons & GamepadState::Down)			bgfx::dbgTextPrintf(_x+12, _y+3, 0xe6, "[v]");
-		if (_gp.m_buttons & GamepadState::Left)			bgfx::dbgTextPrintf(_x+10, _y+2, 0xe6, "[<]");;
-		if (_gp.m_buttons & GamepadState::Right)		bgfx::dbgTextPrintf(_x+14, _y+2, 0xe6, "[>]");
+		if (_gp.m_buttons & GamepadState::Up)			bgfx::dbgTextPrintf(_x+12, _y+1, 0x3b, "[^]");
+		if (_gp.m_buttons & GamepadState::Down)			bgfx::dbgTextPrintf(_x+12, _y+3, 0x3b, "[v]");
+		if (_gp.m_buttons & GamepadState::Left)			bgfx::dbgTextPrintf(_x+10, _y+2, 0x3b, "[<]");;
+		if (_gp.m_buttons & GamepadState::Right)		bgfx::dbgTextPrintf(_x+14, _y+2, 0x3b, "[>]");
 
 		if (_gp.m_buttons & GamepadState::LThumb)		bgfx::dbgTextPrintf(_x+2,  _y+3, 0x8f, "\xfe");
 		if (_gp.m_buttons & GamepadState::RThumb)		bgfx::dbgTextPrintf(_x+20, _y+3, 0x8f, "\xfe");
@@ -767,14 +767,14 @@ void displayGamePadDbg(uint16_t _x, uint16_t _y, const GamepadState& _gp)
 
 		char valbuf[8]; // 6 chars + sign + trailing zero
 	
-		bgfx::dbgTextPrintf(_x+3,  _y, 0x8f, itoaWithSign(_gp.m_LTrigger, valbuf, 3, false));
-		bgfx::dbgTextPrintf(_x+28, _y, 0x8f, itoaWithSign(_gp.m_RTrigger, valbuf, 3, false));
+		bgfx::dbgTextPrintf(_x+3,  _y, 0x87, itoaWithSign(_gp.m_LTrigger, valbuf, 3, false));
+		bgfx::dbgTextPrintf(_x+28, _y, 0x87, itoaWithSign(_gp.m_RTrigger, valbuf, 3, false));
 
-		bgfx::dbgTextPrintf(_x+2, _y+1, 0x8f, itoaWithSign(_gp.m_LStick[0], valbuf, 6));
-		bgfx::dbgTextPrintf(_x+2, _y+2, 0x8f, itoaWithSign(_gp.m_LStick[1], valbuf, 6));
+		bgfx::dbgTextPrintf(_x+2, _y+1, 0x87, itoaWithSign(_gp.m_LStick[0], valbuf, 6));
+		bgfx::dbgTextPrintf(_x+2, _y+2, 0x87, itoaWithSign(_gp.m_LStick[1], valbuf, 6));
 
-		bgfx::dbgTextPrintf(_x+20, _y+1, 0x8f, itoaWithSign(_gp.m_RStick[0], valbuf, 6));
-		bgfx::dbgTextPrintf(_x+20, _y+2, 0x8f, itoaWithSign(_gp.m_RStick[1], valbuf, 6));
+		bgfx::dbgTextPrintf(_x+20, _y+1, 0x87, itoaWithSign(_gp.m_RStick[0], valbuf, 6));
+		bgfx::dbgTextPrintf(_x+20, _y+2, 0x87, itoaWithSign(_gp.m_RStick[1], valbuf, 6));
 	}
 	else
 	{
@@ -807,7 +807,7 @@ void inputDgbMouse()
 #if RAPP_WITH_BGFX
 	const bgfx::Stats* stats = bgfx::getStats();
 
-	bgfx::dbgTextPrintf(1, stats->textHeight-6, 0x8e, " Mouse X[    ] Y[    ] Z[     ]  NX[        ] NY[        ] NZ[        ] LB[ ] MB[ ] RB[ ]");
+	bgfx::dbgTextPrintf(1, stats->textHeight-6, 0x8b, " Mouse X[    ] Y[    ] Z[     ]  NX[        ] NY[        ] NZ[        ] LB[ ] MB[ ] RB[ ]");
 
 	Mouse& m = getInput().m_mouse;
 
@@ -836,8 +836,8 @@ void inputDgbKeyboard()
 #if RAPP_WITH_BGFX
 	const bgfx::Stats* stats = bgfx::getStats();
 
-	bgfx::dbgTextPrintf(91, stats->textHeight-7, 0x8e, "Kb LShift[ ]                                              RShift[ ]");
-	bgfx::dbgTextPrintf(91, stats->textHeight-6, 0x8e, "Kb LCtrl[ ] LMeta[ ] LAlt[ ]   ________   RAlt[ ] RMeta[ ] RCtrl[ ]");
+	bgfx::dbgTextPrintf(91, stats->textHeight-7, 0x8b, "Kb LShift[ ]                                              RShift[ ]");
+	bgfx::dbgTextPrintf(91, stats->textHeight-6, 0x8b, "Kb LCtrl[ ] LMeta[ ] LAlt[ ]   ________   RAlt[ ] RMeta[ ] RCtrl[ ]");
 
 	uint8_t modifiers = inputGetModifiersState();
 	if (modifiers & KeyboardState::Modifier::LShift)	bgfx::dbgTextPrintf(101, stats->textHeight-7, 0x8f, "\xfe");
