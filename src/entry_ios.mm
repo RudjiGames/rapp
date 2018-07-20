@@ -17,7 +17,7 @@
 #include <bgfxplatform.h>
 #endif
 
-namespace entry
+namespace rapp
 {
 	struct MainThreadEntry
 	{
@@ -151,9 +151,9 @@ namespace entry
 		RTM_UNUSED(_handle, _lock);
 	}
 
-} // namespace entry
+} // namespace rapp
 
-using namespace entry;
+using namespace rapp;
 
 @interface View : UIView
 {

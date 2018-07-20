@@ -43,7 +43,7 @@
 
 @end
 
-namespace entry
+namespace rapp
 {
 	static WindowHandle s_defaultWindow = { 0 };	// TODO: Add support for more windows
 	static uint8_t s_translateKey[256];
@@ -643,7 +643,7 @@ namespace entry
 		BX_UNUSED(_handle, _lock);
 	}
 
-} // namespace entry
+} // namespace rapp
 
 @implementation AppDelegate
 
@@ -736,7 +736,7 @@ namespace entry
 - (void)windowDidResize:(NSNotification*)notification
 {
 	BX_UNUSED(notification);
-	using namespace entry;
+	using namespace rapp;
 	s_ctx.windowDidResize();
 }
 
@@ -744,7 +744,7 @@ namespace entry
 
 int main(int _argc, char** _argv)
 {
-	using namespace entry;
+	using namespace rapp;
 	return s_ctx.run(_argc, _argv);
 }
 
