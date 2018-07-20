@@ -198,7 +198,7 @@ namespace rapp
 			return mask;
 		}
 
-		Key::Enum handleKeyEvent(NSEvent* event, uint8_t* specialKeys, uint8_t* _pressedChar)
+		KeyboardState::Key handleKeyEvent(NSEvent* event, uint8_t* specialKeys, uint8_t* _pressedChar)
 		{
 			NSString* key = [event charactersIgnoringModifiers];
 			unichar keyChar = 0;
@@ -216,7 +216,7 @@ namespace rapp
 			// if this is a unhandled key just return None
 			if (keyCode < 256)
 			{
-				return (Key::Enum)s_translateKey[keyCode];
+				return (KeyboardState::Key)s_translateKey[keyCode];
 			}
 
 			switch (keyCode)
@@ -322,7 +322,7 @@ namespace rapp
 					{
 						uint8_t modifiers = 0;
 						uint8_t pressedChar[4];
-						Key::Enum key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
+						KeyboardState::Key key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
 
 						// Returning false means that we take care of the key (instead of the default behavior)
 						if (key != Key::None)
@@ -347,7 +347,7 @@ namespace rapp
 					{
 						uint8_t modifiers  = 0;
 						uint8_t pressedChar[4];
-						Key::Enum key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
+						KeyboardState::Key key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
 
 						BX_UNUSED(pressedChar);
 
