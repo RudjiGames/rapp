@@ -489,6 +489,9 @@ namespace rapp
 
 		bx::HandleAllocT<ENTRY_CONFIG_MAX_WINDOWS> m_windowAlloc;
 		NSWindow* m_window[ENTRY_CONFIG_MAX_WINDOWS];
+	
+//		rtm::Data<NSWindow*, RAPP_MAX_WINDOWS, rtm::Storage::Dense>	m_windows; 
+
 		NSRect m_windowFrame;
 
 		float   m_scrollf;
