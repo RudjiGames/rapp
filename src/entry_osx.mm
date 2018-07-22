@@ -12,7 +12,7 @@
 #import <Cocoa/Cocoa.h>
 
 #if RAPP_WITH_BGFX
-#include <bgfxplatform.h>
+#include <bgfx/platform.h>
 #endif
 
 #include <rbase/inc/uint32_t.h>
@@ -45,6 +45,18 @@
 
 namespace rapp
 {
+#if RAPP_WITH_BGFX
+	inline void osxSetNSWindow(void* _window, void* _nsgl = 0)
+	{
+		bgfx::PlatformData pd;
+		pd.ndt		= 0;
+		pd.nwh		= _window;
+		pd.context	= _nsgl;
+		pd.backBuffer	= 0;
+		pd.backBufferDS	= 0;
+		bgfx::setPlatformData(pd);
+	}
+#endif
 	static WindowHandle s_defaultWindow = { 0 };	// TODO: Add support for more windows
 	static uint8_t s_translateKey[256];
 
@@ -86,54 +98,54 @@ namespace rapp
 			, m_exit(false)
 			, m_fullscreen(false)
 		{
-			s_translateKey[27]             = Key::Esc;
-			s_translateKey[uint8_t('\n')]  = Key::Return;
-			s_translateKey[uint8_t('\t')]  = Key::Tab;
-			s_translateKey[127]            = Key::Backspace;
-			s_translateKey[uint8_t(' ')]   = Key::Space;
+			s_translateKey[27]             = KeyboardState::Key::Esc;
+			s_translateKey[uint8_t('\n')]  = KeyboardState::Key::Return;
+			s_translateKey[uint8_t('\t')]  = KeyboardState::Key::Tab;
+			s_translateKey[127]            = KeyboardState::Key::Backspace;
+			s_translateKey[uint8_t(' ')]   = KeyboardState::Key::Space;
 
 			s_translateKey[uint8_t('+')]   =
-			s_translateKey[uint8_t('=')]   = Key::Plus;
+			s_translateKey[uint8_t('=')]   = KeyboardState::Key::Plus;
 			s_translateKey[uint8_t('_')]   =
-			s_translateKey[uint8_t('-')]   = Key::Minus;
+			s_translateKey[uint8_t('-')]   = KeyboardState::Key::Minus;
 
 			s_translateKey[uint8_t('~')]   =
-			s_translateKey[uint8_t('`')]   = Key::Tilde;
+			s_translateKey[uint8_t('`')]   = KeyboardState::Key::Tilde;
 
 			s_translateKey[uint8_t(':')]   =
-			s_translateKey[uint8_t(';')]   = Key::Semicolon;
+			s_translateKey[uint8_t(';')]   = KeyboardState::Key::Semicolon;
 			s_translateKey[uint8_t('"')]   =
-			s_translateKey[uint8_t('\'')]  = Key::Quote;
+			s_translateKey[uint8_t('\'')]  = KeyboardState::Key::Quote;
 
 			s_translateKey[uint8_t('{')]   =
-			s_translateKey[uint8_t('[')]   = Key::LeftBracket;
+			s_translateKey[uint8_t('[')]   = KeyboardState::Key::LeftBracket;
 			s_translateKey[uint8_t('}')]   =
-			s_translateKey[uint8_t(']')]   = Key::RightBracket;
+			s_translateKey[uint8_t(']')]   = KeyboardState::Key::RightBracket;
 
 			s_translateKey[uint8_t('<')]   =
-			s_translateKey[uint8_t(',')]   = Key::Comma;
+			s_translateKey[uint8_t(',')]   = KeyboardState::Key::Comma;
 			s_translateKey[uint8_t('>')]   =
-			s_translateKey[uint8_t('.')]   = Key::Period;
+			s_translateKey[uint8_t('.')]   = KeyboardState::Key::Period;
 			s_translateKey[uint8_t('?')]   =
-			s_translateKey[uint8_t('/')]   = Key::Slash;
+			s_translateKey[uint8_t('/')]   = KeyboardState::Key::Slash;
 			s_translateKey[uint8_t('|')]   =
-			s_translateKey[uint8_t('\\')]  = Key::Backslash;
+			s_translateKey[uint8_t('\\')]  = KeyboardState::Key::Backslash;
 
-			s_translateKey[uint8_t('0')]   = Key::Key0;
-			s_translateKey[uint8_t('1')]   = Key::Key1;
-			s_translateKey[uint8_t('2')]   = Key::Key2;
-			s_translateKey[uint8_t('3')]   = Key::Key3;
-			s_translateKey[uint8_t('4')]   = Key::Key4;
-			s_translateKey[uint8_t('5')]   = Key::Key5;
-			s_translateKey[uint8_t('6')]   = Key::Key6;
-			s_translateKey[uint8_t('7')]   = Key::Key7;
-			s_translateKey[uint8_t('8')]   = Key::Key8;
-			s_translateKey[uint8_t('9')]   = Key::Key9;
+			s_translateKey[uint8_t('0')]   = KeyboardState::Key::Key0;
+			s_translateKey[uint8_t('1')]   = KeyboardState::Key::Key1;
+			s_translateKey[uint8_t('2')]   = KeyboardState::Key::Key2;
+			s_translateKey[uint8_t('3')]   = KeyboardState::Key::Key3;
+			s_translateKey[uint8_t('4')]   = KeyboardState::Key::Key4;
+			s_translateKey[uint8_t('5')]   = KeyboardState::Key::Key5;
+			s_translateKey[uint8_t('6')]   = KeyboardState::Key::Key6;
+			s_translateKey[uint8_t('7')]   = KeyboardState::Key::Key7;
+			s_translateKey[uint8_t('8')]   = KeyboardState::Key::Key8;
+			s_translateKey[uint8_t('9')]   = KeyboardState::Key::Key9;
 
 			for (char ch = 'a'; ch <= 'z'; ++ch)
 			{
 				s_translateKey[uint8_t(ch)]       =
-				s_translateKey[uint8_t(ch - ' ')] = Key::KeyA + (ch - 'a');
+				s_translateKey[uint8_t(ch - ' ')] = KeyboardState::Key::KeyA + (ch - 'a');
 			}
 		}
 
@@ -159,8 +171,7 @@ namespace rapp
 
 		void getMousePos(int* outX, int* outY)
 		{
-			WindowHandle handle = { 0 };
-			NSWindow* window = m_window[handle.idx];
+			NSWindow* window = m_windows.getDataIndexed(0);
 			NSRect originalFrame = [window frame];
 			NSPoint location = [window mouseLocationOutsideOfEventStream];
 			NSRect adjustFrame = [window contentRectForFrameRect: originalFrame];
@@ -184,16 +195,16 @@ namespace rapp
 			uint8_t mask = 0;
 
 			if (flags & NSShiftKeyMask)
-				mask |= Modifier::LeftShift | Modifier::RightShift;
+				mask |= KeyboardState::Modifier::LShift | KeyboardState::Modifier::RShift;
 
 			if (flags & NSAlternateKeyMask)
-				mask |= Modifier::LeftAlt | Modifier::RightAlt;
+				mask |= KeyboardState::Modifier::LAlt | KeyboardState::Modifier::RAlt;
 
 			if (flags & NSControlKeyMask)
-				mask |= Modifier::LeftCtrl | Modifier::RightCtrl;
+				mask |= KeyboardState::Modifier::LCtrl | KeyboardState::Modifier::RCtrl;
 
 			if (flags & NSCommandKeyMask)
-				mask |= Modifier::LeftMeta | Modifier::RightMeta;
+				mask |= KeyboardState::Modifier::LMeta | KeyboardState::Modifier::RMeta;
 
 			return mask;
 		}
@@ -204,7 +215,7 @@ namespace rapp
 			unichar keyChar = 0;
 			if ([key length] == 0)
 			{
-				return Key::None;
+				return KeyboardState::Key::None;
 			}
 
 			keyChar = [key characterAtIndex:0];
@@ -221,33 +232,33 @@ namespace rapp
 
 			switch (keyCode)
 			{
-			case NSF1FunctionKey:  return Key::F1;
-			case NSF2FunctionKey:  return Key::F2;
-			case NSF3FunctionKey:  return Key::F3;
-			case NSF4FunctionKey:  return Key::F4;
-			case NSF5FunctionKey:  return Key::F5;
-			case NSF6FunctionKey:  return Key::F6;
-			case NSF7FunctionKey:  return Key::F7;
-			case NSF8FunctionKey:  return Key::F8;
-			case NSF9FunctionKey:  return Key::F9;
-			case NSF10FunctionKey: return Key::F10;
-			case NSF11FunctionKey: return Key::F11;
-			case NSF12FunctionKey: return Key::F12;
+			case NSF1FunctionKey:  return KeyboardState::Key::F1;
+			case NSF2FunctionKey:  return KeyboardState::Key::F2;
+			case NSF3FunctionKey:  return KeyboardState::Key::F3;
+			case NSF4FunctionKey:  return KeyboardState::Key::F4;
+			case NSF5FunctionKey:  return KeyboardState::Key::F5;
+			case NSF6FunctionKey:  return KeyboardState::Key::F6;
+			case NSF7FunctionKey:  return KeyboardState::Key::F7;
+			case NSF8FunctionKey:  return KeyboardState::Key::F8;
+			case NSF9FunctionKey:  return KeyboardState::Key::F9;
+			case NSF10FunctionKey: return KeyboardState::Key::F10;
+			case NSF11FunctionKey: return KeyboardState::Key::F11;
+			case NSF12FunctionKey: return KeyboardState::Key::F12;
 
-			case NSLeftArrowFunctionKey:   return Key::Left;
-			case NSRightArrowFunctionKey:  return Key::Right;
-			case NSUpArrowFunctionKey:     return Key::Up;
-			case NSDownArrowFunctionKey:   return Key::Down;
+			case NSLeftArrowFunctionKey:   return KeyboardState::Key::Left;
+			case NSRightArrowFunctionKey:  return KeyboardState::Key::Right;
+			case NSUpArrowFunctionKey:     return KeyboardState::Key::Up;
+			case NSDownArrowFunctionKey:   return KeyboardState::Key::Down;
 
-			case NSPageUpFunctionKey:      return Key::PageUp;
-			case NSPageDownFunctionKey:    return Key::PageDown;
-			case NSHomeFunctionKey:        return Key::Home;
-			case NSEndFunctionKey:         return Key::End;
+			case NSPageUpFunctionKey:      return KeyboardState::Key::PageUp;
+			case NSPageDownFunctionKey:    return KeyboardState::Key::PageDown;
+			case NSHomeFunctionKey:        return KeyboardState::Key::Home;
+			case NSEndFunctionKey:         return KeyboardState::Key::End;
 
-			case NSPrintScreenFunctionKey: return Key::Print;
+			case NSPrintScreenFunctionKey: return KeyboardState::Key::Print;
 			}
 
-			return Key::None;
+			return KeyboardState::Key::None;
 		}
 
 		bool dispatchEvent(NSEvent* event)
@@ -264,7 +275,7 @@ namespace rapp
 					case NSOtherMouseDragged:
 					{
 						getMousePos(&m_mx, &m_my);
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, 0);
 						break;
 					}
 
@@ -273,39 +284,39 @@ namespace rapp
 						// TODO: remove!
 						// Command + Left Mouse Button acts as middle! This just a temporary solution!
 						// This is becase the average OSX user doesn't have middle mouse click.
-						MouseButton::Enum mb = ([event modifierFlags] & NSCommandKeyMask) ? MouseButton::Middle : MouseButton::Left;
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, mb, true);
+						MouseState::Button mb = ([event modifierFlags] & NSCommandKeyMask) ? MouseState::Button::Middle : MouseState::Button::Left;
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, mb, 0, true, false);
 						break;
 					}
 
 					case NSLeftMouseUp:
 					{
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Left, false);
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Middle, false); // TODO: remove!
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Left, 0, false, false);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Middle, 0, false, false); // TODO: remove!
 						break;
 					}
 
 					case NSRightMouseDown:
 					{
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Right, true);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Right, 0, true, false);
 						break;
 					}
 
 					case NSRightMouseUp:
 					{
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Right, false);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Right, 0, false, false);
 						break;
 					}
 
 					case NSOtherMouseDown:
 					{
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Middle, true);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Middle, 0, true, false);
 						break;
 					}
 
 					case NSOtherMouseUp:
 					{
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Middle, false);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Middle, 0, false, false);
 						break;
 					}
 
@@ -314,7 +325,7 @@ namespace rapp
 						m_scrollf += [event deltaY];
 
 						m_scroll = (int32_t)m_scrollf;
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, 0);
 						break;
 					}
 
@@ -325,15 +336,15 @@ namespace rapp
 						KeyboardState::Key key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
 
 						// Returning false means that we take care of the key (instead of the default behavior)
-						if (key != Key::None)
+						if (key != KeyboardState::Key::None)
 						{
-							if (key == Key::KeyQ && (modifiers & Modifier::RightMeta) )
+							if (key == KeyboardState::Key::KeyQ && (modifiers & KeyboardState::Modifier::RMeta) )
 							{
 								m_eventQueue.postExitEvent();
 							}
 							else
 							{
-								enum { ShiftMask = Modifier::LeftShift|Modifier::RightShift };
+								enum { ShiftMask = KeyboardState::Modifier::LShift|KeyboardState::Modifier::RShift };
 								m_eventQueue.postCharEvent(s_defaultWindow, 1, pressedChar);
 								m_eventQueue.postKeyEvent(s_defaultWindow, key, modifiers, true);
 								return false;
@@ -349,9 +360,9 @@ namespace rapp
 						uint8_t pressedChar[4];
 						KeyboardState::Key key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
 
-						BX_UNUSED(pressedChar);
+						RTM_UNUSED(pressedChar);
 
-						if (key != Key::None)
+						if (key != KeyboardState::Key::None)
 						{
 							m_eventQueue.postKeyEvent(s_defaultWindow, key, modifiers, false);
 							return false;
@@ -372,17 +383,16 @@ namespace rapp
 
 		void windowDidResize()
 		{
-			WindowHandle handle = { 0 };
-			NSWindow* window = m_window[handle.idx];
+			NSWindow* window = m_windows.getDataIndexed(0);
 			NSRect originalFrame = [window frame];
 			NSRect rect = [window contentRectForFrameRect: originalFrame];
 			uint32_t width  = uint32_t(rect.size.width);
 			uint32_t height = uint32_t(rect.size.height);
-			m_eventQueue.postSizeEvent(handle, width, height);
+			m_eventQueue.postSizeEvent({0}, width, height);
 
 			// Make sure mouse button state is 'up' after resize.
-			m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Left,  false);
-			m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Right, false);
+			m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Left, 0, false, false);
+			m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Right,0, false,  false);
 		}
 
 		int32_t run(int _argc, char** _argv)
@@ -426,12 +436,15 @@ namespace rapp
 					| NSResizableWindowMask
 					;
 
+			uint32_t dWidth;
+			uint32_t dHeight;
+			windowGetDefaultSize(&dWidth, &dHeight);
 			NSRect screenRect = [[NSScreen mainScreen] frame];
-			const float centerX = (screenRect.size.width  - (float)ENTRY_DEFAULT_WIDTH )*0.5f;
-			const float centerY = (screenRect.size.height - (float)ENTRY_DEFAULT_HEIGHT)*0.5f;
+			const float centerX = (screenRect.size.width  - (float)dWidth )*0.5f;
+			const float centerY = (screenRect.size.height - (float)dHeight)*0.5f;
 
-			m_windowAlloc.alloc();
-			NSRect rect = NSMakeRect(centerX, centerY, (float)ENTRY_DEFAULT_WIDTH, (float)ENTRY_DEFAULT_HEIGHT);
+			m_windows.allocate();
+			NSRect rect = NSMakeRect(centerX, centerY, (float)dWidth, (float)dHeight);
 			NSWindow* window = [[NSWindow alloc]
 				initWithContentRect:rect
 				styleMask:m_style
@@ -444,11 +457,11 @@ namespace rapp
 			[window setBackgroundColor:[NSColor blackColor]];
 			[[Window sharedDelegate] windowCreated:window];
 
-			m_window[0] = window;
+			*m_windows.getDataIndexedPtr(0) = window;
 			m_windowFrame = [window frame];
 
 #if RAPP_WITH_BGFX
-			bgfx::osxSetNSWindow(window);
+			osxSetNSWindow(window);
 #endif
 			MainThreadEntry mte;
 			mte.m_argc = _argc;
@@ -482,15 +495,12 @@ namespace rapp
 
 		bool isValid(WindowHandle _handle)
 		{
-			return m_windowAlloc.isValid(_handle.idx);
+			return m_windows.isValid(_handle.idx);
 		}
 
 		EventQueue m_eventQueue;
 
-		bx::HandleAllocT<ENTRY_CONFIG_MAX_WINDOWS> m_windowAlloc;
-		NSWindow* m_window[ENTRY_CONFIG_MAX_WINDOWS];
-	
-//		rtm::Data<NSWindow*, RAPP_MAX_WINDOWS, rtm::Storage::Dense>	m_windows; 
+		rtm::Data<NSWindow*, RAPP_MAX_WINDOWS, rtm::Storage::Dense>	m_windows; 
 
 		NSRect m_windowFrame;
 
@@ -520,7 +530,7 @@ namespace rapp
 		s_ctx.m_eventQueue.release(_event);
 	}
 
-	void appRunOnMainThread(App::threadFn _fn, void* _userData)
+	void appRunOnMainThread(ThreadFn _fn, void* _userData)
 	{
 	}
 
@@ -534,7 +544,7 @@ namespace rapp
 
 	WindowHandle windowCreate(App* _app, int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
 	{
-		BX_UNUSED(_x, _y, _width, _height, _flags, _title);
+		RTM_UNUSED_6(_x, _y, _width, _height, _flags, _title);
 		WindowHandle handle = { UINT16_MAX };
 		return handle;
 	}
@@ -545,7 +555,7 @@ namespace rapp
 		{
 			dispatch_async(dispatch_get_main_queue()
 			, ^{
-				[s_ctx.m_window[_handle.idx] performClose: nil];
+				[s_ctx.m_windows.getData(_handle.idx) performClose: nil];
 			});
 		}
 	}
@@ -554,7 +564,7 @@ namespace rapp
 	{
 		if (s_ctx.isValid(_handle) )
 		{
-			NSWindow* window = s_ctx.m_window[_handle.idx];
+			NSWindow* window = s_ctx.m_windows.getData(_handle.idx);
 			NSScreen* screen = [window screen];
 
 			NSRect screenRect = [screen frame];
@@ -576,7 +586,7 @@ namespace rapp
 			NSSize size = { float(_width), float(_height) };
 			dispatch_async(dispatch_get_main_queue()
 			, ^{
-				[s_ctx.m_window[_handle.idx] setContentSize: size];
+				[s_ctx.m_windows.getData(_handle.idx) setContentSize: size];
 			});
 		}
 	}
@@ -588,7 +598,7 @@ namespace rapp
 			NSString* title = [[NSString alloc] initWithCString:_title encoding:1];
 			dispatch_async(dispatch_get_main_queue()
 			, ^{
-				[s_ctx.m_window[_handle.idx] setTitle: title];
+				[s_ctx.m_windows.getData(_handle.idx) setTitle: title];
 			});
 			[title release];
 		}
@@ -601,7 +611,7 @@ namespace rapp
 			s_ctx.m_style ^= NSTitledWindowMask;
 			dispatch_async(dispatch_get_main_queue()
 			, ^{
-				[s_ctx.m_window[_handle.idx] setStyleMask: s_ctx.m_style];
+				[s_ctx.m_windows.getData(_handle.idx) setStyleMask: s_ctx.m_style];
 			});
 		}
 	}
@@ -610,7 +620,7 @@ namespace rapp
 	{
 		if (s_ctx.isValid(_handle) )
 		{
-			NSWindow* window = s_ctx.m_window[_handle.idx];
+			NSWindow* window = s_ctx.m_windows.getData(_handle.idx);
 			NSScreen* screen = [window screen];
 			NSRect screenRect = [screen frame];
 
@@ -643,7 +653,7 @@ namespace rapp
 
 	void windowSetMouseLock(WindowHandle _handle, bool _lock)
 	{
-		BX_UNUSED(_handle, _lock);
+		RTM_UNUSED_2(_handle, _lock);
 	}
 
 } // namespace rapp
@@ -671,7 +681,7 @@ namespace rapp
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
-	BX_UNUSED(sender);
+	RTM_UNUSED(sender);
 	self->terminated = true;
 	return NSTerminateCancel;
 }
@@ -715,7 +725,7 @@ namespace rapp
 
 - (void)windowWillClose:(NSNotification*)notification
 {
-	BX_UNUSED(notification);
+	RTM_UNUSED(notification);
 }
 
 - (BOOL)windowShouldClose:(NSWindow*)window
@@ -738,7 +748,7 @@ namespace rapp
 
 - (void)windowDidResize:(NSNotification*)notification
 {
-	BX_UNUSED(notification);
+	RTM_UNUSED(notification);
 	using namespace rapp;
 	s_ctx.windowDidResize();
 }

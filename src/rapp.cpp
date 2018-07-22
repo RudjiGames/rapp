@@ -324,7 +324,7 @@ App* g_next_app = 0;
 
 void appSwitch(App* _app)
 {
-	rtm::interlockedSet((intptr_t*)&g_next_app, (intptr_t)_app);
+	g_next_app = _app;
 }
 
 bool processEvents(App* _app);
