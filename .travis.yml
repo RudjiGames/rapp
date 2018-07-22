@@ -1,4 +1,4 @@
-language: cpp
+LANGUage: cpp
 matrix:
   include:
     - compiler: gcc
@@ -33,7 +33,7 @@ before_script:
 script:
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd .. && mkdir glfwbuild && cd glfwbuild && cmake ../glfw && make -j4 && sudo make install && cd ../rapp; fi
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then make linux CXX="g++-5" CC="gcc-5"; fi
-    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then make osx; fi
+#    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then make osx; fi
 
 branches:
   only:
