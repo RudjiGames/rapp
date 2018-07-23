@@ -51,6 +51,13 @@ function projectExtraConfigExecutable_rapp()
 			"pthread",
 		}
 
+	configuration { "osx" }
+		linkoptions {
+			"-framework CoreFoundation",
+			"-framework Cocoa",
+			"-framework OpenGL",
+		}
+		
 	configuration {}
  end
 
