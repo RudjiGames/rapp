@@ -45,7 +45,7 @@ function projectDependencies_rapp_bgfx()
 	return mergeTables( projectDependencies_rapp(), { "bx", "bimg", "bgfx" } )
 end
 
-function projectExtraConfig_rapp()
+function projectExtraConfigExecutable_rapp()
 	configuration { "linux-* or freebsd" }
 		links {
 			"pthread",
