@@ -38,7 +38,7 @@ function projectDependencies_rapp()
 end
 
 function projectAdd_rapp() 
-	addProject_lib("rapp", Lib.Runtime, false, nil, nil, nil, nil, add_scheduler_defines())
+	addProject_lib("rapp", Lib.Runtime, false, nil, nil, nil, add_scheduler_defines())
 end
 
 function projectDependencies_rapp_bgfx()
@@ -71,7 +71,7 @@ function projectAdd_rapp_bgfx()
 		bgfxPath .. "examples/"
 	}
 
-	addProject_lib("rapp", Lib.Runtime, false, nil, nil, 
+	addProject_lib("rapp", Lib.Runtime, false, nil,  
 						extraFiles, 
 						extraIncludes, 
 						add_scheduler_defines({ "RAPP_WITH_BGFX=1" }), "_bgfx")
