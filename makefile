@@ -62,7 +62,7 @@ vs2015:
 vs2017:
 	$(GENIE) --file=genie/genie.lua vs2017
 
-../.build/osx/gcc/rapp/projects:
+../.build/osx/clang/rapp/projects:
 	$(GENIE) --file=genie/genie.lua --gcc=osx gmake
 osx-debug64: ../.build/osx/clang/rapp/projects
 	make -R -C ../.build/osx/clang/rapp/projects config=debug64
