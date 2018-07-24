@@ -29,6 +29,8 @@ before_script:
     - git clone --depth 1 https://github.com/bkaradzic/bgfx.git ../bgfx
     - git clone --depth 1 https://github.com/glfw/glfw ../glfw
     - git clone --depth 1 https://github.com/01org/tbb.git ../tbb
+    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then chmod 764  ../build/tools/bin/linux/genie; fi
+    - if [ "$TRAVIS_OS_NAME" == "osx" ];   then chmod 764  ../build/tools/bin/darwin/genie; fi
 
 script:
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd .. && mkdir glfwbuild && cd glfwbuild && cmake ../glfw && make -j4 && sudo make install && cd ../rapp; fi
