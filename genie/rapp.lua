@@ -50,6 +50,7 @@ function projectDependencies_rapp_bgfx()
 end
 
 function projectExtraConfigExecutable_rapp()
+	local bgfxPath = find3rdPartyProject("bgfx")
 	configuration { "linux-* or freebsd" }
 		links {
 			"pthread",
@@ -61,6 +62,11 @@ function projectExtraConfigExecutable_rapp()
 			"-framework Cocoa",
 			"-framework OpenGL",
 		}
+
+	includedirs {
+		bgfxPath .. "include/",
+		bgfxPath .. "3rdparty/" 
+	 }
 		
 	configuration {}
  end
@@ -81,6 +87,14 @@ function projectExtraConfig_rapp_bgfx()
 		bgfxPath .. "examples/"
 	}
 	defines { add_scheduler_defines({ "RAPP_WITH_BGFX=1" }) }
+end
+
+function projectExtraConfigExecutable_rapp_bgfx()
+	local bgfxPath = find3rdPartyProject("bgfx")
+	includedirs {
+		bgfxPath .. "3rdparty/",
+		bgfxPath .. "examples/"
+	}
 end
 
 function projectAdd_rapp_bgfx()
