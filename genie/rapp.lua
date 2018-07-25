@@ -50,7 +50,6 @@ function projectDependencies_rapp_bgfx()
 end
 
 function projectExtraConfigExecutable_rapp()
-	local bgfxPath = find3rdPartyProject("bgfx")
 	configuration { "linux-* or freebsd" }
 		links {
 			"pthread",
@@ -63,11 +62,6 @@ function projectExtraConfigExecutable_rapp()
 			"-framework OpenGL",
 		}
 
-	includedirs {
-		bgfxPath .. "include/",
-		bgfxPath .. "3rdparty/" 
-	 }
-		
 	configuration {}
  end
 
