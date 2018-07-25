@@ -90,7 +90,7 @@ License (BSD 2-clause)
 <img align="right" src="http://opensource.org/trademarks/opensource/OSI-Approved-License-100x137.png">
 </a>
 
-	Copyright (c) 2017 Milos Tosic. All rights reserved.
+	Copyright (c) 2018 Milos Tosic. All rights reserved.
 	
 	https://github.com/milostosic/rapp
 	

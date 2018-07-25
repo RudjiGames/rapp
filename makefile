@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2017 Milos Toisc. All rights reserved.
+# Copyright (c) 2018 Milos Toisc. All rights reserved.
 # License: https://github.com/bkaradzic/bgfx#license-bsd-2-clause
 #
 
