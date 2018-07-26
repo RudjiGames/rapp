@@ -21,7 +21,6 @@ addons:
     - libegl1-mesa-dev
 
 before_script:
-    - git submodule update --init --recursive
     - git clone --depth 1 https://github.com/milostosic/build ../build
     - git clone --depth 1 https://github.com/milostosic/rbase ../rbase
     - git clone --depth 1 https://github.com/bkaradzic/bx.git   ../bx
