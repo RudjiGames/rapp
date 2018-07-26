@@ -406,8 +406,8 @@ namespace rapp {
 
 #ifdef RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
-#include "../examples/common/imgui/imgui.h"
-#include "../examples/common/nanovg/nanovg.h"
+#include <imgui/imgui.h>
+#include <nanovg/nanovg.h>
 #endif
 
 #define RAPP_CLASS(_appClass)												\

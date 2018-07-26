@@ -78,7 +78,8 @@ function projectExtraConfig_rapp_bgfx()
  	}
 	includedirs {
 		bgfxPath .. "3rdparty/",
-		bgfxPath .. "examples/"
+		bgfxPath .. "examples/",
+		bgfxPath .. "examples/common/" 	
 	}
 	defines { add_scheduler_defines({ "RAPP_WITH_BGFX=1" }) }
 end
@@ -87,7 +88,7 @@ function projectExtraConfigExecutable_rapp_bgfx()
 	local bgfxPath = find3rdPartyProject("bgfx")
 	includedirs {
 		bgfxPath .. "3rdparty/",
-		bgfxPath .. "examples/"
+		bgfxPath .. "examples/common/" 	
 	}
 end
 
