@@ -1,5 +1,4 @@
-rapp
-======
+<img src="https://github.com/milostosic/milostosic.github.io/raw/master/logo_libs/rapp.png"/>
 
 [![Build Status](https://travis-ci.org/milostosic/rapp.svg?branch=master)](https://travis-ci.org/milostosic/rapp)
 [![Build status](https://ci.appveyor.com/api/projects/status/4wuljmu9t6rcqf00?svg=true)](https://ci.appveyor.com/project/milostosic/rapp)
