@@ -4,7 +4,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/4wuljmu9t6rcqf00?svg=true)](https://ci.appveyor.com/project/milostosic/rapp)
 [![License](https://img.shields.io/badge/license-BSD--2%20clause-blue.svg)](https://github.com/milostosic/rapp/blob/master/LICENSE)
 
-rapp is a library that provides cross-platform application entry point and additional functionality.
+**rapp** is a library that provides cross-platform application entry point and additional functionality.
 rapp is **heavily** based on [bgfx](https://github.com/bkaradzic/bgfx) examples entry point code that can be found [here](https://github.com/bkaradzic/bgfx/tree/master/examples/common/entry). Graphics code is still [bgfx](https://github.com/bkaradzic/bgfx) based but..  
 
 ...dependecy on [bx](https://github.com/bkaradzic/bx) and [bgfx](https://github.com/bkaradzic/bgfx) has been removed by aggressively copying code and by a special feature of [build](https://github.com/milostosic/build) system that allows to have the same library in a 'solution' with different configurations.  
