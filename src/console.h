@@ -41,11 +41,11 @@ struct Console
 	void addLog(uint8_t _r, uint8_t _g, uint8_t _b, const char* fmt, ...);
 	void draw();
 	void execCommand(const char* command_line);
-    int  textEditCallback(ImGuiTextEditCallbackData* data);
+    int  textEditCallback(ImGuiInputTextCallbackData* data);
 	void toggleVisibility();
 	void updateCommands();
 
-	static int textEditCallbackStub(ImGuiTextEditCallbackData* data);
+	static int textEditCallbackStub(ImGuiInputTextCallbackData* data);
 };
 
 } // namespace rapp

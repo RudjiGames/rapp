@@ -252,13 +252,13 @@ void Console::execCommand(const char* command_line)
     }
 }
 
-int Console::textEditCallbackStub(ImGuiTextEditCallbackData* data)
+int Console::textEditCallbackStub(ImGuiInputTextCallbackData* data)
 {
     Console* console = (Console*)data->UserData;
     return console->textEditCallback(data);
 }
 
-int Console::textEditCallback(ImGuiTextEditCallbackData* data)
+int Console::textEditCallback(ImGuiInputTextCallbackData* data)
 {
     switch (data->EventFlag)
     {
