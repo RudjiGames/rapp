@@ -176,7 +176,7 @@ void Console::draw()
         ImGui::LogFinish();
 
     if (m_scrollToBottom)
-        ImGui::SetScrollHere();
+        ImGui::SetScrollHereY();
 
     m_scrollToBottom = false;
     ImGui::PopFont();
