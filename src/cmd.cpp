@@ -354,7 +354,7 @@ int cmdGraphics(App* _app, void* _userData, int _argc, char const* const* _argv)
 #if RAPP_WITH_BGFX
 	if (_argc > 1)
 	{
-		if (rtm::strincmp(_argv[1], "help") == 0)
+		if (rtm::striCmp(_argv[1], "help") == 0)
 		{
 			cmdConsoleLog(_app, "graphics vsync       - toggle vsync on/off");
 			cmdConsoleLog(_app, "graphics maxaniso    - set maximum anisotropy");
@@ -435,7 +435,7 @@ int cmdApp(App* _app, void* _userData, int _argc, char const* const* _argv)
 
 	if (_argc > 1)
 	{
-		if (rtm::strincmp(_argv[1], "help") == 0)
+		if (rtm::striCmp(_argv[1], "help") == 0)
 		{
 			cmdConsoleLog(_app, "app list            - lists registered applications");
 			cmdConsoleLog(_app, "app run [idx/name]  - runs application with given index or name");
@@ -444,7 +444,7 @@ int cmdApp(App* _app, void* _userData, int _argc, char const* const* _argv)
 
 		rtm_vector<App*>& apps = appGetRegistered();
 
-		if (rtm::strincmp(_argv[1], "list") == 0)
+		if (rtm::striCmp(_argv[1], "list") == 0)
 		{
 			cmdConsoleLogRGB(127, 255, 255, _app, "Registered apps:");
 			uint32_t maxNameLen = 0;
@@ -459,7 +459,7 @@ int cmdApp(App* _app, void* _userData, int _argc, char const* const* _argv)
 			return 0;
 		}
 
-		if (rtm::strincmp(_argv[1], "run") == 0)
+		if (rtm::striCmp(_argv[1], "run") == 0)
 		{
 			if (_argc != 3)
 				return 1;
@@ -469,7 +469,7 @@ int cmdApp(App* _app, void* _userData, int _argc, char const* const* _argv)
 			{
 				// try by name
 				for (uint32_t i=0; i<apps.size(); ++i)
-					if (rtm::strincmp(_argv[2], apps[i]->m_name) == 0)
+					if (rtm::striCmp(_argv[2], apps[i]->m_name) == 0)
 					{
 						appSwitch(apps[i]);
 						return 0;

@@ -209,7 +209,7 @@ void Console::execCommand(const char* command_line)
     // Insert into history. First find match and delete it so it can be pushed to the back. This isn't trying to be smart or optimal.
     m_historyPos = -1;
     for (int i = m_history.Size-1; i >= 0; i--)
-        if (rtm::strincmp(m_history[i], command_line) == 0)
+        if (rtm::striCmp(m_history[i], command_line) == 0)
         {
             rtm_free(m_history[i]);
             m_history.erase(m_history.begin() + i);
@@ -218,12 +218,12 @@ void Console::execCommand(const char* command_line)
     m_history.push_back(strdup(command_line));
 
     // Process command
-    if (rtm::strincmp(command_line, "CLEAR") == 0)
+    if (rtm::striCmp(command_line, "CLEAR") == 0)
     {
         clearLog();
     }
     else
-	if (rtm::strincmp(command_line, "HELP") == 0)
+	if (rtm::striCmp(command_line, "HELP") == 0)
     {
         addLog("Available commands:");
         for (int i = 0; i < m_commands.Size; i++)
@@ -233,7 +233,7 @@ void Console::execCommand(const char* command_line)
 									m_commands[i].m_description);
 		}
     }
-    else if (rtm::strincmp(command_line, "HISTORY") == 0)
+    else if (rtm::striCmp(command_line, "HISTORY") == 0)
     {
         int first = m_history.Size - 10;
         for (int i = first > 0 ? first : 0; i < m_history.Size; i++)
@@ -280,7 +280,7 @@ int Console::textEditCallback(ImGuiInputTextCallbackData* data)
             // Build a list of candidates
             ImVector<CmdContext::Func*> candidates;
             for (int i = 0; i < m_commands.Size; i++)
-                if (rtm::strincmp(m_commands[i].m_name, word_start, (int)(word_end-word_start)) == 0)
+                if (rtm::striCmp(m_commands[i].m_name, word_start, (int)(word_end-word_start)) == 0)
                     candidates.push_back(&m_commands[i]);
 
             if (candidates.Size == 0)
