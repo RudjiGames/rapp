@@ -371,8 +371,8 @@ struct Input
 					if ((modifiers == binding->m_bindingMouse.m_modifiers) && (button == MouseState::Button::None))
 					{
 						if ((m_mouse.m_absolute[0] != m_mouse.m_absoluteOld[0]) ||
-							(m_mouse.m_absolute[0] != m_mouse.m_absoluteOld[0]) ||
-							(m_mouse.m_absolute[0] != m_mouse.m_absoluteOld[0]))
+							(m_mouse.m_absolute[1] != m_mouse.m_absoluteOld[1]) ||
+							(m_mouse.m_absolute[2] != m_mouse.m_absoluteOld[2]))
 						{
 							execBinding(_app, binding);
 						}

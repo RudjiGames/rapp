@@ -46,7 +46,9 @@ Console::~Console()
 {
     clearLog();
     for (int i = 0; i < m_history.Size; i++)
+    {
         rtm_free(m_history[i]);
+    }
 	rtm_free(m_items);
 	rtm_free(m_itemColors);
 }
@@ -154,7 +156,9 @@ void Console::draw()
 	ImGui::PushFont(ImGui::Font::Mono);
 
     if (copy_to_clipboard)
+    {
         ImGui::LogToClipboard();
+    }
 
 	uint32_t numLogs = (m_itemsEnd - m_itemsStart) & s_bufferMask;
 	ImGuiListClipper clipper(numLogs);
