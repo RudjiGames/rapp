@@ -9,9 +9,6 @@
 
 #if RTM_PLATFORM_WINDOWS
 
-#include <commctrl.h>
-#pragma comment(lib, "Comctl32.lib")
-
 #if RAPP_WITH_BGFX
 #include <bgfx/platform.h>
 #endif // RAPP_WITH_BGFX
@@ -469,6 +466,7 @@ namespace rapp
 
 		int32_t run(int _argc, const char* const* _argv)
 		{
+			CoInitialize(0);
 			SetDllDirectory(".");
 
 			s_xinput.init();
@@ -621,6 +619,8 @@ namespace rapp
 			DestroyWindow(m_hwndRapp);
 
 			s_xinput.shutdown();
+
+			CoUninitialize();
 
 			return mte.m_result;
 		}
