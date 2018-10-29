@@ -51,7 +51,7 @@ struct bgfxApp : public rapp::App
 	{
 		appRunOnMainThread(mainThreadFunc, this);
 
-		rtm::Console::custom(255, 255, 0, 1, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
+		rtm::Console::rgb(255, 255, 0, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
 
 		// Set view 0 default viewport.
 		bgfx::setViewRect(0, 0, 0, (uint16_t)m_width, (uint16_t)m_height);
@@ -153,14 +153,14 @@ struct bgfxApp : public rapp::App
 	
 	void shutDown()
 	{
-		rtm::Console::custom(255, 255, 0, 1, "Shutting down app\n", (uint32_t)rtm::Thread::getThreadID());
+		rtm::Console::rgb(255, 255, 0, "Shutting down app\n");
 		rapp::appGraphicsShutdown(this, m_window);
 		rapp::inputRemoveBindings("bindings");
 	}
 
 	static void mainThreadFunc(void* /*_appClass*/)
 	{
-		rtm::Console::custom(0, 255, 0, 1, "Printing from main thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
+		rtm::Console::rgb(0, 255, 0, "Printing from main thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
 	}
 
 	static int cmdExit(rapp::App* _app, void* _userData, int _argc, char const* const* _argv)

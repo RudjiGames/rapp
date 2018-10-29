@@ -77,7 +77,7 @@ struct app1 : public rapp::App
 	
 	void shutDown()
 	{
-		rtm::Console::custom(255, 255, 0, 1, "Shutting down app\n", (uint32_t)rtm::Thread::getThreadID());
+		rtm::Console::rgb(255, 255, 0, "Shutting down app\n", (uint32_t)rtm::Thread::getThreadID());
 		rapp::appGraphicsShutdown(this, m_window);
 		rapp::inputRemoveBindings("bindings");
 	}

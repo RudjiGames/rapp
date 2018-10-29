@@ -91,8 +91,7 @@ struct JobSystemApp : public rapp::App
 
 		float endTime = rtm::CPU::time();
 
-		rtm::Console::custom(	0, 255, 0,
-								m_runMode == Mode::Serial ? 0 : 1,
+		rtm::Console::rgb(	0, 255, 0,
 								"%s Mandelbrot set (%d x %d) took: %f ms in %d tiles   - (Ctrl+S to switch execution mode)\n",
 								m_runMode == Mode::Serial ? "Serial" : "Parallel",
 								s_width, s_height, (endTime-startTime)*1000.0f,
@@ -105,7 +104,7 @@ struct JobSystemApp : public rapp::App
 
 	void shutDown()
 	{
-		rtm::Console::custom(255, 255, 0, 1, "Shutting down app\n", (uint32_t)rtm::Thread::getThreadID());
+		rtm::Console::rgb(255, 255, 0, "Shutting down app\n");
 		rapp::inputRemoveBindings("bindings");
 	}
 

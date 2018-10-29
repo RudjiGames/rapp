@@ -36,18 +36,18 @@ struct CmdLineApp : public rapp::App
 	void draw()
 	{
 		appRunOnMainThread(mainThreadFunc, this);
-		rtm::Console::custom(255, 255, 0, 1, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
+		rtm::Console::rgb(255, 255, 0, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
 	}
 
 	void shutDown()
 	{
-		rtm::Console::custom(255, 255, 0, 1, "Shutting down app\n", (uint32_t)rtm::Thread::getThreadID());
+		rtm::Console::rgb(255, 255, 0, "Shutting down app\n", (uint32_t)rtm::Thread::getThreadID());
 		rapp::inputRemoveBindings("bindings");
 	}
 
 	static void mainThreadFunc(void* /*_appClass*/)
 	{
-		rtm::Console::custom(0, 255, 0, 1, "Printing from main thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
+		rtm::Console::rgb(0, 255, 0, "Printing from main thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
 	}
 
 	static int cmdExit(App* _app, void* _userData, int _argc, char const* const* _argv)
