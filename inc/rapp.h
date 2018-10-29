@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 
-struct rtmLibInterface;
+typedef struct _rtmLibInterface rtmLibInterface;
 
 namespace rapp {
 
