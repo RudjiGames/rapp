@@ -32,7 +32,7 @@ before_script:
     - if [ "$TRAVIS_OS_NAME" == "osx" ];   then chmod 764  ../build/tools/bin/darwin/genie; fi
 
 script:
-    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd .. && mkdir glfwbuild && cd glfwbuild && then cmake ../glfw && cmake --build; fi
+    - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd .. && mkdir glfwbuild && cd glfwbuild && cmake ../glfw && cmake --build; fi
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install && cd ../rapp; fi
     - if [ "$TRAVIS_OS_NAME" == "linux" ]; then make linux CXX="g++-5" CC="gcc-5"; fi
     - if [ "$TRAVIS_OS_NAME" == "osx" ]; then make osx; fi
