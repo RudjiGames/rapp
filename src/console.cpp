@@ -133,9 +133,9 @@ void Console::draw()
 	ImGui::SetNextWindowPos(ImVec2(float(m_app->m_width/5), posY), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(float(m_app->m_width*6/10), float(m_app->m_height/2)), ImGuiCond_Always);
 	bool p_open;
-    if (!ImGui::Begin("", &p_open,	ImGuiWindowFlags_NoTitleBar |
-									ImGuiWindowFlags_NoResize	|
-									ImGuiWindowFlags_NoMove))
+    if (!ImGui::Begin("Console", &p_open,	ImGuiWindowFlags_NoTitleBar |
+											ImGuiWindowFlags_NoResize	|
+											ImGuiWindowFlags_NoMove))
     {
         ImGui::End();
         return;
