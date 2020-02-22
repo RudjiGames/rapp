@@ -25,7 +25,7 @@ static char* strdup(const char *str)
 Console::Console(App* _app)
 	: m_app(_app)
 {
-	m_hide				= false;
+	m_hide				= true;
 	m_visible			= 1.0f;
 
 	m_items				= (char**)rtm_alloc(sizeof(char*) * s_bufferHeight);
