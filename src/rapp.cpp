@@ -116,7 +116,7 @@ int32_t rappThreadFunc(void* _userData)
 						, uint16_t(app->m_height)
 						);
 
-					nvgBeginFrame(app->m_data->m_nvg, app->m_width, app->m_height, 1.0f);
+					nvgBeginFrame(app->m_data->m_nvg, (float)app->m_width, (float)app->m_height, 1.0f);
 
 					app->drawGUI();
 					app->m_data->m_console->draw();
