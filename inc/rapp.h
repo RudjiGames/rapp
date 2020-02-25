@@ -16,7 +16,7 @@ namespace rapp {
 	{
 		enum Key
 		{
-			None = 0,
+			None,
 			Esc, Return, Tab, Space, Backspace, Up, Down, Left, Right,
 			Insert, Delete, Home, End, PageUp, PageDown,
 			Print, Plus, Minus, LeftBracket, RightBracket,
@@ -26,7 +26,9 @@ namespace rapp {
 			NumPad0, NumPad1, NumPad2, NumPad3, NumPad4, 
 			NumPad5, NumPad6, NumPad7, NumPad8, NumPad9,
 			Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8, Key9,
-			KeyA, KeyB, KeyC, KeyD, KeyE, KeyF, KeyG, KeyH, KeyI, KeyJ,
+
+			KeyA = 65,
+			KeyB, KeyC, KeyD, KeyE, KeyF, KeyG, KeyH, KeyI, KeyJ,
 			KeyK, KeyL, KeyM, KeyN, KeyO, KeyP, KeyQ, KeyR, KeyS, KeyT,
 			KeyU, KeyV, KeyW, KeyX, KeyY, KeyZ,
 

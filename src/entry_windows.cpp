@@ -551,7 +551,7 @@ namespace rapp
 								m_consoleMouseButtonState = 0;
 							}
 						}
-						
+
 						if (eventBuffer[i].EventType == KEY_EVENT)
 						{
 							KEY_EVENT_RECORD& ker = eventBuffer[i].Event.KeyEvent;
@@ -994,6 +994,16 @@ namespace rapp
 							m_eventQueue.postKeyEvent(handle, key, modifiers, true);
 						}
 						m_eventQueue.postKeyEvent(handle, key, modifiers, _id == WM_KEYDOWN || _id == WM_SYSKEYDOWN);
+
+#if RAPP_WITH_BGFX
+						if (ImGui::GetCurrentContext())
+						{
+							ImGui::GetIO().KeyCtrl	= modifiers & (KeyboardState::Modifier::RCtrl  | KeyboardState::Modifier::LCtrl);
+							ImGui::GetIO().KeyShift	= modifiers & (KeyboardState::Modifier::RShift | KeyboardState::Modifier::LShift);
+							ImGui::GetIO().KeyAlt	= modifiers & (KeyboardState::Modifier::RAlt   | KeyboardState::Modifier::LAlt);
+							//ImGui::GetIO().KeySuper =
+						}
+#endif
 					}
 					break;
 
