@@ -95,14 +95,3 @@ end
 function projectAdd_rapp_bgfx()
 	addProject_lib("rapp", Lib.Runtime, false, "_bgfx", true)
 end
-
-function projectDependencyConfig_03_bgfx(_dependency)
-	if _dependency == "rapp" then return {"rapp", "bgfx"} end
-	return _dependency
-end
-
-function projectDependencyConfig_04_multi_app(_dependency)
-	if _dependency == "rapp" then return {"rapp", "bgfx"} end
-	return _dependency
-end
-
