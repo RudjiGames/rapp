@@ -9,6 +9,7 @@
 
 #if RTM_PLATFORM_OSX
 
+#import <AppKit/AppKit.h>
 #import <Cocoa/Cocoa.h>
 
 #if RAPP_WITH_BGFX
@@ -40,6 +41,8 @@
 - (void)windowWillClose:(NSNotification*)notification;
 - (BOOL)windowShouldClose:(NSWindow*)window;
 - (void)windowDidResize:(NSNotification*)notification;
+- (void)windowDidBecomeKey:(NSNotification *)notification;
+- (void)windowDidResignKey:(NSNotification *)notification;
 
 @end
 
@@ -83,7 +86,10 @@ namespace rapp
 			}
 
 			MainThreadEntry* self = (MainThreadEntry*)_userData;
-			return main(self->m_argc, self->m_argv);
+			uint32_t result = main(self->m_argc, self->m_argv);
+			[NSApp terminate:nil];
+			return result;
+
 		}
 	};
 
@@ -147,6 +153,9 @@ namespace rapp
 				s_translateKey[uint8_t(ch)]       =
 				s_translateKey[uint8_t(ch - ' ')] = KeyboardState::Key::KeyA + (ch - 'a');
 			}
+
+			for(int i=0; i<RAPP_MAX_WINDOWS; ++i)
+				m_window[i] = NULL;
 		}
 
 		NSEvent* waitEvent()
@@ -172,9 +181,9 @@ namespace rapp
 		void getMousePos(int* outX, int* outY)
 		{
 			NSWindow* window = m_windows.getDataIndexed(0);
-			NSRect originalFrame = [window frame];
-			NSPoint location = [window mouseLocationOutsideOfEventStream];
-			NSRect adjustFrame = [window contentRectForFrameRect: originalFrame];
+			NSRect originalFrame	= [window frame];
+			NSPoint location		= [window mouseLocationOutsideOfEventStream];
+			NSRect adjustFrame		= [window contentRectForFrameRect: originalFrame];
 
 			int x = location.x;
 			int y = (int)adjustFrame.size.height - (int)location.y;
@@ -192,21 +201,16 @@ namespace rapp
 
 		uint8_t translateModifiers(int flags)
 		{
-			uint8_t mask = 0;
-
-			if (flags & NSShiftKeyMask)
-				mask |= KeyboardState::Modifier::LShift | KeyboardState::Modifier::RShift;
-
-			if (flags & NSAlternateKeyMask)
-				mask |= KeyboardState::Modifier::LAlt | KeyboardState::Modifier::RAlt;
-
-			if (flags & NSControlKeyMask)
-				mask |= KeyboardState::Modifier::LCtrl | KeyboardState::Modifier::RCtrl;
-
-			if (flags & NSCommandKeyMask)
-				mask |= KeyboardState::Modifier::LMeta | KeyboardState::Modifier::RMeta;
-
-			return mask;
+			return 0
+				| (0 != (flags & NX_DEVICELSHIFTKEYMASK ) ) ? KeyboardState::Modifier::LShift	: 0
+				| (0 != (flags & NX_DEVICERSHIFTKEYMASK ) ) ? KeyboardState::Modifier::RShift	: 0
+				| (0 != (flags & NX_DEVICELALTKEYMASK ) )   ? KeyboardState::Modifier::LAlt		: 0
+				| (0 != (flags & NX_DEVICERALTKEYMASK ) )   ? KeyboardState::Modifier::RAlt		: 0
+				| (0 != (flags & NX_DEVICELCTLKEYMASK ) )   ? KeyboardState::Modifier::LCtrl	: 0
+				| (0 != (flags & NX_DEVICERCTLKEYMASK ) )   ? KeyboardState::Modifier::RCtrl	: 0
+				| (0 != (flags & NX_DEVICELCMDKEYMASK) )    ? KeyboardState::Modifier::LMeta	: 0
+				| (0 != (flags & NX_DEVICERCMDKEYMASK) )    ? KeyboardState::Modifier::RMeta	: 0
+				;
 		}
 
 		KeyboardState::Key handleKeyEvent(NSEvent* event, uint8_t* specialKeys, uint8_t* _pressedChar)
