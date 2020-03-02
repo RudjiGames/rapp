@@ -9,7 +9,6 @@
 
 #if RTM_PLATFORM_OSX
 
-#import <AppKit/AppKit.h>
 #import <Cocoa/Cocoa.h>
 
 #if RAPP_WITH_BGFX
@@ -153,15 +152,12 @@ namespace rapp
 				s_translateKey[uint8_t(ch)]       =
 				s_translateKey[uint8_t(ch - ' ')] = KeyboardState::Key::KeyA + (ch - 'a');
 			}
-
-			for(int i=0; i<RAPP_MAX_WINDOWS; ++i)
-				m_window[i] = NULL;
 		}
 
 		NSEvent* waitEvent()
 		{
 			return [NSApp
-				nextEventMatchingMask:NSAnyEventMask
+				nextEventMatchingMask:NSEventMaskAny
 				untilDate:[NSDate distantFuture] // wait for event
 				inMode:NSDefaultRunLoopMode
 				dequeue:YES
@@ -171,7 +167,7 @@ namespace rapp
 		NSEvent* peekEvent()
 		{
 			return [NSApp
-				nextEventMatchingMask:NSAnyEventMask
+				nextEventMatchingMask:NSEventMaskAny
 				untilDate:[NSDate distantPast] // do not wait for event
 				inMode:NSDefaultRunLoopMode
 				dequeue:YES
@@ -273,58 +269,58 @@ namespace rapp
 
 				switch (eventType)
 				{
-					case NSMouseMoved:
-					case NSLeftMouseDragged:
-					case NSRightMouseDragged:
-					case NSOtherMouseDragged:
+					case NSEventTypeMouseMoved:
+					case NSEventTypeLeftMouseDragged:
+					case NSEventTypeRightMouseDragged:
+					case NSEventTypeOtherMouseDragged:
 					{
 						getMousePos(&m_mx, &m_my);
 						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, 0);
 						break;
 					}
 
-					case NSLeftMouseDown:
+					case NSEventTypeLeftMouseDown:
 					{
 						// TODO: remove!
 						// Command + Left Mouse Button acts as middle! This just a temporary solution!
 						// This is becase the average OSX user doesn't have middle mouse click.
-						MouseState::Button mb = ([event modifierFlags] & NSCommandKeyMask) ? MouseState::Button::Middle : MouseState::Button::Left;
+						MouseState::Button mb = ([event modifierFlags] & NSEventModifierFlagCommand) ? MouseState::Button::Middle : MouseState::Button::Left;
 						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, mb, 0, true, false);
 						break;
 					}
 
-					case NSLeftMouseUp:
+					case NSEventTypeLeftMouseUp:
 					{
 						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Left, 0, false, false);
 						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Middle, 0, false, false); // TODO: remove!
 						break;
 					}
 
-					case NSRightMouseDown:
+					case NSEventTypeRightMouseDown:
 					{
 						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Right, 0, true, false);
 						break;
 					}
 
-					case NSRightMouseUp:
+					case NSEventTypeRightMouseUp:
 					{
 						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Right, 0, false, false);
 						break;
 					}
 
-					case NSOtherMouseDown:
+					case NSEventTypeOtherMouseDown:
 					{
 						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Middle, 0, true, false);
 						break;
 					}
 
-					case NSOtherMouseUp:
+					case NSEventTypeOtherMouseUp:
 					{
 						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Middle, 0, false, false);
 						break;
 					}
 
-					case NSScrollWheel:
+					case NSEventTypeScrollWheel:
 					{
 						m_scrollf += [event deltaY];
 
@@ -333,7 +329,7 @@ namespace rapp
 						break;
 					}
 
-					case NSKeyDown:
+					case NSEventTypeKeyDown:
 					{
 						uint8_t modifiers = 0;
 						uint8_t pressedChar[4];
@@ -358,7 +354,7 @@ namespace rapp
 						break;
 					}
 
-					case NSKeyUp:
+					case NSEventTypeKeyUp:
 					{
 						uint8_t modifiers  = 0;
 						uint8_t pressedChar[4];
@@ -434,10 +430,10 @@ namespace rapp
 			[NSApp setMainMenu:menubar];
 
 			m_style = 0
-					| NSTitledWindowMask
-					| NSClosableWindowMask
-					| NSMiniaturizableWindowMask
-					| NSResizableWindowMask
+					| NSWindowStyleMaskTitled
+					| NSWindowStyleMaskClosable
+					| NSWindowStyleMaskMiniaturizable
+					| NSWindowStyleMaskResizable
 					;
 
 			uint32_t dWidth;
@@ -612,7 +608,7 @@ namespace rapp
 	{
 		if (s_ctx.isValid(_handle) )
 		{
-			s_ctx.m_style ^= NSTitledWindowMask;
+			s_ctx.m_style ^= NSWindowStyleMaskTitled;
 			dispatch_async(dispatch_get_main_queue()
 			, ^{
 				[s_ctx.m_windows.getData(_handle.idx) setStyleMask: s_ctx.m_style];
@@ -630,7 +626,7 @@ namespace rapp
 
 			if (!s_ctx.m_fullscreen)
 			{
-				s_ctx.m_style &= ~NSTitledWindowMask;
+				s_ctx.m_style &= ~NSWindowStyleMaskTitled;
 				dispatch_async(dispatch_get_main_queue()
 				, ^{
 					[NSMenu setMenuBarVisible: false];
@@ -642,7 +638,7 @@ namespace rapp
 			}
 			else
 			{
-				s_ctx.m_style |= NSTitledWindowMask;
+				s_ctx.m_style |= NSWindowStyleMaskTitled;
 				dispatch_async(dispatch_get_main_queue()
 				, ^{
 					[NSMenu setMenuBarVisible: true];
