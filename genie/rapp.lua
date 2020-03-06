@@ -71,7 +71,11 @@ function projectExtraConfig_rapp_bgfx()
 		bgfxPath .. "examples/common/imgui/**.h",
 		bgfxPath .. "examples/common/imgui/**.cpp",
 		bgfxPath .. "examples/common/imgui/**.inl",
-		bgfxPath .. "3rdparty/dear-imgui/**.*",
+		bgfxPath .. "3rdparty/dear-imgui/imgui.cpp",
+		bgfxPath .. "3rdparty/dear-imgui/imgui_draw.cpp",
+		bgfxPath .. "3rdparty/dear-imgui/imgui_widgets.cpp",
+		bgfxPath .. "3rdparty/dear-imgui/**.h",
+		bgfxPath .. "3rdparty/dear-imgui/**.inl",
 		bgfxPath .. "3rdparty/ib-compress/**.*",
 		bgfxPath .. "examples/common/nanovg/*.h",
 		bgfxPath .. "examples/common/nanovg/*.cpp"
