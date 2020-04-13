@@ -27,6 +27,13 @@ struct Job
 	Data		m_data;
 	uint8_t		m_padding[RTM_CACHE_LINE_SIZE - sizeof(Data)];
 
+	inline Job()
+	{
+		m_data.m_function	= 0;
+		m_data.m_userData	= 0;
+		m_data.m_parent		= 0;
+	}
+
 	bool isDone() const { return m_data.m_jobCount <= 0; }
 };
 
@@ -226,7 +233,6 @@ void jobInit(uint32_t _numThreads)
 	JobThread::s_jobAllocator = new Job[totalJobs];
 
 	memset(JobThread::s_jobQueue, 0, sizeof(Job*)*queueJobs);
-	memset(JobThread::s_jobAllocator, 0, sizeof(Job)*totalJobs);
 
 	for (uint32_t i=0; i<JobThread::s_jobNumThreads; ++i)
 		JobThread::s_jobThreads[i].init( i,	JobThread::s_jobQueue + (i*RAPP_JOBS_PER_QUEUE),

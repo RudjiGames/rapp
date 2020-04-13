@@ -93,8 +93,8 @@ namespace rapp
 
 			if (NULL != m_xinputdll)
 			{
-				XInputGetState = (PFN_XINPUT_GET_STATE)::GetProcAddress(m_xinputdll, "XInputGetState");
-//				XInputEnable   = (PFN_XINPUT_ENABLE   )::GetProcAddress(m_xinputdll, "XInputEnable"  );
+				*(FARPROC*)&XInputGetState = ::GetProcAddress(m_xinputdll, "XInputGetState");
+//				*(FARPROC*)&XInputEnable   = ::GetProcAddress(m_xinputdll, "XInputEnable"  );
 
 				if (NULL == XInputGetState)
 				{
