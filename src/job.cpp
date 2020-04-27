@@ -189,6 +189,14 @@ struct JobThread : public rtm::Thread
 	static int32_t threadFunc(void* _userData)
 	{
 		JobThread* self = (JobThread*)_userData;
+
+#if RTM_PLATFORM_WINDOWS
+		GROUP_AFFINITY group{};
+		group.Mask = (KAFFINITY)-1;
+		group.Group = self->m_index & 1;
+		SetThreadGroupAffinity(GetCurrentThread(), &group, 0);
+#endif
+
 		self->m_active = true;
 		while (self->m_active && self->m_started)
 		{
