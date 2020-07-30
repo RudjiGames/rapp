@@ -26,7 +26,7 @@ Console::Console(App* _app)
 	: m_app(_app)
 {
 	m_hide				= true;
-	m_visible			= 1.0f;
+	m_visible			= 0.0f;
 
 	m_items				= (char**)rtm_alloc(sizeof(char*) * s_bufferHeight);
 	m_itemColors		= (Color*)rtm_alloc(sizeof(Color) * s_bufferHeight);
