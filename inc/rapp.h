@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------//
-/// Copyright (c) 2018 by Milos Tosic. All Rights Reserved.                ///
+/// Copyright (c) 2020 by Milos Tosic. All Rights Reserved.                ///
 /// License: http://www.opensource.org/licenses/BSD-2-Clause               ///
 //--------------------------------------------------------------------------//
 
@@ -85,23 +85,6 @@ namespace rapp {
 		int32_t		m_accelerometer[3];
 	};
 
-	struct State
-	{
-		enum Button
-		{
-			None,
-			Left,
-			Middle,
-			Right,
-
-			Count
-		};
-
-		int32_t		m_absolute[3];
-		float		m_norm[3];
-		uint8_t		m_buttons[MouseState::Button::Count];
-	};
-
 	struct GamepadState
 	{
 		enum Buttons
@@ -141,76 +124,6 @@ namespace rapp {
 	#define RAPP_WINDOW_FLAG_RENDERING		0x4
 	#define RAPP_WINDOW_FLAG_MAIN_WINDOW	0x8
 
-	struct InputBinding;
-
-	typedef void (*InputBindingFn)(const void* _userData, const InputBinding* _binding);
-
-	struct InputBindingKeyboard
-	{
-		KeyboardState::Key		m_key;
-		uint8_t					m_modifiers;
-	};
-
-	struct InputBindingMouse
-	{
-		MouseState::Button		m_button;		// MouseState::Button::None for movement binding
-		uint8_t					m_modifiers;
-	};
-
-	struct InputBindingGamepad
-	{
-		enum Stick
-		{
-			None,
-			LeftStick,
-			LeftTrigger,
-			RightStick,
-			RightTrigger
-		};
-
-		GamepadState::Buttons	m_button;		// GamepadState::Button::None for stick/trigger event
-		uint8_t					m_gamepadIndex;
-		Stick					m_stick;
-	};
-
-	struct InputBindingTouch
-	{
-	};
-
-	struct InputBinding
-	{
-		enum Enum
-		{
-			Gamepad,
-			Mouse,
-			Keyboard,
-			Touch,
-
-			Count
-		};
-
-		InputBinding::Enum		m_type;
-		InputBindingFn			m_fn;
-		const void*				m_userData;
-		uint8_t					m_flags;
-
-		union
-		{
-			InputBindingKeyboard	m_bindingKeyboard;
-			InputBindingMouse		m_bindingMouse;
-			InputBindingGamepad		m_bindingGamepad;
-			InputBindingTouch		m_bindingTouch;
-		};
-
-		InputBinding(int);
-		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingKeyboard& _kb);
-		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingMouse& _mouse);
-		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingGamepad& _gp);
-		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingTouch& _touch);
-	};
-
-	#define RAPP_INPUT_BINDING_END		{ 0 }
-
 	struct AppData;
 
 	struct App
@@ -238,8 +151,6 @@ namespace rapp {
 
 	typedef int(*ConsoleFn)(App* _app, void* _userData, int _argc, char const* const* _argv);
 	typedef void(*ThreadFn)(void* _userData);
-
-	struct JobHandle  { uint32_t idx; };
 
 	// ------------------------------------------------
 	/// Initialization functions
@@ -343,8 +254,10 @@ namespace rapp {
 	void windowSetMouseLock(WindowHandle _handle, bool _lock);
 
 	// ------------------------------------------------
-	/// Job system functions
+	/// Job system types and functions
 	// ------------------------------------------------
+
+	struct JobHandle { uint32_t  idx; };
 
 	///
 	JobHandle jobCreate(ThreadFn _func, void* _userData);
@@ -367,6 +280,76 @@ namespace rapp {
 	// ------------------------------------------------
 	/// Input functions
 	// ------------------------------------------------
+
+	struct InputBinding;
+
+	typedef void(*InputBindingFn)(const void* _userData, const InputBinding* _binding);
+
+	struct InputBindingKeyboard
+	{
+		KeyboardState::Key		m_key;
+		uint8_t					m_modifiers;
+	};
+
+	struct InputBindingMouse
+	{
+		MouseState::Button		m_button;		// MouseState::Button::None for movement binding
+		uint8_t					m_modifiers;
+	};
+
+	struct InputBindingGamepad
+	{
+		enum Stick
+		{
+			None,
+			LeftStick,
+			LeftTrigger,
+			RightStick,
+			RightTrigger
+		};
+
+		GamepadState::Buttons	m_button;		// GamepadState::Button::None for stick/trigger event
+		uint8_t					m_gamepadIndex;
+		Stick					m_stick;
+	};
+
+	struct InputBindingTouch
+	{
+	};
+
+	struct InputBinding
+	{
+		enum Enum
+		{
+			Gamepad,
+			Mouse,
+			Keyboard,
+			Touch,
+
+			Count
+		};
+
+		InputBinding::Enum		m_type;
+		InputBindingFn			m_fn;
+		const void*				m_userData;
+		uint8_t					m_flags;
+
+		union
+		{
+			InputBindingKeyboard	m_bindingKeyboard;
+			InputBindingMouse		m_bindingMouse;
+			InputBindingGamepad		m_bindingGamepad;
+			InputBindingTouch		m_bindingTouch;
+		};
+
+		InputBinding(int);
+		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingKeyboard& _kb);
+		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingMouse& _mouse);
+		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingGamepad& _gp);
+		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingTouch& _touch);
+	};
+
+	#define RAPP_INPUT_BINDING_END		{ 0 }
 
 	///
 	void inputAddBindings(const char* _name, const InputBinding* _bindings);
