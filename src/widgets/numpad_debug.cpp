@@ -223,7 +223,7 @@ namespace rapp {
 	}
 
 
-	static int cmdKey(rapp::App* _app, void* /*_userData*/, int /*_argc*/, char const* const* /*_argv*/)
+	static int cmdKey(rapp::App* /*_app*/, void* /*_userData*/, int /*_argc*/, char const* const* /*_argv*/)
 	{
 		return 0;
 	}

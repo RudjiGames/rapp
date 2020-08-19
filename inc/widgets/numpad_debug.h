@@ -7,6 +7,9 @@
 #define RTM_RAPP_DEBUG_H
 
 #include <stdint.h>
+
+#if RAPP_WITH_BGFX
+
 #include <imgui/imgui.h>
 #include <rapp/inc/widgets/widget_theme.h>
 
@@ -185,5 +188,7 @@ namespace rapp {
 #endif // RAPP_DEBUG_WITH_STD_STRING
 
 } // namespace rapp
+
+#endif // RAPP_WITH_BGFX
 
 #endif // RTM_RAPP_DEBUG_H
