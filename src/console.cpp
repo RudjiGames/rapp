@@ -161,7 +161,8 @@ void Console::draw()
     }
 
 	uint32_t numLogs = (m_itemsEnd - m_itemsStart) & s_bufferMask;
-	ImGuiListClipper clipper(numLogs);
+	ImGuiListClipper clipper;
+	clipper.Begin(numLogs);
 	while (clipper.Step())
 	for (int i=clipper.DisplayStart; i<clipper.DisplayEnd; i++)
 	{
@@ -175,6 +176,8 @@ void Console::draw()
 		ImGui::TextUnformatted(item);
 		ImGui::PopStyleColor();
 	}
+
+	clipper.End();
 
 	if (copy_to_clipboard)
         ImGui::LogFinish();
