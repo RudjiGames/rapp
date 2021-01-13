@@ -7,8 +7,6 @@
 #include <rapp/src/rapp_config.h>
 #include <rapp/src/job.h>
 
-#if RAPP_JOBS_INTERNAL
-
 #include <atomic>
 #include <thread>
 
@@ -309,5 +307,3 @@ void jobShutdown()
 }
 
 } // namespace rapp
-
-#endif // RAPP_JOBS_INTERNAL

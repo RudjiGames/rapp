@@ -20,4 +20,3 @@ namespace rapp {
 } // namespace rapp
 
 #endif // RTM_RAPP_JOB_H
-

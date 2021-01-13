@@ -3,42 +3,12 @@
 -- License: http://www.opensource.org/licenses/BSD-2-Clause
 --
 
-newoption {
-	trigger	= "scheduler",
-	value	= "Job scheduler type",
-	description = "Choose type of job scheduler",
-	allowed = {
-		{ "rapp", "Built-in job scheduler" },
-		{ "tbb",  "Intel Thread Building Blocks" }
-	}
-}
-
-if  _OPTIONS["scheduler"] == nil then
-	_OPTIONS["scheduler"] = "rapp"
-end
-
-function add_scheduler_defines(definesToAppend)
-	if  _OPTIONS["scheduler"] == "rapp" then
-		return mergeTables(definesToAppend, {"RAPP_JOBS_INTERNAL=1"})
-	elseif  _OPTIONS["scheduler"] == "tbb" then
-		return mergeTables(definesToAppend, {"RAPP_JOBS_TBB=1"})
-	end
-	return definesToAppend
-end
-
 function projectDependencies_rapp()
-	local dependencies = { "rbase" }
-	if _OPTIONS["scheduler"] == "tbb" then
-		table.insert(dependencies, "tbb")
-	end
+	local dependencies = { "rbase", "enkits" }
 	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
 		table.insert(dependencies, "X11")
 	end
 	return dependencies
-end
-
-function projectExtraConfig_rapp()
-	defines { add_scheduler_defines() }
 end
 
 function projectAdd_rapp() 
@@ -86,7 +56,7 @@ function projectExtraConfig_rapp_bgfx()
 		bgfxPath .. "examples/",
 		bgfxPath .. "examples/common/" 	
 	}
-	defines { add_scheduler_defines({ "RAPP_WITH_BGFX=1" }) }
+	defines { "RAPP_WITH_BGFX=1" }
 end
 
 function projectExtraConfigExecutable_rapp_bgfx()
