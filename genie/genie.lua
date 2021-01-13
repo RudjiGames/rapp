@@ -14,4 +14,3 @@ solution "rapp"
 	setPlatforms()
 
 	addLibProjects("rapp")
-	addLibProjects({"rapp", "bgfx"})

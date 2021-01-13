@@ -4,19 +4,21 @@
 --
 
 function projectDependencies_rapp()
-	local dependencies = { "rbase", "enkits" }
-	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
-		table.insert(dependencies, "X11")
-	end
-	return dependencies
+	return  { "rbase", "enkits" }
 end
 
 function projectAdd_rapp() 
-	addProject_lib("rapp", Lib.Runtime )
+	addProject_lib("rapp", Lib.Runtime)
 end
 
 function projectDependencies_rapp_bgfx()
-	return mergeTables( projectDependencies_rapp(), { "bgfx" } )
+	local dependencies = {}
+	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
+		table.insert(dependencies, "X11")
+	end
+	dependencies = mergeTwoTables(dependencies, { "bgfx" })
+	dependencies = mergeTables( projectDependencies_rapp(), dependencies )
+	return dependencies
 end
 
 function projectExtraConfigExecutable_rapp()
@@ -60,6 +62,7 @@ function projectExtraConfig_rapp_bgfx()
 end
 
 function projectExtraConfigExecutable_rapp_bgfx()
+	projectExtraConfigExecutable_rapp()
 	local bgfxPath = find3rdPartyProject("bgfx")
 	includedirs {
 		bgfxPath .. "3rdparty/",

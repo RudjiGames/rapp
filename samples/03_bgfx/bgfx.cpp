@@ -37,6 +37,7 @@ struct bgfxApp : public rapp::App
 		m_height	= height;
 
 		rapp::appGraphicsInit(this, m_width, m_height);
+
 		return 0;
 	}
 
