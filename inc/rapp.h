@@ -151,6 +151,7 @@ namespace rapp {
 
 	typedef int(*ConsoleFn)(App* _app, void* _userData, int _argc, char const* const* _argv);
 	typedef void(*ThreadFn)(void* _userData);
+	typedef void(*JobFn)(void* _userData, uint32_t _start, uint32_t _end);
 
 	// ------------------------------------------------
 	/// Initialization functions
@@ -257,16 +258,16 @@ namespace rapp {
 	/// Job system types and functions
 	// ------------------------------------------------
 
-	struct JobHandle { uint32_t  idx; };
+	struct JobHandle { uintptr_t  idx; };
 
 	///
-	JobHandle jobCreate(ThreadFn _func, void* _userData);
+	JobHandle jobCreate(JobFn  _func, void* _userData, bool _deleteOnFinish = true);
 
 	///
-	JobHandle jobCreateGroup(ThreadFn _func, void* _userData, uint32_t _dataStride, uint32_t _numJobs);
+	JobHandle jobCreateGroup(JobFn _func, void* _userData, uint32_t _dataStride, uint32_t _numJobs, bool _deleteOnFinish = true);
 
 	///
-	JobHandle jobCreateChild(JobHandle _parent, ThreadFn _func, void* _userData);
+	void jobDestroy(JobHandle _job);
 
 	///
 	void jobRun(JobHandle _job);

@@ -5,9 +5,6 @@
 
 #include <job_system_pch.h>
 
-#include <atomic>
-static std::atomic<int> s_numTiles;
-
 struct JobSystemApp : public rapp::App
 {
 	RAPP_CLASS(JobSystemApp)
@@ -47,14 +44,14 @@ struct JobSystemApp : public rapp::App
 	void suspend() {}
 	void resume() {}
 
+	static const uint32_t s_width	= 2048;
+	static const uint32_t s_height	= 2048;
+	static const uint32_t s_tile	= 64;
+	static const uint32_t s_tileX	= s_width / s_tile;
+	static const uint32_t s_tileY	= s_height / s_tile;
+
 	void update(float /*_time*/)
 	{
-		const uint32_t s_width   = 2048;
-		const uint32_t s_height  = 2048;
-		const uint32_t s_tile    = 64;
-		const uint32_t s_tileX   = s_width  / s_tile;
-		const uint32_t s_tileY   = s_height / s_tile;
-
 		static Tile s_tiles[s_tileX * s_tileY];
 		for (uint32_t y=0; y<s_tileY; ++y)
 		for (uint32_t x=0; x<s_tileX; ++x)
@@ -69,22 +66,20 @@ struct JobSystemApp : public rapp::App
 
 		float startTime = rtm::CPU::time();
 
-		s_numTiles = 0;
-
 		switch (m_runMode)
 		{
 			case Serial:
 				{
-					for (uint32_t i=0; i<s_tileX*s_tileY; ++i)
-						tileMandelbrot(&s_tiles[i]);
+					tileMandelbrot(s_tiles, 0, s_tileX * s_tileY);
 				};
 				break;
 
 			case Parallel:
 				{
-					rapp::JobHandle group = rapp::jobCreateGroup(tileMandelbrot, s_tiles, sizeof(Tile), s_tileX*s_tileY);
+					rapp::JobHandle group = rapp::jobCreateGroup(tileMandelbrot, s_tiles, sizeof(Tile), s_tileX * s_tileY, false);
 					rapp::jobRun(group);
 					rapp::jobWait(group);
+					rapp::jobDestroy(group);
 				};
 				break;
 		};
@@ -108,24 +103,26 @@ struct JobSystemApp : public rapp::App
 		rapp::inputRemoveBindings("bindings");
 	}
 
-	static void tileMandelbrot(void* _userData)
+	static void tileMandelbrot(void* _userData, uint32_t _start, uint32_t _end)
 	{
-		Tile* tile = (Tile*)_userData;
-		++s_numTiles;
-
-		for (uint32_t Y=tile->y; Y<tile->y+tile->h; ++Y)
-		for (uint32_t X=tile->x; X<tile->x+tile->w; ++X)
+		for (uint32_t range=_start; range<_end; ++range)
 		{
-			float x = (float)Y * 2 / tile->tw - 1.5f;
-			float y = (float)X * 2 / tile->th - 1;
+			Tile* tile = &((Tile*)_userData)[range];
 
-			int iteration = 0;
-			while (++iteration < 12)
+			for (uint32_t Y = tile->y; Y < tile->y + tile->h; ++Y)
+			for (uint32_t X = tile->x; X < tile->x + tile->w; ++X)
 			{
-				const float nx = x*x - y*y;
-				const float ny = 2.0f * x*y;
-				x = nx;
-				y = ny;
+				float x = (float)Y * 2 / tile->tw - 1.5f;
+				float y = (float)X * 2 / tile->th - 1;
+
+				int iteration = 0;
+				while (++iteration < 12)
+				{
+					const float nx = x * x - y * y;
+					const float ny = 2.0f * x * y;
+					x = nx;
+					y = ny;
+				}
 			}
 		}
 	}

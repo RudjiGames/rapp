@@ -12,7 +12,7 @@
 namespace rapp {
 
 	///
-	void jobInit(uint32_t _numThreads = 0);
+	void jobInit();
 
 	///
 	void jobShutdown();
