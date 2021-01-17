@@ -261,7 +261,7 @@ namespace rapp {
 	struct JobHandle { uintptr_t  idx; };
 
 	///
-	JobHandle jobCreate(JobFn  _func, void* _userData, bool _deleteOnFinish = true);
+	JobHandle jobCreate(JobFn  _func, void* _userData = 0, bool _deleteOnFinish = true);
 
 	///
 	JobHandle jobCreateGroup(JobFn _func, void* _userData, uint32_t _dataStride, uint32_t _numJobs, bool _deleteOnFinish = true);
