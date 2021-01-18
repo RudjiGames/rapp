@@ -40,7 +40,7 @@ namespace rapp
 	typedef void  (WINAPI* PFN_XINPUT_ENABLE)(BOOL enable); // 1.4+
 
 	PFN_XINPUT_GET_STATE XInputGetState;
-	PFN_XINPUT_ENABLE    XInputEnable;
+	PFN_XINPUT_ENABLE    XInputEnableFn;
 
 	struct XInputRemap
 	{
@@ -94,7 +94,7 @@ namespace rapp
 			if (NULL != m_xinputdll)
 			{
 				*(FARPROC*)&XInputGetState = ::GetProcAddress(m_xinputdll, "XInputGetState");
-//				*(FARPROC*)&XInputEnable   = ::GetProcAddress(m_xinputdll, "XInputEnable"  );
+//				*(FARPROC*)&XInputEnableFn   = ::GetProcAddress(m_xinputdll, "XInputEnableFn"  );
 
 				if (NULL == XInputGetState)
 				{
