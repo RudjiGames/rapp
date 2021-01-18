@@ -51,7 +51,7 @@ namespace rapp {
 				m_taskDeleter.SetDependency(m_taskDeleter.m_Dependency, this);
 		}
 
-		void ExecuteRange(enki::TaskSetPartition _range, uint32_t _threadnum) override
+		void ExecuteRange(enki::TaskSetPartition _range, uint32_t /*_threadnum*/) override
 		{
 			m_function(m_userData, _range.start, _range.end);
 		}
