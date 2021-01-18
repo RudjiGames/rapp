@@ -22,7 +22,7 @@ install:
   - git clone --depth 1 https://github.com/bkaradzic/bx.git   ..\bx
   - git clone --depth 1 https://github.com/bkaradzic/bimg.git ..\bimg
   - git clone --depth 1 https://github.com/bkaradzic/bgfx.git ..\bgfx
-  - git clone --depth 1 https://github.com/dougbinks/enkiTS ..\enkits
+  - git clone --depth 1 https://github.com/dougbinks/enkiTS ..\enkiTS
   - ..\build\tools\bin\windows\genie --file=genie\genie.lua %TOOLSET%
 
 build:
