@@ -69,6 +69,10 @@ namespace rapp
 	};
 	RTM_STATIC_ASSERT(KeyboardState::Key::Count == RTM_NUM_ELEMENTS(s_keyName) );
 
+#if RAPP_WITH_BGFX
+	ImGuiKey	s_keyMap[KeyboardState::Key::Count];
+#endif // RAPP_WITH_BGFX
+
 	const char* getName(KeyboardState::Key _key)
 	{
 		RTM_ASSERT(_key < KeyboardState::Key::Count, "Invalid key %d.", _key);
@@ -103,6 +107,40 @@ namespace rapp
 #if RAPP_WITH_BGFX
 		cmdAdd("graphics",  cmdGraphics,  0, "Graphics related commands, type 'graphics help' for list of options");
 		rapp::inputAddBindings("graphics", s_bindingsGraphics);
+
+		for (int i=0; i<KeyboardState::Key::Count; ++i)
+			s_keyMap[i] = ImGuiKey_None;
+
+		s_keyMap[KeyboardState::Key::Tab]		= ImGuiKey_Tab;
+		s_keyMap[KeyboardState::Key::Left]		= ImGuiKey_LeftArrow;
+		s_keyMap[KeyboardState::Key::Right]		= ImGuiKey_RightArrow;
+		s_keyMap[KeyboardState::Key::Up]		= ImGuiKey_UpArrow;
+		s_keyMap[KeyboardState::Key::Down]		= ImGuiKey_DownArrow;
+		s_keyMap[KeyboardState::Key::Home]		= ImGuiKey_Home;
+		s_keyMap[KeyboardState::Key::End]		= ImGuiKey_End;
+		s_keyMap[KeyboardState::Key::Delete]	= ImGuiKey_Delete;
+		s_keyMap[KeyboardState::Key::Backspace] = ImGuiKey_Backspace;
+		s_keyMap[KeyboardState::Key::Return]	= ImGuiKey_Enter;
+		s_keyMap[KeyboardState::Key::Esc]		= ImGuiKey_Escape;
+		s_keyMap[KeyboardState::Key::Insert]	= ImGuiKey_Insert;
+		s_keyMap[KeyboardState::Key::Delete]	= ImGuiKey_Delete;
+		s_keyMap[KeyboardState::Key::Home]		= ImGuiKey_Home;
+		s_keyMap[KeyboardState::Key::End]		= ImGuiKey_End;
+		s_keyMap[KeyboardState::Key::PageUp]	= ImGuiKey_PageUp;
+		s_keyMap[KeyboardState::Key::PageDown]	= ImGuiKey_PageDown;
+		s_keyMap[KeyboardState::Key::Print]		= ImGuiKey_PrintScreen;
+		s_keyMap[KeyboardState::Key::KeyA]		= ImGuiKey_A;
+		s_keyMap[KeyboardState::Key::KeyC]		= ImGuiKey_C;
+		s_keyMap[KeyboardState::Key::KeyV]		= ImGuiKey_V;
+		s_keyMap[KeyboardState::Key::KeyX]		= ImGuiKey_X;
+		s_keyMap[KeyboardState::Key::KeyY]		= ImGuiKey_Y;
+		s_keyMap[KeyboardState::Key::KeyZ]		= ImGuiKey_Z;
+
+		for (int i=0; i<10; i++)
+			s_keyMap[KeyboardState::Key::NumPad0+i]		= (ImGuiKey)(ImGuiKey_Keypad0+i);
+		
+		for (int i=0; i<12; i++)
+			s_keyMap[KeyboardState::Key::F1 + i]		= (ImGuiKey)(ImGuiKey_F1 + i);
 #endif
 		rapp::jobInit();
 
@@ -161,7 +199,7 @@ namespace rapp
 						inputChar(chev->m_len, chev->m_char);
 #if RAPP_WITH_BGFX
 						if (ImGui::GetIO().WantCaptureKeyboard && (keysBindings == false))
-						ImGui::GetIO().AddInputCharactersUTF8((const char*)chev->m_char);
+							ImGui::GetIO().AddInputCharactersUTF8((const char*)chev->m_char);
 #endif // RAPP_WITH_BGFX
 
 					}
@@ -207,7 +245,8 @@ namespace rapp
 						handle = key->m_handle;
 						inputSetKeyState(key->m_key, key->m_modifiers, key->m_down);
 #if RAPP_WITH_BGFX
-						ImGui::GetIO().KeysDown[key->m_key] = key->m_down;
+						ImGui::GetIO().AddKeyEvent(s_keyMap[key->m_key], key->m_down);
+						//ImGui::GetIO().KeysDown[key->m_key] = key->m_down;
 #endif // RAPP_WITH_BGFX
 					}
 					break;
@@ -216,9 +255,14 @@ namespace rapp
 					{
 						const SizeEvent* size = static_cast<const SizeEvent*>(ev);
 						handle  = size->m_handle;
-						_app->m_width  = size->m_width;
-						_app->m_height = size->m_height;
-						reset  = !g_reset; // force reset
+						if ((_app->m_width  != size->m_width) || 
+							(_app->m_height != size->m_height))
+						{
+							_app->m_width  = size->m_width;
+							_app->m_height = size->m_height;
+
+							reset  = !g_reset; // force reset
+						}
 					}
 					break;
 
@@ -236,7 +280,7 @@ namespace rapp
 		{
 			reset = g_reset;
 #if RAPP_WITH_BGFX
-			bgfx::reset(_app->m_width, _app->m_height, reset);
+			_app->m_resetView = true;
 #endif
 			inputSetMouseResolution((uint16_t)_app->m_width, (uint16_t)_app->m_height);
 		}

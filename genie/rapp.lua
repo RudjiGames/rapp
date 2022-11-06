@@ -59,6 +59,11 @@ function projectExtraConfig_rapp_bgfx()
 		bgfxPath .. "examples/common/" 	
 	}
 	defines { "RAPP_WITH_BGFX=1" }
+	configuration { "debug or release" }
+		defines { "BX_CONFIG_DEBUG=1" }
+	configuration { "retail" }
+		defines { "BX_CONFIG_DEBUG=0" }
+	configuration {}
 end
 
 function projectExtraConfigExecutable_rapp_bgfx()

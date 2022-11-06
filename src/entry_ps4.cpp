@@ -620,6 +620,11 @@ namespace rapp
 		RTM_UNUSED(_handle);
 	}
 
+	void* windowGetNativeHandle(WindowHandle _handle)
+	{
+		RTM_UNUSED_1(_handle);
+	}
+
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y)
 	{
 		RTM_UNUSED_3(_handle, _x, _y);

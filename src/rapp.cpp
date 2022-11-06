@@ -96,6 +96,13 @@ int32_t rappThreadFunc(void* _userData)
 			case Command::Draw:
 				{
 					RAPP_CMD_READ(App*, app);
+#if RAPP_WITH_BGFX
+					if (app->m_resetView)
+					{
+						bgfx::reset(app->m_width, app->m_height);
+						app->m_resetView = false;
+					}
+#endif // #RAPP_WITH_BGFX
 					app->draw();
 				}
 				break;
@@ -171,6 +178,7 @@ App::App(const char* _name, const char* _description)
 	, m_width(0)
 	, m_height(0)
 	, m_data(0)
+	, m_resetView(false)
 {
 	appRegister(this);
 }
@@ -251,7 +259,16 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 											RAPP_WINDOW_FLAG_MAIN_WINDOW,
 											_app->m_name);
 
-	bgfx::init();
+	bgfx::Init init;
+	init.type     = bgfx::RendererType::Count;
+	init.vendorId = BGFX_PCI_ID_NONE;
+	init.platformData.nwh  = rapp::windowGetNativeHandle(win);
+	init.platformData.ndt  = 0;//rapp::windowGetNativeDisplayHandle();
+	init.resolution.width  = _width;
+	init.resolution.height = _height;
+	init.resolution.reset  = BGFX_RESET_VSYNC;
+	bgfx::init(init);
+
 	bgfx::reset(_width, _height, BGFX_RESET_VSYNC);
 
 //#if !RTM_RETAIL
@@ -263,24 +280,6 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
 
 	imguiCreate();
-
-	ImGui::GetIO().KeyMap[ImGuiKey_Tab]			= KeyboardState::Key::Tab;
-	ImGui::GetIO().KeyMap[ImGuiKey_LeftArrow]	= KeyboardState::Key::Left;
-	ImGui::GetIO().KeyMap[ImGuiKey_RightArrow]	= KeyboardState::Key::Right;
-	ImGui::GetIO().KeyMap[ImGuiKey_UpArrow]		= KeyboardState::Key::Up;
-	ImGui::GetIO().KeyMap[ImGuiKey_DownArrow]	= KeyboardState::Key::Down;
-	ImGui::GetIO().KeyMap[ImGuiKey_Home]		= KeyboardState::Key::Home;
-	ImGui::GetIO().KeyMap[ImGuiKey_End]			= KeyboardState::Key::End;
-	ImGui::GetIO().KeyMap[ImGuiKey_Delete]		= KeyboardState::Key::Delete;
-	ImGui::GetIO().KeyMap[ImGuiKey_Backspace]	= KeyboardState::Key::Backspace;
-	ImGui::GetIO().KeyMap[ImGuiKey_Enter]		= KeyboardState::Key::Return;
-	ImGui::GetIO().KeyMap[ImGuiKey_Escape]		= KeyboardState::Key::Esc;
-	ImGui::GetIO().KeyMap[ImGuiKey_A]			= KeyboardState::Key::KeyA;
-	ImGui::GetIO().KeyMap[ImGuiKey_C]			= KeyboardState::Key::KeyC;
-	ImGui::GetIO().KeyMap[ImGuiKey_V]			= KeyboardState::Key::KeyV;
-	ImGui::GetIO().KeyMap[ImGuiKey_X]			= KeyboardState::Key::KeyX;
-	ImGui::GetIO().KeyMap[ImGuiKey_Y]			= KeyboardState::Key::KeyY;
-	ImGui::GetIO().KeyMap[ImGuiKey_Z]			= KeyboardState::Key::KeyZ;
 
 	_app->m_data			= new AppData;
 	_app->m_data->m_console = new Console(_app);

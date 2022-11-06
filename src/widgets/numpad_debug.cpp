@@ -470,7 +470,7 @@ namespace rapp {
 		static bool		s_hovered[9] = {false};
 	
 		ImVec2 maxC(_position.x + _size.x, _position.y + _size.y);
-		_drawList->AddRectFilled(_position, maxC, RAPP_COLOR_WIDGET_OUTLINE, RAPP_WIDGET_OUTLINE * 3, ImDrawCornerFlags_All);
+		_drawList->AddRectFilled(_position, maxC, RAPP_COLOR_WIDGET_OUTLINE, RAPP_WIDGET_OUTLINE * 3);
 
 		_position.x += RAPP_WIDGET_OUTLINE;
 		_position.y += RAPP_WIDGET_OUTLINE;

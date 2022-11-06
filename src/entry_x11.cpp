@@ -801,6 +801,11 @@ namespace rapp
 		}
 	}
 
+	void* windowGetNativeHandle(WindowHandle _handle)
+	{
+		RTM_UNUSED_1(_handle);
+	}
+
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y)
 	{
 		Display* display = s_ctx.m_display;

@@ -1281,6 +1281,13 @@ namespace rapp
 		}
 	}
 
+	void* windowGetNativeHandle(WindowHandle _handle)
+	{
+		if (s_ctx.m_windows.isValid(_handle.idx))
+			return (void*)s_ctx.m_windows.getData(_handle.idx).m_window;
+		return (void*)0;
+	}
+
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y)
 	{
 		Msg* msg = new Msg;

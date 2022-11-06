@@ -134,6 +134,7 @@ namespace rapp {
 		uint32_t		m_width;
 		uint32_t		m_height;
 		AppData*		m_data;
+		bool			m_resetView;
 
 		App(const char* _name, const char* _description = 0);
 		virtual ~App() {}
@@ -235,6 +236,9 @@ namespace rapp {
 
 	/// 
 	void windowDestroy(WindowHandle _handle);
+
+	/// 
+	void* windowGetNativeHandle(WindowHandle _handle);
 
 	/// 
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y);
