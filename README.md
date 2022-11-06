@@ -65,6 +65,7 @@ Dependencies can be obtained by cloning the following repositories:
 
 	git clone https://github.com/milostosic/build.git
 	git clone https://github.com/milostosic/rbase.git
+	git clone https://github.com/milostosic/enkiTS.git
 
 To build samples based on [bgfx](https://github.com/bkaradzic/bgfx), clone the following repositories:  
 
