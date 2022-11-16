@@ -40,12 +40,12 @@ namespace rapp {
 
 
 		Job(uint32_t _numJobs, bool _delete)
-			: m_function(0)
+			: enki::ITaskSet(_numJobs)
+			, m_function(0)
 			, m_userData(0)
 			, m_stride(0)
 			, m_start(0)
 			, m_end(0)
-			, enki::ITaskSet(_numJobs)
 		{
 			if (_delete)
 				m_taskDeleter.SetDependency(m_taskDeleter.m_Dependency, this);
