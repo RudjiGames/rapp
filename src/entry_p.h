@@ -33,7 +33,8 @@ namespace rapp
 			Key,
 			Mouse,
 			Size,
-			Window
+			Window,
+			Suspend
 		};
 
 		Event(Enum _type)
@@ -122,6 +123,22 @@ namespace rapp
 		ENTRY_IMPLEMENT_EVENT(WindowEvent, Event::Window);
 
 		void* m_nwh;
+	};
+
+	struct SuspendEvent : public Event
+	{
+		enum Enum
+		{
+			DidSuspend,
+			DidResume,
+			WillSuspend,
+			WillResume
+		};
+
+		ENTRY_IMPLEMENT_EVENT(SuspendEvent, Event::Suspend);
+
+		void* m_nwh;
+		SuspendEvent::Enum m_eventState;
 	};
 
 	const Event* poll();
@@ -233,6 +250,13 @@ namespace rapp
 		{
 			WindowEvent* ev = new WindowEvent(_handle);
 			ev->m_nwh = _nwh;
+			while(!m_queue.write(ev));
+		}
+
+		void postSuspendEvent(WindowHandle _handle, SuspendEvent::Enum _suspendState)
+		{
+			SuspendEvent* ev = new SuspendEvent(_handle);
+			ev->m_eventState = _suspendState;
 			while(!m_queue.write(ev));
 		}
 

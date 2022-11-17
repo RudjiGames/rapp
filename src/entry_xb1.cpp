@@ -322,7 +322,6 @@ public:
 
 			IVectorView<IGamepad> gamepads = Gamepad::Gamepads();
 
-			rapp::WindowHandle defaultWindow = { 0 };
 			for (uint32_t i=0; i<Gamepad::Gamepads().Size(); ++i )
 			{
 				if (i > ENTRY_CONFIG_MAX_GAMEPADS) break;
@@ -334,7 +333,7 @@ public:
 				{
 					m_gamepadIDs[i]		= id;
 					m_gamepadState[i]	= reading;
-					g_eventQueue.postGamepadEvent(defaultWindow, {(uint16_t)i}, true);
+					g_eventQueue.postGamepadEvent(rapp::kDefaultWindowHandle, {(uint16_t)i}, true);
 				}
 
 				if (m_gamepadIDs[i] == 0)
@@ -352,18 +351,18 @@ public:
 						uint16_t bit = s_gamepadRemap[jj].m_bit;
 						if (bit & (uint16_t)changed)
 						{
-							g_eventQueue.postGamepadButtonEvent(defaultWindow, {(uint16_t)i}, s_gamepadRemap[jj].m_button, !!(0 == (bit & (uint16_t)current)));
+							g_eventQueue.postGamepadButtonEvent(rapp::kDefaultWindowHandle, {(uint16_t)i}, s_gamepadRemap[jj].m_button, !!(0 == (bit & (uint16_t)current)));
 						}
 					}
 				}
 
 				float lt = reading.LeftTrigger();
 				if (lt != m_gamepadState[i].LeftTrigger())
-					g_eventQueue.postAxisEvent(defaultWindow, {(uint16_t)i}, rapp::GamepadAxis::LeftZ, (int32_t)(lt*255));
+					g_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, {(uint16_t)i}, rapp::GamepadAxis::LeftZ, (int32_t)(lt*255));
 
 				float rt = reading.RightTrigger();
 				if (rt != m_gamepadState[i].RightTrigger())
-					g_eventQueue.postAxisEvent(defaultWindow, {(uint16_t)i}, rapp::GamepadAxis::RightZ, (int32_t)(rt*255));
+					g_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, {(uint16_t)i}, rapp::GamepadAxis::RightZ, (int32_t)(rt*255));
 
 				float ltsx = reading.LeftThumbstickX();
 				float ltsy = reading.LeftThumbstickY();
@@ -371,16 +370,16 @@ public:
 				float rtsy = reading.RightThumbstickY();
 
 				if (ltsx != m_gamepadState[i].LeftThumbstickX())
-					g_eventQueue.postAxisEvent(defaultWindow, {(uint16_t)i}, rapp::GamepadAxis::LeftX, (int32_t)(ltsx*32767.0f));
+					g_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, {(uint16_t)i}, rapp::GamepadAxis::LeftX, (int32_t)(ltsx*32767.0f));
 				
 				if (ltsy != m_gamepadState[i].LeftThumbstickY())
-					g_eventQueue.postAxisEvent(defaultWindow, {(uint16_t)i}, rapp::GamepadAxis::LeftY, (int32_t)(ltsy*32767.0f));
+					g_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, {(uint16_t)i}, rapp::GamepadAxis::LeftY, (int32_t)(ltsy*32767.0f));
 
 				if (rtsx != m_gamepadState[i].RightThumbstickX())
-					g_eventQueue.postAxisEvent(defaultWindow, {(uint16_t)i}, rapp::GamepadAxis::RightX, (int32_t)(rtsx*32767.0f));
+					g_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, {(uint16_t)i}, rapp::GamepadAxis::RightX, (int32_t)(rtsx*32767.0f));
 
 				if (rtsy != m_gamepadState[i].RightThumbstickY())
-					g_eventQueue.postAxisEvent(defaultWindow, {(uint16_t)i}, rapp::GamepadAxis::RightY, (int32_t)(rtsy*32767.0f));
+					g_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, {(uint16_t)i}, rapp::GamepadAxis::RightY, (int32_t)(rtsy*32767.0f));
 
 				m_gamepadState[i] = reading;
 			}
@@ -438,8 +437,8 @@ protected:
 				break;
 		RTM_ASSERT(index<ENTRY_CONFIG_MAX_GAMEPADS, "");
 		
-		rapp::WindowHandle defaultWindow = { 0 };
-		g_eventQueue.postGamepadEvent(defaultWindow, {(uint16_t)index}, true);
+		rapp::WindowHandle rapp::kDefaultWindowHandle = { 0 };
+		g_eventQueue.postGamepadEvent(rapp::kDefaultWindowHandle, {(uint16_t)index}, true);
 	}
 	
 	void OnGamePadRemoved(IInspectable const & _sender, GamepadRemovedEventArgs _args)
@@ -453,8 +452,8 @@ protected:
 		m_gamepadIDs[index]		= 0;
 		m_gamepadState[index]	= IGamepadReading();
 
-		rapp::WindowHandle defaultWindow = { 0 };
-		g_eventQueue.postGamepadEvent(defaultWindow, {(uint16_t)index}, false);
+		rapp::WindowHandle rapp::kDefaultWindowHandle = { 0 };
+		g_eventQueue.postGamepadEvent(rapp::kDefaultWindowHandle, {(uint16_t)index}, false);
 	}
 
 	void KeyDown(CoreWindow const & _sender, KeyEventArgs const & _args)
@@ -469,8 +468,8 @@ protected:
 		if (key == rapp::KeyboardState::Key::None)
 			return;
 
-		rapp::WindowHandle defaultWindow = { 0 };
-		g_eventQueue.postKeyEvent(defaultWindow, key, m_modifiers, true);
+		rapp::WindowHandle rapp::kDefaultWindowHandle = { 0 };
+		g_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, key, m_modifiers, true);
 	}
 
 	void KeyUp(CoreWindow const & _sender, KeyEventArgs const & _args)
@@ -485,8 +484,8 @@ protected:
 		if (key == rapp::KeyboardState::Key::None)
 			return;
 
-		rapp::WindowHandle defaultWindow = { 0 };
-		g_eventQueue.postKeyEvent(defaultWindow, key, m_modifiers, false);
+		rapp::WindowHandle rapp::kDefaultWindowHandle = { 0 };
+		g_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, key, m_modifiers, false);
 	}
 
 	void PointerEntered(CoreWindow const & _sender, PointerEventArgs const & _args)

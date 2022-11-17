@@ -615,8 +615,7 @@ void inputSetMouseLock(bool _lock)
 	if (getInput().m_mouse.m_lock != _lock)
 	{
 		getInput().m_mouse.m_lock = _lock;
-		WindowHandle defaultWindow = { 0 };
-		windowSetMouseLock(defaultWindow, _lock);
+		windowSetMouseLock(rapp::kDefaultWindowHandle, _lock);
 		if (_lock)
 		{
 			getInput().m_mouse.m_norm[0] = 0.0f;

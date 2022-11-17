@@ -117,6 +117,7 @@ namespace rapp {
 
 	struct WindowHandle  { uint32_t idx; };
 	inline bool isValid(WindowHandle _handle)  { return UINT32_MAX != _handle.idx; }
+	constexpr WindowHandle kDefaultWindowHandle = { 0 };
 
 	#define RAPP_WINDOW_FLAG_ASPECT_NONE	0x0
 	#define RAPP_WINDOW_FLAG_ASPECT_RATIO	0x1

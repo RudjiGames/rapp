@@ -128,8 +128,6 @@ namespace rapp
 				return;
 			}
 
-			WindowHandle defaultWindow = { 0 };
-
 			for (uint32_t ii = 0; ii < RTM_NUM_ELEMENTS(m_state); ++ii)
 			{
 				GamepadHandle handle = { static_cast<uint16_t>(ii) };
@@ -139,7 +137,7 @@ namespace rapp
 				bool connected = ERROR_SUCCESS == result;
 				if (connected != m_connected[ii])
 				{
-					_eventQueue.postGamepadEvent(defaultWindow, handle, connected);
+					_eventQueue.postGamepadEvent(rapp::kDefaultWindowHandle, handle, connected);
 				}
 
 				m_connected[ii] = connected;
@@ -157,7 +155,7 @@ namespace rapp
 							uint16_t bit = s_xinputRemap[jj].m_bit;
 							if (bit & changed)
 							{
-								_eventQueue.postGamepadButtonEvent(defaultWindow, handle, s_xinputRemap[jj].m_button, !!(0 == (current & bit)));
+								_eventQueue.postGamepadButtonEvent(rapp::kDefaultWindowHandle, handle, s_xinputRemap[jj].m_button, !!(0 == (current & bit)));
 							}
 						}
 
@@ -169,7 +167,7 @@ namespace rapp
 						int32_t value = state.Gamepad.bLeftTrigger;
 						if (filter(GamepadAxis::LeftZ, gamepad.bLeftTrigger, &value) )
 						{
-							_eventQueue.postAxisEvent(defaultWindow, handle, GamepadAxis::LeftZ, value);
+							_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, GamepadAxis::LeftZ, value);
 						}
 
 						gamepad.bLeftTrigger = state.Gamepad.bLeftTrigger;
@@ -180,7 +178,7 @@ namespace rapp
 						int32_t value = state.Gamepad.bRightTrigger;
 						if (filter(GamepadAxis::RightZ, gamepad.bRightTrigger, &value) )
 						{
-							_eventQueue.postAxisEvent(defaultWindow, handle, GamepadAxis::RightZ, value);
+							_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, GamepadAxis::RightZ, value);
 						}
 
 						gamepad.bRightTrigger = state.Gamepad.bRightTrigger;
@@ -191,7 +189,7 @@ namespace rapp
 						int32_t value = state.Gamepad.sThumbLX;
 						if (filter(GamepadAxis::LeftX, gamepad.sThumbLX, &value) )
 						{
-							_eventQueue.postAxisEvent(defaultWindow, handle, GamepadAxis::LeftX, value);
+							_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, GamepadAxis::LeftX, value);
 						}
 
 						gamepad.sThumbLX = state.Gamepad.sThumbLX;
@@ -202,7 +200,7 @@ namespace rapp
 						int32_t value = state.Gamepad.sThumbLY;
 						if (filter(GamepadAxis::LeftY, gamepad.sThumbLY, &value) )
 						{
-							_eventQueue.postAxisEvent(defaultWindow, handle, GamepadAxis::LeftY, value);
+							_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, GamepadAxis::LeftY, value);
 						}
 
 						gamepad.sThumbLY = state.Gamepad.sThumbLY;
@@ -213,7 +211,7 @@ namespace rapp
 						int32_t value = state.Gamepad.sThumbRX;
 						if (filter(GamepadAxis::RightX, gamepad.sThumbRX, &value) )
 						{
-							_eventQueue.postAxisEvent(defaultWindow, handle, GamepadAxis::RightX, value);
+							_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, GamepadAxis::RightX, value);
 						}
 
 						gamepad.sThumbRX = state.Gamepad.sThumbRX;
@@ -224,7 +222,7 @@ namespace rapp
 						int32_t value = state.Gamepad.sThumbRY;
 						if (filter(GamepadAxis::RightY, gamepad.sThumbRY, &value) )
 						{
-							_eventQueue.postAxisEvent(defaultWindow, handle, GamepadAxis::RightY, value);
+							_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, GamepadAxis::RightY, value);
 						}
 
 						gamepad.sThumbRY = state.Gamepad.sThumbRY;

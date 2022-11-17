@@ -155,14 +155,13 @@ namespace rapp
 				return false;
 			}
 
-			WindowHandle defaultWindow = { 0 };
 			GamepadHandle handle = { 0 };
 
 			if (event.type & JS_EVENT_BUTTON)
 			{
 				if (event.number < RTM_NUM_ELEMENTS(s_translateButton) )
 				{
-					_eventQueue.postGamepadButtonEvent(defaultWindow, handle, s_translateButton[event.number], 0 != event.value);
+					_eventQueue.postGamepadButtonEvent(rapp::kDefaultWindowHandle, handle, s_translateButton[event.number], 0 != event.value);
 				}
 			}
 			else if (event.type & JS_EVENT_AXIS)
@@ -173,20 +172,20 @@ namespace rapp
 					int32_t value = event.value;
 					if (filter(axis, &value) )
 					{
-						_eventQueue.postAxisEvent(defaultWindow, handle, axis, value);
+						_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, axis, value);
 
 						if (GamepadState::Buttons::None != s_axisDpad[axis].first)
 						{
 							if (m_value[axis] == 0)
 							{
-								_eventQueue.postAxisEvent(defaultWindow, handle, GamepadAxis::LeftZ, value);
-								_eventQueue.postAxisEvent(defaultWindow, handle, GamepadAxis::LeftZ, value);
-								//_eventQueue.postKeyEvent(defaultWindow, s_axisDpad[axis].first,  0, false);
-								//_eventQueue.postKeyEvent(defaultWindow, s_axisDpad[axis].second, 0, false);
+								_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, GamepadAxis::LeftZ, value);
+								_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, GamepadAxis::LeftZ, value);
+								//_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, s_axisDpad[axis].first,  0, false);
+								//_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, s_axisDpad[axis].second, 0, false);
 							}
 							else
 							{
-								//_eventQueue.postKeyEvent(defaultWindow
+								//_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle
 								//	, 0 > m_value[axis] ? s_axisDpad[axis].first : s_axisDpad[axis].second
 								//	, 0
 								//	, true
@@ -443,8 +442,7 @@ namespace rapp
 			rtm::Thread thread;
 			thread.start(mte.threadFunc, &mte);
 
-			WindowHandle defaultWindow = { 0 };
-			m_eventQueue.postSizeEvent(defaultWindow, 1, 1);
+			m_eventQueue.postSizeEvent(rapp::kDefaultWindowHandle, 1, 1);
 
 			s_joystick.init();
 

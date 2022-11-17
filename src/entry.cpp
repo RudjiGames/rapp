@@ -144,10 +144,8 @@ namespace rapp
 #endif
 		rapp::jobInit();
 
-		WindowHandle defaultWindow = { 0 };
-
 		const char* executable = rtm::pathGetFileName(_argv[0]);
-		windowSetTitle(defaultWindow, executable ? executable : "rapp");
+		windowSetTitle(rapp::kDefaultWindowHandle, executable ? executable : "rapp");
 
 		int32_t result = rapp::rapp_main(_argc, _argv);
 
@@ -264,6 +262,9 @@ namespace rapp
 							reset  = !g_reset; // force reset
 						}
 					}
+					break;
+
+				case Event::Suspend:
 					break;
 
 				case Event::Window:

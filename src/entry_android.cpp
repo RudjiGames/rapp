@@ -210,8 +210,7 @@ namespace rapp
 						int32_t height = ANativeWindow_getHeight(m_window);
 
 						RAPP_DBG("ANativeWindow width %d, height %d", width, height);
-						WindowHandle defaultWindow = { 0 };
-						m_eventQueue.postSizeEvent(defaultWindow, width, height);
+						m_eventQueue.postSizeEvent(rapp::kDefaultWindowHandle, width, height);
 
 						m_thread.start(MainThreadEntry::threadFunc, &m_mte);
 					}
