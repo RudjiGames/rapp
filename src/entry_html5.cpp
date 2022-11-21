@@ -124,13 +124,14 @@ namespace rapp
 			fullscreenStrategy.canvasResizedCallback = canvasResizeCb;
 			fullscreenStrategy.canvasResizedCallbackUserData = this;
 
-			EMSCRIPTEN_CHECK(emscripten_request_fullscreen_strategy(canvas, false, &fullscreenStrategy) );
+			//EMSCRIPTEN_CHECK(emscripten_request_fullscreen_strategy(canvas, false, &fullscreenStrategy) );
 
 			EMSCRIPTEN_CHECK(emscripten_set_focus_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, focusCb) );
 			EMSCRIPTEN_CHECK(emscripten_set_focusin_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, focusCb) );
 			EMSCRIPTEN_CHECK(emscripten_set_focusout_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, focusCb) );
 
 			int32_t result = main(_argc, _argv);
+
 			return result;
 		}
 
@@ -433,7 +434,7 @@ namespace rapp
 	{
 		BX_UNUSED(_handle, _lock);
 	}
-
+	 
 	void* windowGetNativeHandle(WindowHandle _handle)
 	{
 		if (kDefaultWindowHandle.idx == _handle.idx)

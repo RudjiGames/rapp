@@ -42,6 +42,7 @@ struct Command
 };
 
 static rtm::CommandBuffer	s_commChannel;		// rapp_main to app class thread communication
+App*						s_app = 0;
 
 rtm_vector<App*>& appGetRegistered()
 {
@@ -159,14 +160,18 @@ void init(rtmLibInterface* _libInterface)
 	if (appGetRegistered().size() > 1)
 		cmdAdd("app", cmdApp, 0, "Application management commands, type 'app help' for more info");
 
+#if !RTM_PLATFORM_EMSCRIPTEN
 	s_commChannel.init(rappThreadFunc);
+#endif // !RTM_PLATFORM_EMSCRIPTEN
 }
 
 void shutDown()
 {
 	inputShutdown();
 
+#if !RTM_PLATFORM_EMSCRIPTEN
 	s_commChannel.shutDown();
+#endif // !RTM_PLATFORM_EMSCRIPTEN
 }
 
 void appRegister(App* _app);
@@ -328,9 +333,38 @@ void appSwitch(App* _app)
 
 bool processEvents(App* _app);
 
+static void updateApp()
+{
+	FrameStep fs;
+	while (processEvents(s_app))
+	{
+		float time = fs.step();
+		s_app->update(time);
+
+		s_app->draw();
+
+		if (s_app->m_width && s_app->m_height)
+			s_app->drawGUI();
+
+		if (g_next_app)
+		{
+			s_app->shutDown();
+			s_app = g_next_app;
+
+			s_app->init(0, 0);//_argc, _argv);
+			g_next_app = 0;
+		}
+	}
+}
+
 ///
 int appRun(App* _app, int _argc, const char* const* _argv)
 {
+#if RTM_PLATFORM_EMSCRIPTEN
+	s_app = _app;
+	_app->init(_argc, _argv);
+	emscripten_set_main_loop(&updateApp, -1, 1);
+#else
 	appInit(_app, _argc, _argv);
 
 	FrameStep fs;
@@ -358,6 +392,7 @@ int appRun(App* _app, int _argc, const char* const* _argv)
 
 		s_commChannel.frame();
 	}
+#endif // RTM_PLATFORM_EMSCRIPTEN
 
 	appShutDown(_app);
 
@@ -368,7 +403,9 @@ int rapp_main(int _argc, const char* const* _argv)
 {
 	rtmLibInterface* errorHandler = 0;
 	//&RAPP_INSTANCE(CmdLineApp)
+
 	rapp::init(errorHandler);
+
 	int ret = rapp::appRun(rapp::appGetRegistered()[0], _argc, _argv);
 	rapp::shutDown();
 

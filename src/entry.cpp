@@ -142,6 +142,7 @@ namespace rapp
 		for (int i=0; i<12; i++)
 			s_keyMap[KeyboardState::Key::F1 + i]		= (ImGuiKey)(ImGuiKey_F1 + i);
 #endif
+
 		rapp::jobInit();
 
 		const char* executable = rtm::pathGetFileName(_argv[0]);
