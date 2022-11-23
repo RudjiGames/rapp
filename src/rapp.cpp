@@ -274,12 +274,10 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 	init.resolution.reset  = BGFX_RESET_VSYNC;
 	bgfx::init(init);
 
-	bgfx::reset(_width, _height, BGFX_RESET_VSYNC);
-
-//#if !RTM_RETAIL
+#if !RTM_RETAIL
 	// Enable debug text.
 	bgfx::setDebug(BGFX_DEBUG_TEXT);
-//#endif
+#endif
 
 	// Set view 0 clear state.
 	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
@@ -336,7 +334,7 @@ bool processEvents(App* _app);
 static void updateApp()
 {
 	FrameStep fs;
-	while (processEvents(s_app))
+	if (processEvents(s_app))
 	{
 		float time = fs.step();
 		s_app->update(time);
