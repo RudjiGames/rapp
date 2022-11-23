@@ -23,6 +23,8 @@ extern "C" void entry_emscripten_yield()
 //	emscripten_sleep(0);
 }
 
+static const char* s_canvasID = "#canvas";
+
 #define _EMSCRIPTEN_CHECK(_check, _call)                                                                  \
 	BX_MACRO_BLOCK_BEGIN                                                                                  \
 		EMSCRIPTEN_RESULT __result__ = _call;                                                             \
@@ -103,13 +105,11 @@ namespace rapp
 
 		int32_t run(int _argc, const char* const* _argv)
 		{
-			static const char* canvas = "#canvas";
+			EMSCRIPTEN_CHECK(emscripten_set_mousedown_callback(s_canvasID, this, true, mouseCb) );
+			EMSCRIPTEN_CHECK(emscripten_set_mouseup_callback(s_canvasID, this, true, mouseCb) );
+			EMSCRIPTEN_CHECK(emscripten_set_mousemove_callback(s_canvasID, this, true, mouseCb) );
 
-			EMSCRIPTEN_CHECK(emscripten_set_mousedown_callback(canvas, this, true, mouseCb) );
-			EMSCRIPTEN_CHECK(emscripten_set_mouseup_callback(canvas, this, true, mouseCb) );
-			EMSCRIPTEN_CHECK(emscripten_set_mousemove_callback(canvas, this, true, mouseCb) );
-
-			EMSCRIPTEN_CHECK(emscripten_set_wheel_callback(canvas, this, true, wheelCb) );
+			EMSCRIPTEN_CHECK(emscripten_set_wheel_callback(s_canvasID, this, true, wheelCb) );
 
 			EMSCRIPTEN_CHECK(emscripten_set_keypress_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, keyCb) );
 			EMSCRIPTEN_CHECK(emscripten_set_keydown_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, keyCb) );
@@ -124,7 +124,8 @@ namespace rapp
 			fullscreenStrategy.canvasResizedCallback = canvasResizeCb;
 			fullscreenStrategy.canvasResizedCallbackUserData = this;
 
-			//EMSCRIPTEN_CHECK(emscripten_request_fullscreen_strategy(canvas, false, &fullscreenStrategy) );
+			//EMSCRIPTEN_CHECK(emscripten_request_fullscreen_strategy(s_canvasID, false, &fullscreenStrategy) );
+			EMSCRIPTEN_CHECK(emscripten_enter_soft_fullscreen(s_canvasID, &fullscreenStrategy) );
 
 			EMSCRIPTEN_CHECK(emscripten_set_focus_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, focusCb) );
 			EMSCRIPTEN_CHECK(emscripten_set_focusin_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, focusCb) );
@@ -395,7 +396,7 @@ namespace rapp
 	WindowHandle windowCreate(App* _app, int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
 	{
 		BX_UNUSED(_app, _x, _y, _width, _height, _flags, _title);
-		WindowHandle handle = { UINT16_MAX };
+		WindowHandle handle = { kDefaultWindowHandle.idx };
 
 		return handle;
 	}
@@ -428,6 +429,23 @@ namespace rapp
 	void windowToggleFullscreen(WindowHandle _handle)
 	{
 		BX_UNUSED(_handle);
+
+		//EmscriptenFullscreenChangeEvent state;
+		//emscripten_get_fullscreen_status(&state);
+
+		//if (!state.isFullscreen)
+		//{
+		//	EmscriptenFullscreenStrategy fullscreenStrategy = {};
+		//	fullscreenStrategy.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_DEFAULT;
+		//	fullscreenStrategy.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
+		//	fullscreenStrategy.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
+		//	fullscreenStrategy.canvasResizedCallback = canvasResizeCb;
+		//	fullscreenStrategy.canvasResizedCallbackUserData = this;
+
+		//	EMSCRIPTEN_CHECK(emscripten_request_fullscreen_strategy(s_canvasID, false, &fullscreenStrategy) );
+		//}
+		//else
+		//	emscripten_exit_fullscreen();
 	}
 
 	void windowSetMouseLock(WindowHandle _handle, bool _lock)
@@ -438,14 +456,12 @@ namespace rapp
 	void* windowGetNativeHandle(WindowHandle _handle)
 	{
 		if (kDefaultWindowHandle.idx == _handle.idx)
-		{
-			return (void*)"#canvas";
-		}
+			return (void*)s_canvasID;
 
 		return NULL;
 	}
 
-	void* getNativeDisplayHandle()
+	void* windowGetNativeDisplayHandle()
 	{
 		return NULL;
 	}

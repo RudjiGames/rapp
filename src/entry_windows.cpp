@@ -1286,6 +1286,11 @@ namespace rapp
 		return (void*)0;
 	}
 
+	void* windowGetNativeDisplayHandle()
+	{
+		return NULL;
+	}
+
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y)
 	{
 		Msg* msg = new Msg;

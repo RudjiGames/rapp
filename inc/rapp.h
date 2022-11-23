@@ -242,6 +242,9 @@ namespace rapp {
 	void* windowGetNativeHandle(WindowHandle _handle);
 
 	/// 
+	void* windowGetNativeDisplayHandle();
+
+	/// 
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y);
 
 	/// 

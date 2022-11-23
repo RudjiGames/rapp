@@ -268,7 +268,7 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 	init.type     = bgfx::RendererType::Count;
 	init.vendorId = BGFX_PCI_ID_NONE;
 	init.platformData.nwh  = rapp::windowGetNativeHandle(win);
-	init.platformData.ndt  = 0;//rapp::windowGetNativeDisplayHandle();
+	init.platformData.ndt  = rapp::windowGetNativeDisplayHandle();
 	init.resolution.width  = _width;
 	init.resolution.height = _height;
 	init.resolution.reset  = BGFX_RESET_VSYNC;

@@ -625,6 +625,11 @@ namespace rapp
 		RTM_UNUSED_1(_handle);
 	}
 
+	void* windowGetNativeDisplayHandle()
+	{
+		return NULL;
+	}
+
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y)
 	{
 		RTM_UNUSED_3(_handle, _x, _y);
