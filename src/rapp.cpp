@@ -145,7 +145,6 @@ int32_t rappThreadFunc(void* _userData)
 			case Command::DrawGUI:
 				{
 					RAPP_CMD_READ(App*, app);
-					RTM_UNUSED(app);
 					drawGUI(app);
 				}
 				break;
@@ -362,7 +361,7 @@ bool processEvents(App* _app);
 #if RTM_PLATFORM_EMSCRIPTEN
 static void updateApp()
 {
-	FrameStep fs;
+	static FrameStep fs;
 	if (processEvents(s_app))
 	{
 		float time = fs.step();
