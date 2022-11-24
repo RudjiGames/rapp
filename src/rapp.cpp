@@ -35,6 +35,7 @@ struct Command
 		Update,
 		Draw,
 		DrawGUI,
+		Frame,
 		Shutdown,
 
 		Count
@@ -101,10 +102,19 @@ int32_t rappThreadFunc(void* _userData)
 					if (app->m_resetView)
 					{
 						bgfx::reset(app->m_width, app->m_height);
+
 						app->m_resetView = false;
 					}
-#endif // #RAPP_WITH_BGFX
+
+					// Set view 0 default viewport.
+					bgfx::setViewRect(0, 0, 0, (uint16_t)app->m_width, (uint16_t)app->m_height);
+
+					// This dummy draw call is here to make sure that view 0 is cleared
+					// if no other draw calls are submitted to view 0.
+					bgfx::touch(0);
+
 					app->draw();
+#endif // #RAPP_WITH_BGFX
 				}
 				break;
 
@@ -131,7 +141,15 @@ int32_t rappThreadFunc(void* _userData)
 
 					nvgEndFrame(app->m_data->m_nvg);
 					imguiEndFrame();
-#endif
+#endif // RAPP_WITH_BGFX
+				}
+				break;
+
+			case Command::Frame:
+				{
+#if RAPP_WITH_BGFX
+					bgfx::frame();
+#endif // RAPP_WITH_BGFX
 				}
 				break;
 
@@ -252,6 +270,11 @@ void appDrawGUI(App* _app)
 	s_commChannel.write(_app);
 }
 
+void appFrame()
+{
+	s_commChannel.write(Command::Frame);
+}
+
 WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 {
 	RTM_UNUSED_3(_app, _width, _height);
@@ -331,6 +354,7 @@ void appSwitch(App* _app)
 
 bool processEvents(App* _app);
 
+#if RTM_PLATFORM_EMSCRIPTEN
 static void updateApp()
 {
 	FrameStep fs;
@@ -339,10 +363,27 @@ static void updateApp()
 		float time = fs.step();
 		s_app->update(time);
 
+#if RAPP_WITH_BGFX
+		if (s_app->m_resetView)
+		{
+			bgfx::reset(s_app->m_width, s_app->m_height);
+			s_app->m_resetView = false;
+		}
+
+		// Set view 0 default viewport.
+		bgfx::setViewRect(0, 0, 0, (uint16_t)s_app->m_width, (uint16_t)s_app->m_height);
+
+		// This dummy draw call is here to make sure that view 0 is cleared
+		// if no other draw calls are submitted to view 0.
+		bgfx::touch(0);
+
 		s_app->draw();
 
 		if (s_app->m_width && s_app->m_height)
 			s_app->drawGUI();
+
+		bgfx::frame();
+#endif // RAPP_WITH_BGFX
 
 		if (g_next_app)
 		{
@@ -354,15 +395,15 @@ static void updateApp()
 		}
 	}
 }
+#endif // RTM_PLATFORM_EMSCRIPTEN
 
-///
 int appRun(App* _app, int _argc, const char* const* _argv)
 {
 #if RTM_PLATFORM_EMSCRIPTEN
 	s_app = _app;
 	_app->init(_argc, _argv);
 	emscripten_set_main_loop(&updateApp, -1, 1);
-#else
+#else // RTM_PLATFORM_EMSCRIPTEN
 	appInit(_app, _argc, _argv);
 
 	FrameStep fs;
@@ -378,6 +419,8 @@ int appRun(App* _app, int _argc, const char* const* _argv)
 
 		if (_app->m_width && _app->m_height)
 			appDrawGUI(_app);
+
+		appFrame();
 
 		if (g_next_app)
 		{

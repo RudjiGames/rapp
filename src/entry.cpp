@@ -245,7 +245,6 @@ namespace rapp
 						inputSetKeyState(key->m_key, key->m_modifiers, key->m_down);
 #if RAPP_WITH_BGFX
 						ImGui::GetIO().AddKeyEvent(s_keyMap[key->m_key], key->m_down);
-						//ImGui::GetIO().KeysDown[key->m_key] = key->m_down;
 #endif // RAPP_WITH_BGFX
 					}
 					break;
@@ -254,6 +253,7 @@ namespace rapp
 					{
 						const SizeEvent* size = static_cast<const SizeEvent*>(ev);
 						handle  = size->m_handle;
+
 						if ((_app->m_width  != size->m_width) || 
 							(_app->m_height != size->m_height))
 						{
@@ -278,7 +278,7 @@ namespace rapp
 
 		} while (NULL != ev);
 
-		if ((handle.idx == 0) && (reset != g_reset))
+		if ((handle.idx == kDefaultWindowHandle.idx) && (reset != g_reset))
 		{
 			reset = g_reset;
 #if RAPP_WITH_BGFX

@@ -1025,6 +1025,19 @@ namespace rapp
 					}
 					break;
 
+				//case WM_DROPFILES:
+				//	{
+				//		HDROP drop = (HDROP)_wparam;
+				//		char tmp[bx::kMaxFilePath];
+				//		WCHAR utf16[bx::kMaxFilePath];
+				//		uint32_t result = DragQueryFileW(drop, 0, utf16, bx::kMaxFilePath);
+				//		BX_UNUSED(result);
+				//		WideCharToMultiByte(CP_UTF8, 0, utf16, -1, tmp, bx::kMaxFilePath, NULL, NULL);
+				//		WindowHandle handle = findHandle(_hwnd);
+				//		m_eventQueue.postDropFileEvent(handle, tmp);
+				//	}
+				//	break;
+
 				default:
 					break;
 				}
