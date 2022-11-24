@@ -51,6 +51,30 @@ rtm_vector<App*>& appGetRegistered()
 	return apps;
 }
 
+static void drawGUI(App* _app)
+{
+#if RAPP_WITH_BGFX
+	MouseState ms;
+	inputGetMouseState(ms);
+	imguiBeginFrame(ms.m_absolute[0], ms.m_absolute[1]
+		, (ms.m_buttons[MouseState::Button::Left  ] ? IMGUI_MBUT_LEFT   : 0)
+		| (ms.m_buttons[MouseState::Button::Right ] ? IMGUI_MBUT_RIGHT  : 0)
+		| (ms.m_buttons[MouseState::Button::Middle] ? IMGUI_MBUT_MIDDLE : 0)
+		,  ms.m_absolute[2]
+		, uint16_t(_app->m_width)
+		, uint16_t(_app->m_height)
+		);
+
+	nvgBeginFrame(_app->m_data->m_nvg, (float)_app->m_width, (float)_app->m_height, 1.0f);
+
+	_app->drawGUI();
+	_app->m_data->m_console->draw();
+
+	nvgEndFrame(_app->m_data->m_nvg);
+	imguiEndFrame();
+#endif // RAPP_WITH_BGFX
+}
+
 int32_t rappThreadFunc(void* _userData)
 {
 	rtm::CommandBuffer* cc = (rtm::CommandBuffer*)_userData;
@@ -122,26 +146,7 @@ int32_t rappThreadFunc(void* _userData)
 				{
 					RAPP_CMD_READ(App*, app);
 					RTM_UNUSED(app);
-#if RAPP_WITH_BGFX
-					MouseState ms;
-					inputGetMouseState(ms);
-					imguiBeginFrame(ms.m_absolute[0], ms.m_absolute[1]
-						, (ms.m_buttons[MouseState::Button::Left  ] ? IMGUI_MBUT_LEFT   : 0)
-						| (ms.m_buttons[MouseState::Button::Right ] ? IMGUI_MBUT_RIGHT  : 0)
-						| (ms.m_buttons[MouseState::Button::Middle] ? IMGUI_MBUT_MIDDLE : 0)
-						,  ms.m_absolute[2]
-						, uint16_t(app->m_width)
-						, uint16_t(app->m_height)
-						);
-
-					nvgBeginFrame(app->m_data->m_nvg, (float)app->m_width, (float)app->m_height, 1.0f);
-
-					app->drawGUI();
-					app->m_data->m_console->draw();
-
-					nvgEndFrame(app->m_data->m_nvg);
-					imguiEndFrame();
-#endif // RAPP_WITH_BGFX
+					drawGUI(app);
 				}
 				break;
 
@@ -380,7 +385,7 @@ static void updateApp()
 		s_app->draw();
 
 		if (s_app->m_width && s_app->m_height)
-			s_app->drawGUI();
+			drawGUI(s_app);
 
 		bgfx::frame();
 #endif // RAPP_WITH_BGFX
