@@ -15,7 +15,12 @@
 #include <bgfx/bgfx.h>
 #include <common/imgui/imgui.h>
 #include <dear-imgui/imgui_internal.h>
-#endif
+#endif // RAPP_WITH_BGFX
+
+#if RTM_PLATFORM_EMSCRIPTEN
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif // RTM_PLATFORM_EMSCRIPTEN
 
 #define RAPP_CMD_READ(_type, _name)		\
 	_type _name;						\
@@ -282,7 +287,6 @@ void appFrame()
 WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 {
 	RTM_UNUSED_3(_app, _width, _height);
-
 #if RAPP_WITH_BGFX
 	WindowHandle win = rapp::windowCreate(	_app, 0, 0, _width, _height,
 											RAPP_WINDOW_FLAG_ASPECT_RATIO	|
@@ -359,23 +363,42 @@ void appSwitch(App* _app)
 bool processEvents(App* _app);
 
 #if RTM_PLATFORM_EMSCRIPTEN
+static const char* s_canvasID = "#canvas";
+
 static void updateApp()
 {
+	static bool first_frame = true;
 	static FrameStep fs;
+
 	if (processEvents(s_app))
 	{
 		float time = fs.step();
 		s_app->update(time);
 
 #if RAPP_WITH_BGFX
+		double dwidth, dheight;
+		emscripten_get_element_css_size(s_canvasID, &dwidth, &dheight);
+		uint32_t width	= (uint32_t)dwidth;
+		uint32_t height	= (uint32_t)dheight;
+
 		if (s_app->m_resetView)
 		{
-			bgfx::reset(s_app->m_width, s_app->m_height);
+			s_app->m_width = width;
+			s_app->m_height = height;
 			s_app->m_resetView = false;
+			bgfx::reset(s_app->m_width, s_app->m_height);
 		}
 
 		// Set view 0 default viewport.
 		bgfx::setViewRect(0, 0, 0, (uint16_t)s_app->m_width, (uint16_t)s_app->m_height);
+		bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
+
+		if (first_frame)
+		{
+			// reset view in first frame to match canvas size
+			bgfx::reset(s_app->m_width, s_app->m_height);
+			first_frame = false;
+		}
 
 		// This dummy draw call is here to make sure that view 0 is cleared
 		// if no other draw calls are submitted to view 0.

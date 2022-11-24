@@ -397,8 +397,10 @@ namespace rapp
 	{
 		RTM_ASSERT(_width, "");
 		RTM_ASSERT(_height, "");
-		*_width		= 1920;
-		*_height	= 1080;
+		double width, height;
+		emscripten_get_element_css_size(s_canvasID, &width, &height);
+		*_width		= (int)width;
+		*_height	= (int)height;
 	}
 
 	WindowHandle windowCreate(App* _app, int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
@@ -423,7 +425,7 @@ namespace rapp
 	{
 		BX_UNUSED(_handle, _width, _height);
 		//if (_handle.idx == rapp::kDefaultWindowHandle.idx)
-		//	emscripten_set_canvas_element_size(s_canvasID, _width, _height);
+		//	emscripten_set_canvas_element_size(s_canvasID, _width, _height);  css_element?
 	}
 
 	void windowSetTitle(WindowHandle _handle, const char* _title)
