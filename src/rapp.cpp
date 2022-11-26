@@ -365,6 +365,7 @@ bool processEvents(App* _app);
 #if RTM_PLATFORM_EMSCRIPTEN
 static const char* s_canvasID = "#canvas";
 
+extern void emscriptenUpdateGamepads();
 static void updateApp()
 {
 	static bool first_frame = true;
@@ -372,8 +373,13 @@ static void updateApp()
 
 	if (processEvents(s_app))
 	{
-		float time = fs.step();
-		s_app->update(time);
+		while (fs.update())
+		{
+			float time = fs.step();
+			s_app->update(time);
+		}
+
+		emscriptenUpdateGamepads();
 
 #if RAPP_WITH_BGFX
 		double dwidth, dheight;

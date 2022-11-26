@@ -43,7 +43,7 @@ Platform support
 | **Linux**        | ✓XX         |  ✓        | ✓      |    ✓     |
 | **Android**      | XXX         |  ✓        | ?      |    ✓     |
 | **OSX**          | ✓✓X         |  ✓        | ✓      |    ✓     |
-| **Emscripten**   | ✓✓X         |  X        | ✓      |    ✓     |
+| **Emscripten**   | ✓✓✓         |  X        | ✓      |    ✓     |
 
 ✓ - Working  
 X - Not yet implemented  

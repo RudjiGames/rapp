@@ -136,17 +136,22 @@ namespace rapp
 			EMSCRIPTEN_CHECK(emscripten_set_focusin_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, focusCb) );
 			EMSCRIPTEN_CHECK(emscripten_set_focusout_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, focusCb) );
 
+			EMSCRIPTEN_CHECK(emscripten_set_gamepadconnected_callback(this, true, gamepadCb) );
+			EMSCRIPTEN_CHECK(emscripten_set_gamepaddisconnected_callback(this, true, gamepadCb) );
+
 			int32_t result = main(_argc, _argv);
 
 			return result;
 		}
 
-		static EM_BOOL mouseCb(int eventType, const EmscriptenMouseEvent* event, void* userData);
-		static EM_BOOL wheelCb(int eventType, const EmscriptenWheelEvent* event, void* userData);
-		static EM_BOOL keyCb(int eventType, const EmscriptenKeyboardEvent* event, void* userData);
-		static EM_BOOL resizeCb(int eventType, const EmscriptenUiEvent* event, void* userData);
-		static EM_BOOL canvasResizeCb(int eventType, const void* reserved, void* userData);
-		static EM_BOOL focusCb(int eventType, const EmscriptenFocusEvent* event, void* userData);
+		static EM_BOOL mouseCb(int _eventType, const EmscriptenMouseEvent* event, void* userData);
+		static EM_BOOL wheelCb(int _eventType, const EmscriptenWheelEvent* event, void* userData);
+		static EM_BOOL keyCb(int _eventType, const EmscriptenKeyboardEvent* event, void* userData);
+		static EM_BOOL resizeCb(int _eventType, const EmscriptenUiEvent* event, void* userData);
+		static EM_BOOL canvasResizeCb(int _eventType, const void* reserved, void* userData);
+		static EM_BOOL focusCb(int _eventType, const EmscriptenFocusEvent* event, void* userData);
+		static EM_BOOL gamepadCb(int _eventType, const EmscriptenGamepadEvent *_gamepadEvent, void *userData);
+
 
 		EventQueue m_eventQueue;
 
@@ -368,6 +373,91 @@ namespace rapp
 			}
 		}
 
+		return false;
+	}
+
+	static GamepadState::Buttons s_buttonRemap[] =
+	{
+		GamepadState::A,
+		GamepadState::B,
+		GamepadState::X,
+		GamepadState::Y,
+		GamepadState::LShoulder,
+		GamepadState::RShoulder,
+		GamepadState::None, //TL
+		GamepadState::None,//TR
+		GamepadState::Back,
+		GamepadState::Start,
+		GamepadState::LThumb,
+		GamepadState::RThumb,
+		GamepadState::Up,
+		GamepadState::Down,
+		GamepadState::Left,
+		GamepadState::Right
+	};
+
+	static GamepadAxis::Enum s_axisRemap[] =
+	{
+		GamepadAxis::LeftX,
+		GamepadAxis::LeftY,
+		GamepadAxis::RightX,
+		GamepadAxis::RightY
+	};
+
+	void emscriptenUpdateGamepads()
+	{
+		static EmscriptenGamepadEvent prevState[32];
+		static int prevNumGamepads = 0;
+
+		int numGamepads = 0;
+		if (EMSCRIPTEN_RESULT_SUCCESS == emscripten_sample_gamepad_data())
+		{
+			numGamepads = emscripten_get_num_gamepads();
+			if (numGamepads != prevNumGamepads)
+				prevNumGamepads = numGamepads;
+		}
+
+		for(int i=0; i<numGamepads && i<32; ++i)
+		{
+			EmscriptenGamepadEvent ge;
+			int ret = emscripten_get_gamepad_status(i, &ge);
+			if (ret == EMSCRIPTEN_RESULT_SUCCESS)
+			{
+				GamepadHandle handle = { static_cast<uint16_t>(i) };
+				int g = ge.index;
+
+				for(int j=0; (j<ge.numAxes) && (j<4); ++j)
+				{
+					if (ge.axis[j] != prevState[g].axis[j])
+						s_ctx.m_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, s_axisRemap[j], ge.axis[j] * 32768.0f);
+				}
+
+				for(int j=0; j<ge.numButtons; ++j)
+				{
+					if ((ge.analogButton[j] != prevState[g].analogButton[j]) || (ge.digitalButton[j] != prevState[g].digitalButton[j]))
+					{
+						if (j == 6) // L trigger
+							s_ctx.m_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, GamepadAxis::LeftZ, 255.0f * ge.analogButton[j]);
+						else
+						if (j == 7) // R trigger
+							s_ctx.m_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, GamepadAxis::RightZ, 255.0f * ge.analogButton[j]);
+						else
+							s_ctx.m_eventQueue.postGamepadButtonEvent(rapp::kDefaultWindowHandle, handle, s_buttonRemap[j], ge.analogButton[j]);
+					}
+				}
+				prevState[g] = ge;
+			}
+		}
+	}
+
+	EM_BOOL Context::gamepadCb(int _eventType, const EmscriptenGamepadEvent* _gamepadEvent, void* _userData)
+	{
+		BX_UNUSED(_eventType, _userData);
+		if (_gamepadEvent->connected)
+		{
+			GamepadHandle handle = { static_cast<uint16_t>(_gamepadEvent->index) };
+			s_ctx.m_eventQueue.postGamepadEvent(rapp::kDefaultWindowHandle, handle, _gamepadEvent->connected != 0);
+		}
 		return false;
 	}
 
