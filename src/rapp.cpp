@@ -80,6 +80,11 @@ static void drawGUI(App* _app)
 #endif // RAPP_WITH_BGFX
 }
 
+#if RAPP_WITH_BGFX
+static uint32_t s_debug = 0;
+extern uint32_t g_debug;
+#endif // RAPP_WITH_BGFX
+
 int32_t rappThreadFunc(void* _userData)
 {
 	rtm::CommandBuffer* cc = (rtm::CommandBuffer*)_userData;
@@ -141,6 +146,12 @@ int32_t rappThreadFunc(void* _userData)
 					// This dummy draw call is here to make sure that view 0 is cleared
 					// if no other draw calls are submitted to view 0.
 					bgfx::touch(0);
+
+					if (s_debug != g_debug)
+					{
+						bgfx::setDebug(g_debug);
+						s_debug = g_debug;
+					}
 
 					app->draw();
 #endif // #RAPP_WITH_BGFX
@@ -377,6 +388,12 @@ static void updateApp()
 		{
 			float time = fs.step();
 			s_app->update(time);
+		}
+
+		if (s_debug != g_debug)
+		{
+			bgfx::setDebug(g_debug);
+			s_debug = g_debug;
 		}
 
 		emscriptenUpdateGamepads();

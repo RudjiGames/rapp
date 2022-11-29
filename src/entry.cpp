@@ -162,7 +162,6 @@ namespace rapp
 
 	bool processEvents(App* _app)
 	{
-		uint32_t debug = g_debug;
 		uint32_t reset = g_reset;
 
 		WindowHandle handle = { UINT16_MAX };
@@ -286,8 +285,6 @@ namespace rapp
 #endif
 			inputSetMouseResolution((uint16_t)_app->m_width, (uint16_t)_app->m_height);
 		}
-
-		g_debug = debug;
 
 		return _app->m_exitCode != -1;
 	}

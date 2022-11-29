@@ -346,7 +346,6 @@ uint32_t g_reset = BGFX_RESET_VSYNC;
 uint32_t g_debug = 0;
 uint32_t g_reset = 0;
 #endif
-
 int cmdGraphics(App* _app, void* _userData, int _argc, char const* const* _argv)
 {
 	RTM_UNUSED_4(_app, _userData, _argc, _argv);
@@ -391,7 +390,7 @@ int cmdGraphics(App* _app, void* _userData, int _argc, char const* const* _argv)
 				||  setOrToggle(g_debug, "text",      BGFX_DEBUG_TEXT,      1, _argc, _argv)
 				||  setOrToggle(g_debug, "wireframe", BGFX_DEBUG_WIREFRAME, 1, _argc, _argv) )
 		{
-			bgfx::setDebug(g_debug);
+			//bgfx::setDebug(g_debug);
 			return 0;
 		}
 		else if (0 == strcmp(_argv[1], "screenshot") )
