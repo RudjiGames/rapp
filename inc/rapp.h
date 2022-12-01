@@ -19,7 +19,7 @@ namespace rapp {
 			None,
 			Esc, Return, Tab, Space, Backspace, Up, Down, Left, Right,
 			Insert, Delete, Home, End, PageUp, PageDown,
-			Print, Plus, Minus, LeftBracket, RightBracket,
+			Print, Plus, Minus, Equal, LeftBracket, RightBracket,
 			Semicolon, Quote, Comma, Period, Slash, Backslash, Tilde,
 			F1, F2, F3, F4, F5, F6, 
 			F7, F8, F9, F10, F11, F12,

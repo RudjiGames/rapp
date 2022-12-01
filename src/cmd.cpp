@@ -192,6 +192,7 @@ void CmdContext::updateMaxLen()
 
 bool CmdContext::exec(App* _app, const char* _cmd, int* _errorCode)
 {
+	rtm::Console::debug("EXEC command:    %s \n", _cmd);
 	for (const char* next = _cmd; '\0' != *next; _cmd = next)
 	{
 		char commandLine[1024];

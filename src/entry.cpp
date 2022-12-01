@@ -50,6 +50,7 @@ namespace rapp
 		"Print",
 		"Plus",
 		"Minus",
+		"Equal",
 		"LeftBracket",
 		"RightBracket",
 		"Semicolon",
@@ -63,7 +64,7 @@ namespace rapp
 		"NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4",
 		"NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9",
 		"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-		"Dummy", "Dummy", "Dummy", "Dummy", "Dummy", // padding for 'A' to be 65
+		"Dummy", "Dummy", "Dummy", "Dummy", // padding for 'A' to be 65
 		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
 		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 	};
@@ -129,18 +130,15 @@ namespace rapp
 		s_keyMap[KeyboardState::Key::PageUp]	= ImGuiKey_PageUp;
 		s_keyMap[KeyboardState::Key::PageDown]	= ImGuiKey_PageDown;
 		s_keyMap[KeyboardState::Key::Print]		= ImGuiKey_PrintScreen;
-		s_keyMap[KeyboardState::Key::KeyA]		= ImGuiKey_A;
-		s_keyMap[KeyboardState::Key::KeyC]		= ImGuiKey_C;
-		s_keyMap[KeyboardState::Key::KeyV]		= ImGuiKey_V;
-		s_keyMap[KeyboardState::Key::KeyX]		= ImGuiKey_X;
-		s_keyMap[KeyboardState::Key::KeyY]		= ImGuiKey_Y;
-		s_keyMap[KeyboardState::Key::KeyZ]		= ImGuiKey_Z;
+
+		for (int i=0; i<26; ++i)
+			s_keyMap[KeyboardState::Key::KeyA + i]	= ImGuiKey(ImGuiKey_A + i);
 
 		for (int i=0; i<10; i++)
-			s_keyMap[KeyboardState::Key::NumPad0+i]		= (ImGuiKey)(ImGuiKey_Keypad0+i);
+			s_keyMap[KeyboardState::Key::NumPad0+i]	= (ImGuiKey)(ImGuiKey_Keypad0+i);
 		
 		for (int i=0; i<12; i++)
-			s_keyMap[KeyboardState::Key::F1 + i]		= (ImGuiKey)(ImGuiKey_F1 + i);
+			s_keyMap[KeyboardState::Key::F1 + i]	= (ImGuiKey)(ImGuiKey_F1 + i);
 #endif
 
 		rapp::jobInit();

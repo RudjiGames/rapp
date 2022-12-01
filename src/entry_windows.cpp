@@ -382,6 +382,7 @@ namespace rapp
 			s_translateKey[VK_SNAPSHOT]   = KeyboardState::Key::Print;
 			s_translateKey[VK_OEM_PLUS]   = KeyboardState::Key::Plus;
 			s_translateKey[VK_OEM_MINUS]  = KeyboardState::Key::Minus;
+			s_translateKey[VK_OEM_NEC_EQUAL] = KeyboardState::Key::Equal;
 			s_translateKey[VK_OEM_4]      = KeyboardState::Key::LeftBracket;
 			s_translateKey[VK_OEM_6]      = KeyboardState::Key::RightBracket;
 			s_translateKey[VK_OEM_1]      = KeyboardState::Key::Semicolon;
@@ -999,7 +1000,6 @@ namespace rapp
 							ImGui::GetIO().KeyCtrl	= modifiers & (KeyboardState::Modifier::RCtrl  | KeyboardState::Modifier::LCtrl);
 							ImGui::GetIO().KeyShift	= modifiers & (KeyboardState::Modifier::RShift | KeyboardState::Modifier::LShift);
 							ImGui::GetIO().KeyAlt	= modifiers & (KeyboardState::Modifier::RAlt   | KeyboardState::Modifier::LAlt);
-							//ImGui::GetIO().KeySuper =
 						}
 #endif
 					}

@@ -17,6 +17,7 @@
 
 #include <emscripten.h>
 #include <emscripten/html5.h>
+#include <emscripten/key_codes.h>
 
 extern "C" void entry_emscripten_yield()
 {
@@ -37,6 +38,7 @@ static const char* s_canvasID = "#canvas";
 namespace rapp
 {
 	static uint8_t s_translateKey[256];
+	static uint8_t s_translateKeyHigh[128];
 
 	struct Context
 	{
@@ -47,54 +49,98 @@ namespace rapp
 			, m_scroll(0)
 		{
 			memset(s_translateKey, 0, sizeof(s_translateKey));
-			s_translateKey[27]             = KeyboardState::Key::Esc;
-			s_translateKey[uint8_t('\n')]  =
-			s_translateKey[uint8_t('\r')]  = KeyboardState::Key::Return;
-			s_translateKey[uint8_t('\t')]  = KeyboardState::Key::Tab;
-			s_translateKey[127]            = KeyboardState::Key::Backspace;
-			s_translateKey[uint8_t(' ')]   = KeyboardState::Key::Space;
-			s_translateKey[38]             = KeyboardState::Key::Up;
-			s_translateKey[40]             = KeyboardState::Key::Down;
-			s_translateKey[37]             = KeyboardState::Key::Left;
-			s_translateKey[39]             = KeyboardState::Key::Right;
+			s_translateKey[DOM_PK_ESCAPE]			= KeyboardState::Key::Esc;
+			s_translateKey[DOM_PK_0]				= KeyboardState::Key::Key0;
+			s_translateKey[DOM_PK_1]				= KeyboardState::Key::Key1;
+			s_translateKey[DOM_PK_2]				= KeyboardState::Key::Key2;
+			s_translateKey[DOM_PK_3]				= KeyboardState::Key::Key3;
+			s_translateKey[DOM_PK_4]				= KeyboardState::Key::Key4;
+			s_translateKey[DOM_PK_5]				= KeyboardState::Key::Key5;
+			s_translateKey[DOM_PK_6]				= KeyboardState::Key::Key6;
+			s_translateKey[DOM_PK_7]				= KeyboardState::Key::Key7;
+			s_translateKey[DOM_PK_8]				= KeyboardState::Key::Key8;
+			s_translateKey[DOM_PK_9]				= KeyboardState::Key::Key9;
+			s_translateKey[DOM_PK_MINUS]			= KeyboardState::Key::Minus;
+			s_translateKey[DOM_PK_EQUAL]			= KeyboardState::Key::Equal;
+			s_translateKey[DOM_PK_BACKSPACE]		= KeyboardState::Key::Backspace;
+			s_translateKey[DOM_PK_TAB]				= KeyboardState::Key::Tab;
+			s_translateKey[DOM_PK_Q]				= KeyboardState::Key::KeyQ;
+			s_translateKey[DOM_PK_W]				= KeyboardState::Key::KeyW;
+			s_translateKey[DOM_PK_E]				= KeyboardState::Key::KeyE;
+			s_translateKey[DOM_PK_R]				= KeyboardState::Key::KeyR;
+			s_translateKey[DOM_PK_T]				= KeyboardState::Key::KeyT;
+			s_translateKey[DOM_PK_Y]				= KeyboardState::Key::KeyY;
+			s_translateKey[DOM_PK_U]				= KeyboardState::Key::KeyU;
+			s_translateKey[DOM_PK_I]				= KeyboardState::Key::KeyI;
+			s_translateKey[DOM_PK_O]				= KeyboardState::Key::KeyO;
+			s_translateKey[DOM_PK_P]				= KeyboardState::Key::KeyP;
+			s_translateKey[DOM_PK_BRACKET_LEFT]		= KeyboardState::Key::LeftBracket;
+			s_translateKey[DOM_PK_BRACKET_RIGHT]	= KeyboardState::Key::RightBracket;
+			s_translateKey[DOM_PK_ENTER]			= KeyboardState::Key::Return;
+			s_translateKey[DOM_PK_A]				= KeyboardState::Key::KeyA;
+			s_translateKey[DOM_PK_S]				= KeyboardState::Key::KeyS;
+			s_translateKey[DOM_PK_D]				= KeyboardState::Key::KeyD;
+			s_translateKey[DOM_PK_F]				= KeyboardState::Key::KeyF;
+			s_translateKey[DOM_PK_G]				= KeyboardState::Key::KeyG;
+			s_translateKey[DOM_PK_H]				= KeyboardState::Key::KeyH;
+			s_translateKey[DOM_PK_J]				= KeyboardState::Key::KeyJ;
+			s_translateKey[DOM_PK_K]				= KeyboardState::Key::KeyK;
+			s_translateKey[DOM_PK_L]				= KeyboardState::Key::KeyL;
+			s_translateKey[DOM_PK_SEMICOLON]		= KeyboardState::Key::Semicolon;
+			s_translateKey[DOM_PK_QUOTE]			= KeyboardState::Key::Quote;
+			s_translateKey[DOM_PK_BACKQUOTE]		= KeyboardState::Key::Tilde;
+			s_translateKey[DOM_PK_BACKSLASH]		= KeyboardState::Key::Backslash;
+			s_translateKey[DOM_PK_Z]				= KeyboardState::Key::KeyZ;
+			s_translateKey[DOM_PK_X]				= KeyboardState::Key::KeyX;
+			s_translateKey[DOM_PK_C]				= KeyboardState::Key::KeyC;
+			s_translateKey[DOM_PK_V]				= KeyboardState::Key::KeyV;
+			s_translateKey[DOM_PK_B]				= KeyboardState::Key::KeyB;
+			s_translateKey[DOM_PK_N]				= KeyboardState::Key::KeyN;
+			s_translateKey[DOM_PK_M]				= KeyboardState::Key::KeyM;
+			s_translateKey[DOM_PK_COMMA]			= KeyboardState::Key::Comma;
+			s_translateKey[DOM_PK_PERIOD]			= KeyboardState::Key::Period;
+			s_translateKey[DOM_PK_SLASH]			= KeyboardState::Key::Slash;
+			s_translateKey[DOM_PK_SPACE]			= KeyboardState::Key::Space;
+			s_translateKey[DOM_PK_F1]				= KeyboardState::Key::F1;
+			s_translateKey[DOM_PK_F2]				= KeyboardState::Key::F2;
+			s_translateKey[DOM_PK_F3]				= KeyboardState::Key::F3;
+			s_translateKey[DOM_PK_F4]				= KeyboardState::Key::F4;
+			s_translateKey[DOM_PK_F5]				= KeyboardState::Key::F5;
+			s_translateKey[DOM_PK_F6]				= KeyboardState::Key::F6;
+			s_translateKey[DOM_PK_F7]				= KeyboardState::Key::F7;
+			s_translateKey[DOM_PK_F8]				= KeyboardState::Key::F8;
+			s_translateKey[DOM_PK_F9]				= KeyboardState::Key::F9;
+			s_translateKey[DOM_PK_F10]				= KeyboardState::Key::F10;
+			s_translateKey[DOM_PK_NUMPAD_7]			= KeyboardState::Key::NumPad7;
+			s_translateKey[DOM_PK_NUMPAD_8]			= KeyboardState::Key::NumPad8;
+			s_translateKey[DOM_PK_NUMPAD_9]			= KeyboardState::Key::NumPad9;
+			s_translateKey[DOM_PK_NUMPAD_SUBTRACT]	= KeyboardState::Key::Minus;
+			s_translateKey[DOM_PK_NUMPAD_4]			= KeyboardState::Key::NumPad4;
+			s_translateKey[DOM_PK_NUMPAD_5]			= KeyboardState::Key::NumPad5;
+			s_translateKey[DOM_PK_NUMPAD_6]			= KeyboardState::Key::NumPad6;
+			s_translateKey[DOM_PK_NUMPAD_ADD]		= KeyboardState::Key::Plus;     
+			s_translateKey[DOM_PK_NUMPAD_1]			= KeyboardState::Key::NumPad1;
+			s_translateKey[DOM_PK_NUMPAD_2]			= KeyboardState::Key::NumPad2;
+			s_translateKey[DOM_PK_NUMPAD_3]			= KeyboardState::Key::NumPad3;
+			s_translateKey[DOM_PK_NUMPAD_0]			= KeyboardState::Key::NumPad0;
+			s_translateKey[DOM_PK_INTL_BACKSLASH]	= KeyboardState::Key::Backslash;
+			s_translateKey[DOM_PK_F11]				= KeyboardState::Key::F11;
+			s_translateKey[DOM_PK_F12]				= KeyboardState::Key::F12;
+			s_translateKey[DOM_PK_NUMPAD_EQUAL]		= KeyboardState::Key::Equal;   
+			s_translateKey[DOM_PK_NUMPAD_COMMA]		= KeyboardState::Key::Comma;
 
-			s_translateKey[uint8_t('+')]   =
-			s_translateKey[uint8_t('=')]   = KeyboardState::Key::Plus;
-			s_translateKey[uint8_t('_')]   =
-			s_translateKey[uint8_t('-')]   = KeyboardState::Key::Minus;
 
-			s_translateKey[uint8_t(':')]   =
-			s_translateKey[uint8_t(';')]   = KeyboardState::Key::Semicolon;
-			s_translateKey[uint8_t('"')]   =
-			s_translateKey[uint8_t('\'')]  = KeyboardState::Key::Quote;
-
-			s_translateKey[uint8_t('{')]   =
-			s_translateKey[uint8_t('[')]   = KeyboardState::Key::LeftBracket;
-			s_translateKey[uint8_t('}')]   =
-			s_translateKey[uint8_t(']')]   = KeyboardState::Key::RightBracket;
-
-			s_translateKey[uint8_t('<')]   =
-			s_translateKey[uint8_t(',')]   = KeyboardState::Key::Comma;
-			s_translateKey[uint8_t('>')]   =
-			s_translateKey[uint8_t('.')]   = KeyboardState::Key::Period;
-			s_translateKey[uint8_t('?')]   =
-			s_translateKey[uint8_t('/')]   = KeyboardState::Key::Slash;
-			s_translateKey[uint8_t('|')]   =
-			s_translateKey[uint8_t('\\')]  = KeyboardState::Key::Backslash;
-
-			s_translateKey[uint8_t('~')]   =
-			s_translateKey[uint8_t('`')]   = KeyboardState::Key::Tilde;
-
-			s_translateKey[uint8_t('0')]   = KeyboardState::Key::Key0;
-			s_translateKey[uint8_t('1')]   = KeyboardState::Key::Key1;
-			s_translateKey[uint8_t('2')]   = KeyboardState::Key::Key2;
-			s_translateKey[uint8_t('3')]   = KeyboardState::Key::Key3;
-			s_translateKey[uint8_t('4')]   = KeyboardState::Key::Key4;
-			s_translateKey[uint8_t('5')]   = KeyboardState::Key::Key5;
-			s_translateKey[uint8_t('6')]   = KeyboardState::Key::Key6;
-			s_translateKey[uint8_t('7')]   = KeyboardState::Key::Key7;
-			s_translateKey[uint8_t('8')]   = KeyboardState::Key::Key8;
-			s_translateKey[uint8_t('9')]   = KeyboardState::Key::Key9;
+			memset(s_translateKeyHigh, 0, sizeof(s_translateKeyHigh));
+			s_translateKeyHigh[DOM_PK_NUMPAD_ENTER & 0xff]	= KeyboardState::Key::Return;
+			s_translateKeyHigh[DOM_PK_HOME & 0xff]			= KeyboardState::Key::Home;
+			s_translateKeyHigh[DOM_PK_ARROW_UP & 0xff]		= KeyboardState::Key::Up;
+			s_translateKeyHigh[DOM_PK_PAGE_UP & 0xff]		= KeyboardState::Key::PageUp;
+			s_translateKeyHigh[DOM_PK_ARROW_LEFT & 0xff]	= KeyboardState::Key::Left;
+			s_translateKeyHigh[DOM_PK_ARROW_RIGHT & 0xff]	= KeyboardState::Key::Right;
+			s_translateKeyHigh[DOM_PK_ARROW_DOWN & 0xff]	= KeyboardState::Key::Down;
+			s_translateKeyHigh[DOM_PK_PAGE_DOWN & 0xff]		= KeyboardState::Key::PageDown;
+			s_translateKeyHigh[DOM_PK_INSERT & 0xff]		= KeyboardState::Key::Insert;
+			s_translateKeyHigh[DOM_PK_DELETE & 0xff]		= KeyboardState::Key::Delete;
 
 			for (char ch = 'a'; ch <= 'z'; ++ch)
 			{
@@ -126,7 +172,8 @@ namespace rapp
 			//EMSCRIPTEN_CHECK(emscripten_request_fullscreen_strategy(s_canvasID, false, &fullscreenStrategy) );
 
 			EmscriptenFullscreenStrategy fullscreenStrategy = {};
-			fullscreenStrategy.scaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF;
+			fullscreenStrategy.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_DEFAULT;
+			fullscreenStrategy.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
 			fullscreenStrategy.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
 			fullscreenStrategy.canvasResizedCallback = canvasResizeCb;
 			fullscreenStrategy.canvasResizedCallbackUserData = this;   // pointer to user data
@@ -231,70 +278,80 @@ namespace rapp
 
 		if (_event->shiftKey)
 		{
-			mask |= KeyboardState::Modifier::LShift | KeyboardState::Modifier::RShift;
+			if (_event->location == DOM_KEY_LOCATION_LEFT)
+				mask |= KeyboardState::Modifier::LShift;
+			else
+				mask |= KeyboardState::Modifier::RShift;
 		}
 
 		if (_event->altKey)
 		{
-			mask |= KeyboardState::Modifier::LAlt | KeyboardState::Modifier::RAlt;
+			if (_event->location == DOM_KEY_LOCATION_LEFT)
+				mask |= KeyboardState::Modifier::LAlt;
+			else
+				mask |= KeyboardState::Modifier::RAlt;
 		}
 
 		if (_event->ctrlKey)
 		{
-			mask |= KeyboardState::Modifier::LCtrl | KeyboardState::Modifier::RCtrl;
+			if (_event->location == DOM_KEY_LOCATION_LEFT)
+				mask |= KeyboardState::Modifier::LCtrl;
+			else
+				mask |= KeyboardState::Modifier::RCtrl;
 		}
 
 		if (_event->metaKey)
 		{
-			mask |= KeyboardState::Modifier::LMeta | KeyboardState::Modifier::RMeta;
+			if (_event->location == DOM_KEY_LOCATION_LEFT)
+				mask |= KeyboardState::Modifier::LMeta;
+			else
+				mask |= KeyboardState::Modifier::RMeta;
 		}
 
 		return mask;
 	}
 
-	KeyboardState::Key handleKeyEvent(const EmscriptenKeyboardEvent* _event, uint8_t* _specialKeys, uint8_t* _pressedChar)
+	static int number_of_characters_in_utf8_string(const char *str)
 	{
-		*_pressedChar = uint8_t(_event->keyCode);
-
-		int32_t keyCode = int32_t(_event->keyCode);
-		*_specialKeys = translateModifiers(_event);
-
-		if (_event->charCode == 0)
+		if (!str) return 0;
+		int num_chars = 0;
+		while(*str)
 		{
-			switch (keyCode)
-			{
-				case 112: return KeyboardState::Key::F1;
-				case 113: return KeyboardState::Key::F2;
-				case 114: return KeyboardState::Key::F3;
-				case 115: return KeyboardState::Key::F4;
-				case 116: return KeyboardState::Key::F5;
-				case 117: return KeyboardState::Key::F6;
-				case 118: return KeyboardState::Key::F7;
-				case 119: return KeyboardState::Key::F8;
-				case 120: return KeyboardState::Key::F9;
-				case 121: return KeyboardState::Key::F10;
-				case 122: return KeyboardState::Key::F11;
-				case 123: return KeyboardState::Key::F12;
-
-				case  37: return KeyboardState::Key::Left;
-				case  39: return KeyboardState::Key::Right;
-				case  38: return KeyboardState::Key::Up;
-				case  40: return KeyboardState::Key::Down;
-			}
+			if ((*str++ & 0xC0) != 0x80) ++num_chars; // Skip all continuation bytes
 		}
+		return num_chars;
+	}
+
+	//static int emscripten_key_event_is_printable_character(const EmscriptenKeyboardEvent *keyEvent)
+	//{
+	//	// Not sure if this is correct, but heuristically looks good. Improvements on corner cases welcome.
+	//	return number_of_characters_in_utf8_string(keyEvent->key) == 1;
+	//}
+
+	KeyboardState::Key handleKeyEvent(const EmscriptenKeyboardEvent* _event, uint8_t* _modifiers, uint8_t* _pressedChar)
+	{
+		*(unsigned long*)_pressedChar = _event->keyCode;
+		int dom_pk_code = emscripten_compute_dom_pk_code(_event->code);
+
+		*_modifiers = translateModifiers(_event);
 
 		// if this is a unhandled key just return None
-		if (keyCode < 256)
-		{
-			return KeyboardState::Key(s_translateKey[keyCode]);
-		}
+		if (dom_pk_code < 256)
+			return KeyboardState::Key(s_translateKey[dom_pk_code]);
 
-		return KeyboardState::Key::None;
+		return KeyboardState::Key(s_translateKeyHigh[dom_pk_code & 0xff]);
 	}
 
 	EM_BOOL Context::keyCb(int32_t _eventType, const EmscriptenKeyboardEvent* _event, void* _userData)
 	{
 		BX_UNUSED(_userData);
+
+		bool ret =  _event->keyCode == DOM_VK_BACK_SPACE // Don't navigate away from this test page on backspace.
+				||  _event->keyCode == DOM_VK_TAB // Don't change keyboard focus to different browser UI elements while testing.
+				|| (_event->keyCode >= DOM_VK_F1 && _event->keyCode <= DOM_VK_F24) // Don't F5 refresh the test page to reload.
+				||  _event->ctrlKey // Don't trigger e.g. Ctrl-B to open bookmarks
+				||  _event->altKey // Don't trigger any alt-X based shortcuts either (Alt-F4 is not overrideable though)
+				||  _eventType == EMSCRIPTEN_EVENT_KEYPRESS || _eventType == EMSCRIPTEN_EVENT_KEYUP; // Don't perform any default actions on these.
 
 		if (_event)
 		{
@@ -303,31 +360,33 @@ namespace rapp
 			KeyboardState::Key key = handleKeyEvent(_event, &modifiers, &pressedChar[0]);
 
 			// Returning true means that we take care of the key (instead of the default behavior)
-			if (key != KeyboardState::Key::None)
+			switch (_eventType)
 			{
-				switch (_eventType)
-				{
-					case EMSCRIPTEN_EVENT_KEYPRESS:
-					case EMSCRIPTEN_EVENT_KEYDOWN:
-						if (key == KeyboardState::Key::KeyQ && (modifiers & KeyboardState::Modifier::RMeta) )
+				case EMSCRIPTEN_EVENT_KEYPRESS:
+				case EMSCRIPTEN_EVENT_KEYDOWN:
+					if (key == KeyboardState::Key::KeyQ && (modifiers & KeyboardState::Modifier::RMeta) )
+					{
+						s_ctx.m_eventQueue.postExitEvent();
+					}
+					else
+					{
+						if (_eventType == EMSCRIPTEN_EVENT_KEYPRESS)
 						{
-							s_ctx.m_eventQueue.postExitEvent();
-						}
-						else
-						{
-							enum { ShiftMask = KeyboardState::Modifier::LShift|KeyboardState::Modifier::RShift };
-							s_ctx.m_eventQueue.postCharEvent(kDefaultWindowHandle, 1, pressedChar);
-							s_ctx.m_eventQueue.postKeyEvent(kDefaultWindowHandle, key, modifiers, true);
-							return true;
-						}
-						break;
+//							if (emscripten_key_event_is_printable_character(_event))
+								s_ctx.m_eventQueue.postCharEvent(kDefaultWindowHandle, number_of_characters_in_utf8_string((char*)pressedChar), pressedChar);
 
-					case EMSCRIPTEN_EVENT_KEYUP:
-						s_ctx.m_eventQueue.postKeyEvent(kDefaultWindowHandle, key, modifiers, false);
-						return true;
-				}
+							return ret;
+						}
+
+						s_ctx.m_eventQueue.postKeyEvent(kDefaultWindowHandle, key, modifiers, true);
+						return ret;
+					}
+					break;
+
+				case EMSCRIPTEN_EVENT_KEYUP:
+					s_ctx.m_eventQueue.postKeyEvent(kDefaultWindowHandle, key, modifiers, false);
+					return ret;
 			}
-
 		}
 		return false;
 	}
