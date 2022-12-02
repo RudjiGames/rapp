@@ -254,7 +254,9 @@ void Console::execCommand(const char* command_line)
     {
         int first = m_history.Size - 10;
         for (int i = first > 0 ? first : 0; i < m_history.Size; i++)
-            addLog("%3d: %s\n", i, m_history[i]);
+		{
+		    addLog(77, 175, 77, "%3d: %s\n", i, m_history[i]);
+		}
     }
     else
     {

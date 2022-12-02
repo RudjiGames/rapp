@@ -160,7 +160,7 @@ namespace rapp {
 
 void CmdContext::add(const char* _name, ConsoleFn _fn, void* _userData, const char* _description)
 {
-	uint32_t cmd = rtm::hashMurmur3(_name, (uint32_t)strlen(_name) );
+	uint32_t cmd = rtm::hashStr(_name, (uint32_t)strlen(_name) );
 	if (m_lookup.end() != m_lookup.find(cmd))
 		remove(_name);
 
@@ -172,7 +172,7 @@ void CmdContext::add(const char* _name, ConsoleFn _fn, void* _userData, const ch
 
 void CmdContext::remove(const char* _name)
 {
-	uint32_t cmd = rtm::hashMurmur3(_name, (uint32_t)strlen(_name) );
+	uint32_t cmd = rtm::hashStr(_name, (uint32_t)strlen(_name) );
 	CmdLookup::iterator it = m_lookup.find(cmd);
 	RTM_ASSERT(m_lookup.end() != it, "Command \"%s\" does not exist!", _name);
 	m_lookup.erase(it);
@@ -192,7 +192,6 @@ void CmdContext::updateMaxLen()
 
 bool CmdContext::exec(App* _app, const char* _cmd, int* _errorCode)
 {
-	rtm::Console::debug("EXEC command:    %s \n", _cmd);
 	for (const char* next = _cmd; '\0' != *next; _cmd = next)
 	{
 		char commandLine[1024];
@@ -203,9 +202,9 @@ bool CmdContext::exec(App* _app, const char* _cmd, int* _errorCode)
 		if (argc > 0)
 		{
 			int err = -1;
-			uint32_t cmd = rtm::hashMurmur3(argv[0], (uint32_t)strlen(argv[0]) );
+			uint32_t cmd = rtm::hashStr(argv[0], (uint32_t)strlen(argv[0]) );
 			CmdLookup::iterator it = m_lookup.find(cmd);
-			if (it != m_lookup.end() )
+			if (it != m_lookup.end())
 			{
 				Func& fn = it->second;
 				err = fn.m_fn(_app, fn.m_userData, argc, argv);
