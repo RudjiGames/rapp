@@ -192,7 +192,7 @@ void Console::draw()
     ImGui::Separator();
 
     // Command-line
-	if (m_visible == 0.0f || m_visible == 1.0f)
+	if (m_visible == 1.0f)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(147.0f/255.0f, 1.0f, 147.0f/255.0f, 1.0f));
 		ImGui::Text("$>"); 
