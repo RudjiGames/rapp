@@ -171,13 +171,13 @@ namespace rapp
 			//fullscreenStrategy.canvasResizedCallbackUserData = this;
 			//EMSCRIPTEN_CHECK(emscripten_request_fullscreen_strategy(s_canvasID, false, &fullscreenStrategy) );
 
-			EmscriptenFullscreenStrategy fullscreenStrategy = {};
-			fullscreenStrategy.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_DEFAULT;
-			fullscreenStrategy.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
-			fullscreenStrategy.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
-			fullscreenStrategy.canvasResizedCallback = canvasResizeCb;
-			fullscreenStrategy.canvasResizedCallbackUserData = this;   // pointer to user data
-			EMSCRIPTEN_CHECK(emscripten_enter_soft_fullscreen(s_canvasID, &fullscreenStrategy));
+			//EmscriptenFullscreenStrategy fullscreenStrategy = {};
+			//fullscreenStrategy.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_DEFAULT;
+			//fullscreenStrategy.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
+			//fullscreenStrategy.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
+			//fullscreenStrategy.canvasResizedCallback = canvasResizeCb;
+			//fullscreenStrategy.canvasResizedCallbackUserData = this;   // pointer to user data
+			//EMSCRIPTEN_CHECK(emscripten_enter_soft_fullscreen(s_canvasID, &fullscreenStrategy));
 
 			EMSCRIPTEN_CHECK(emscripten_set_focus_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, focusCb) );
 			EMSCRIPTEN_CHECK(emscripten_set_focusin_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, true, focusCb) );
