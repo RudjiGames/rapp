@@ -161,30 +161,29 @@ namespace rapp {
 void CmdContext::add(const char* _name, ConsoleFn _fn, void* _userData, const char* _description)
 {
 	uint32_t cmd = rtm::hashStr(_name, (uint32_t)strlen(_name) );
-	if (m_lookup.end() != m_lookup.find(cmd))
-		remove(_name);
-
-	//RTM_ASSERT(m_lookup.end() == m_lookup.find(cmd), "Command \"%s\" already exist!", _name);
 	Func fn = { _fn, _userData, _name, _description };
-	m_lookup.insert(std::make_pair(cmd, fn) );
+
+	uint32_t cmdIdx = cmd & RAPP_HASH_MASK;
+	m_lookup[cmdIdx] = fn;
+
 	updateMaxLen();
 }
 
 void CmdContext::remove(const char* _name)
 {
 	uint32_t cmd = rtm::hashStr(_name, (uint32_t)strlen(_name) );
-	CmdLookup::iterator it = m_lookup.find(cmd);
-	RTM_ASSERT(m_lookup.end() != it, "Command \"%s\" does not exist!", _name);
-	m_lookup.erase(it);
+	uint32_t cmdIdx = cmd & RAPP_HASH_MASK;
+	m_lookup[cmdIdx] = { 0, 0, 0, 0 };
 	updateMaxLen();
 }
 
 void CmdContext::updateMaxLen()
 {
 	size_t len = 0;
-	for (auto& cmd : m_lookup)
+	for (int i=0; i<RAPP_HASH_SIZE; ++i)
+		if (m_lookup[i].m_fn)
 	{
-		size_t clen = strlen(cmd.second.m_name);
+		size_t clen = strlen(m_lookup[i].m_name);
 		if (clen > len) len = clen;
 	}
 	m_maxCommandLength = (uint32_t)len;
@@ -203,11 +202,12 @@ bool CmdContext::exec(App* _app, const char* _cmd, int* _errorCode)
 		{
 			int err = -1;
 			uint32_t cmd = rtm::hashStr(argv[0], (uint32_t)strlen(argv[0]) );
-			CmdLookup::iterator it = m_lookup.find(cmd);
-			if (it != m_lookup.end())
+
+			uint32_t cmdIdx = cmd & RAPP_HASH_MASK;
+			auto& it = m_lookup[cmdIdx];
+			if (it.m_fn)
 			{
-				Func& fn = it->second;
-				err = fn.m_fn(_app, fn.m_userData, argc, argv);
+				err = it.m_fn(_app, it.m_userData, argc, argv);
 				if (_errorCode)
 					*_errorCode = err;
 				return true;
@@ -425,7 +425,8 @@ int cmdGraphics(App* _app, void* _userData, int _argc, char const* const* _argv)
 	return 1;
 }
 
-rtm_vector<App*>& appGetRegistered();
+
+rtm::FixedArray<App*, RAPP_MAX_APPS>& appGetRegistered();
 void appSwitch(App* _app);
 
 int cmdApp(App* _app, void* _userData, int _argc, char const* const* _argv)
@@ -441,7 +442,7 @@ int cmdApp(App* _app, void* _userData, int _argc, char const* const* _argv)
 			return 0;
 		}
 
-		rtm_vector<App*>& apps = appGetRegistered();
+		rtm::FixedArray<App*, RAPP_MAX_APPS>& apps = appGetRegistered();
 
 		if (rtm::striCmp(_argv[1], "list") == 0)
 		{

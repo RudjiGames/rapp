@@ -12,7 +12,9 @@ namespace rapp {
 	{
 		CmdContext()
 			: m_maxCommandLength(0)
-		{}
+		{
+			memset(m_lookup, 0, sizeof(m_lookup));
+		}
 
 		void add(const char* _name, ConsoleFn _fn, void* _userData, const char* _description);
 		void remove(const char* _name);
@@ -27,8 +29,7 @@ namespace rapp {
 			const char*	m_description;
 		};
 
-		typedef rtm_unordered_map<uint32_t, Func> CmdLookup;
-		CmdLookup	m_lookup;
+		Func		m_lookup[RAPP_HASH_SIZE];
 		uint32_t	m_maxCommandLength;
 	};
 
@@ -40,7 +41,6 @@ namespace rapp {
 
 	///
 	CmdContext* cmdGetContext();
-
 
 	int cmdMouseLock(App* _app, void* _userData, int _argc, char const* const* _argv);
 	int cmdGraphics(App* _app, void* _userData, int _argc, char const* const* _argv);

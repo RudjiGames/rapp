@@ -50,9 +50,9 @@ struct Command
 static rtm::CommandBuffer	s_commChannel;		// rapp_main to app class thread communication
 App*						s_app = 0;
 
-rtm_vector<App*>& appGetRegistered()
+rtm::FixedArray<App*, RAPP_MAX_APPS>& appGetRegistered()
 {
-	static rtm_vector<App*> apps;
+	static rtm::FixedArray<App*, RAPP_MAX_APPS> apps;
 	return apps;
 }
 

@@ -324,8 +324,8 @@ int Console::textEditCallback(ImGuiInputTextCallbackData* data)
                     bool all_candidates_matches = true;
                     for (int i = 0; i < candidates.Size && all_candidates_matches; i++)
                         if (i == 0)
-                            c = toupper(candidates[i]->m_name[match_len]);
-                        else if (c == 0 || c != toupper(candidates[i]->m_name[match_len]))
+                            c = rtm::toUpper(candidates[i]->m_name[match_len]);
+                        else if (c == 0 || c != rtm::toUpper(candidates[i]->m_name[match_len]))
                             all_candidates_matches = false;
                     if (!all_candidates_matches)
                         break;
@@ -393,8 +393,9 @@ void Console::updateCommands()
 
 	if (!context) return;
 
-	for (auto& i : context->m_lookup)
-		m_commands.push_back(i.second);
+	for (int i=0; i<RAPP_HASH_SIZE; ++i)
+		if (context->m_lookup[i].m_fn)
+			m_commands.push_back(context->m_lookup[i]);
 }
 
 } // namespace rapp

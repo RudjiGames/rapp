@@ -330,15 +330,16 @@ namespace rapp
 			, m_height(0)
 			, m_flags(0)
 		{
+			m_title[0] = '\0';
 		}
 
-		App*       m_app;
-		int32_t    m_x;
-		int32_t    m_y;
-		uint32_t   m_width;
-		uint32_t   m_height;
-		uint32_t   m_flags;
-		rtm_string m_title;
+		App*      m_app;
+		int32_t   m_x;
+		int32_t   m_y;
+		uint32_t  m_width;
+		uint32_t  m_height;
+		uint32_t  m_flags;
+		char      m_title[256];
 	};
 
 	static void mouseCapture(HWND _hwnd, bool _capture)
@@ -663,7 +664,7 @@ namespace rapp
 					{
 						Msg* msg = (Msg*)_lparam;
 						HWND hwnd = CreateWindowA("rapp"
-							, msg->m_title.c_str()
+							, msg->m_title
 							, WS_OVERLAPPEDWINDOW|WS_VISIBLE
 							, msg->m_x
 							, msg->m_y
@@ -732,7 +733,7 @@ namespace rapp
 						uint32_t index = winArrayIndex((uint32_t)_wparam);
 						Msg* msg = (Msg*)_lparam;
 						WindowInfo& info = *m_windows.getDataIndexedPtr(index);
-						SetWindowTextA(info.m_window, msg->m_title.c_str() );
+						SetWindowTextA(info.m_window, msg->m_title );
 						delete msg;
 					}
 					break;
@@ -1273,9 +1274,12 @@ namespace rapp
 			msg->m_y      = _y;
 			msg->m_width  = _width;
 			msg->m_height = _height;
-			msg->m_title  = _title;
 			msg->m_flags  = _flags;
-			msg->m_title  = _title ? _title : "";
+
+			if (_title)
+				rtm::strlCpy(msg->m_title, 256, _title);
+			else
+				msg->m_title[0] = '\0';
 
 			SendMessage(s_ctx.m_hwndRapp, WM_USER_WINDOW_CREATE, handle.idx, (LPARAM)msg);
 		}
@@ -1320,7 +1324,7 @@ namespace rapp
 	void windowSetTitle(WindowHandle _handle, const char* _title)
 	{
 		Msg* msg = new Msg;
-		msg->m_title = _title;
+		rtm::strlCpy(msg->m_title, 256, _title);
 		PostMessage(s_ctx.m_hwndRapp, WM_USER_WINDOW_SET_TITLE, _handle.idx, (LPARAM)msg);
 	}
 

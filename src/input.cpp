@@ -282,8 +282,8 @@ struct Gamepad
 struct Input
 {
 	Input()
-		: m_inputBindingsMap(0)
 	{
+		memset(m_inputBindings, 0, sizeof(m_inputBindings));
 		reset();
 	}
 
@@ -293,20 +293,24 @@ struct Input
 
 	void addBindings(const char* _name, const InputBinding* _bindings)
 	{
-		m_inputBindingsMap.insert(std::make_pair(_name, _bindings) );
+		uint32_t idx = rtm::hashStr(_name, (uint32_t)strlen(_name) ) & RAPP_HASH_MASK;
+		m_inputBindings[idx] = _bindings;
+		m_inputBindingsArray.push_back(_bindings);
 	}
 
 	void removeBindings(const char* _name)
 	{
-		InputBindingMap::iterator it = m_inputBindingsMap.find(_name);
-		if (it != m_inputBindingsMap.end() )
-		{
-			m_inputBindingsMap.erase(it);
-		}
-	}
+		uint32_t idx = rtm::hashStr(_name, (uint32_t)strlen(_name) ) & RAPP_HASH_MASK;
+		const InputBinding* remove = m_inputBindings[idx];
+		m_inputBindings[idx] = 0;
 
-	void removeAllBindings()
-	{
+		rtm::FixedArray<const InputBinding*, 256> temp;
+		for (uint32_t i=0; i<m_inputBindingsArray.size(); ++i)
+		{
+			if (m_inputBindingsArray[i] != remove)
+				temp.push_back(m_inputBindingsArray[i]);
+		}
+		m_inputBindingsArray = temp;
 	}
 
 	void execBinding(App* _app, const InputBinding* _binding)
@@ -489,10 +493,8 @@ struct Input
 	bool process(App* _app)
 	{
 		bool keyEvents = false;
-		for (InputBindingMap::const_iterator it = m_inputBindingsMap.begin(); it != m_inputBindingsMap.end(); ++it)
-		{
-			keyEvents = keyEvents || process(_app, it->second);
-		}
+		for (uint32_t i=0; i<m_inputBindingsArray.size(); ++i)
+				keyEvents = keyEvents || process(_app, m_inputBindingsArray[i]);
 		return keyEvents;
 	}
 
@@ -506,11 +508,11 @@ struct Input
 		}
 	}
 
-	typedef rtm_unordered_map<const char*, const InputBinding*> InputBindingMap;
-	InputBindingMap	m_inputBindingsMap;
-	Mouse			m_mouse;
-	Keyboard		m_keyboard;
-	Gamepad			m_gamepad[ENTRY_CONFIG_MAX_GAMEPADS];
+	const InputBinding*							m_inputBindings[RAPP_HASH_SIZE];
+	rtm::FixedArray<const InputBinding*, 256>	m_inputBindingsArray;
+	Mouse										m_mouse;
+	Keyboard									m_keyboard;
+	Gamepad										m_gamepad[ENTRY_CONFIG_MAX_GAMEPADS];
 };
 
 Input& getInput()

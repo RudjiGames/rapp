@@ -7,7 +7,11 @@
 #include <rapp/src/rapp_config.h>
 
 #define RBASE_NAMESPACE rapp
-#define RTM_DEFINE_STL_TYPES
+//#define RTM_DEFINE_STL_TYPES
+#define RAPP_HASH_SIZE	32768
+#define RAPP_HASH_MASK	32767
+#define RAPP_MAX_APPS	64
+
 #include <rbase/inc/platform.h>
 
 #include <rbase/inc/atomic.h>
