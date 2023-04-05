@@ -25,8 +25,6 @@ install:
   - git clone --depth 1 https://github.com/bkaradzic/bimg.git ..\bimg
   - git clone --depth 1 https://github.com/bkaradzic/bgfx.git ..\bgfx
   - git clone --depth 1 https://github.com/dougbinks/enkiTS ..\enkiTS
-  - cmd: ..\build\tools\bin\windows\genie --file=genie\genie.lua %TOOLSET%
-  - sh:  ../build/tools/bin/linux/genie --file=genie/genie.lua -gcc=linux-gcc-9
 
 matrix:
   fast_finish: true
@@ -44,16 +42,14 @@ for:
     - job_name: Windows
 
   init:
-  - echo "Init for Windows"
+  - ..\build\tools\bin\windows\genie --file=genie\genie.lua %TOOLSET%
 
   #build_script:
   #- echo "Build for Windows"
 
   project: ../.build/windows/$(TOOLSET)/rapp/projects/rapp.sln
   
-  test: off
-
-# ======================================
+  # ======================================
 #      Linux
 # ======================================
 -
@@ -62,14 +58,12 @@ for:
     - job_name: Linux
 
   init:
-  - echo "Init for Linux"
+  - ../build/tools/bin/linux/genie --file=genie/genie.lua -gcc=linux-gcc-9
 
   #build_script:
   #- echo "Build for Linux"
 
   project: ../.build/linux/linux/gcc-9/rapp/projects/rapp.make
-
-  test: off
 
 # ======================================
 #      macOS
@@ -80,11 +74,9 @@ for:
     - job_name: OSX
 
   init:
-  - echo "Init for OSX"
+  - ../build/tools/bin/darwin/genie --file=genie/genie.lua -gcc=osx
 
 #  build_script:
 #  - echo "Build for OSX"
 
   project: ../.build/osx/clang/rapp/projects/rapp.make
-
-  test: off
