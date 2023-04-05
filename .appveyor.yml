@@ -42,9 +42,9 @@ for:
     - job_name: Windows
 
   init:
-  - ..\build\tools\bin\windows\genie --file=genie\genie.lua %TOOLSET%
+  - ..\build\tools\bin\windows\genie --file=genie\genie.lua vs2019
 
-  build: ../.build/windows/$(TOOLSET)/rapp/projects/rapp.sln
+  build: ../.build/windows/vs2019/rapp/projects/rapp.sln
   
 # ======================================
 #      Linux
