@@ -44,12 +44,9 @@ for:
   init:
   - ..\build\tools\bin\windows\genie --file=genie\genie.lua %TOOLSET%
 
-  #build_script:
-  #- echo "Build for Windows"
-
-  project: ../.build/windows/$(TOOLSET)/rapp/projects/rapp.sln
+  build: ../.build/windows/$(TOOLSET)/rapp/projects/rapp.sln
   
-  # ======================================
+# ======================================
 #      Linux
 # ======================================
 -
@@ -60,10 +57,8 @@ for:
   init:
   - ../build/tools/bin/linux/genie --file=genie/genie.lua -gcc=linux-gcc-9
 
-  #build_script:
-  #- echo "Build for Linux"
-
-  project: ../.build/linux/linux/gcc-9/rapp/projects/rapp.make
+  build_script:
+  - make -f ../.build/linux/linux/gcc-9/rapp/projects/rapp.make
 
 # ======================================
 #      macOS
@@ -76,7 +71,5 @@ for:
   init:
   - ../build/tools/bin/darwin/genie --file=genie/genie.lua -gcc=osx
 
-#  build_script:
-#  - echo "Build for OSX"
-
-  project: ../.build/osx/clang/rapp/projects/rapp.make
+  build_script:
+  - make -f ../.build/osx/clang/rapp/projects/rapp.make
