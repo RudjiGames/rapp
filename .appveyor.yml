@@ -1,20 +1,32 @@
 
 environment:
-  buildcfg: debug64
   matrix:
     - job_name: Windows
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
     - job_name: Linux
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
+      buildcfg: debug64
+
+    - job_name: Linux
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
+      buildcfg: release64
+
+    - job_name: Linux
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
+      buildcfg: retail64
 
     - job_name: OSX
       APPVEYOR_BUILD_WORKER_IMAGE: macOS
+      buildcfg: debug64
 
-configuration:
-  - Debug
-  - Release
-  - Retail
+    - job_name: OSX
+      APPVEYOR_BUILD_WORKER_IMAGE: macOS
+      buildcfg: release64
+
+    - job_name: OSX
+      APPVEYOR_BUILD_WORKER_IMAGE: macOS
+      buildcfg: retail64
     
 shallow_clone: true
 
@@ -55,7 +67,6 @@ for:
     matrix:
       only:
       - job_name: Linux
-      - configuration: Debug
 
     init:
       - sudo apt update -y && sudo apt install -y xorg libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libegl1-mesa-dev
