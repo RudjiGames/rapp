@@ -57,26 +57,26 @@ for:
       - job_name: Linux
       - configuration: Debug
 
-    init:
-    - sudo apt update -y && sudo apt install -y xorg libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libegl1-mesa-dev
-    - git clone --depth 1 https://github.com/milostosic/rapp rapp
-    - git clone --depth 1 https://github.com/milostosic/build build
-    - git clone --depth 1 https://github.com/milostosic/rbase rbase
-    - git clone --depth 1 https://github.com/bkaradzic/bx bx
-    - git clone --depth 1 https://github.com/bkaradzic/bimg bimg
-    - git clone --depth 1 https://github.com/bkaradzic/bgfx bgfx
-    - git clone --depth 1 https://github.com/glfw/glfw glfw
-    - git clone --depth 1 https://github.com/dougbinks/enkiTS enkiTS
-    - git clone --depth 1 https://github.com/bkaradzic/GENie GENie		# build GENie from source: `GLIBC_2.29' not found
-    - cd GENie && make && cd ..
-    - mkdir glfwbuild && cd glfwbuild && cmake ../glfw -DGLFW_BUILD_TESTS=OFF && make -j4 && sudo make install && cd ..
+      init:
+      - sudo apt update -y && sudo apt install -y xorg libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libegl1-mesa-dev
+      - git clone --depth 1 https://github.com/milostosic/rapp rapp
+      - git clone --depth 1 https://github.com/milostosic/build build
+      - git clone --depth 1 https://github.com/milostosic/rbase rbase
+      - git clone --depth 1 https://github.com/bkaradzic/bx bx
+      - git clone --depth 1 https://github.com/bkaradzic/bimg bimg
+      - git clone --depth 1 https://github.com/bkaradzic/bgfx bgfx
+      - git clone --depth 1 https://github.com/glfw/glfw glfw
+      - git clone --depth 1 https://github.com/dougbinks/enkiTS enkiTS
+      - git clone --depth 1 https://github.com/bkaradzic/GENie GENie		# build GENie from source: `GLIBC_2.29' not found
+      - cd GENie && make && cd ..
+      - mkdir glfwbuild && cd glfwbuild && cmake ../glfw -DGLFW_BUILD_TESTS=OFF && make -j4 && sudo make install && cd ..
   
-    install:
-    - ./GENie/bin/linux/genie --file=rapp/genie/genie.lua --gcc=linux-gcc-9 gmake
+      install:
+      - ./GENie/bin/linux/genie --file=rapp/genie/genie.lua --gcc=linux-gcc-9 gmake
   
-    build_script:
-    - cd ./.build/linux/gcc-9/rapp/projects/
-    - make config=${buildcfg}
+      build_script:
+      - cd ./.build/linux/gcc-9/rapp/projects/
+      - make config=${buildcfg}
 
 # ======================================
 # OSX
@@ -87,19 +87,18 @@ for:
       only:
       - job_name: OSX
 
-    init:
-    - git clone --depth 1 https://github.com/milostosic/rapp rapp
-    - git clone --depth 1 https://github.com/milostosic/build build
-    - git clone --depth 1 https://github.com/milostosic/rbase rbase
-    - git clone --depth 1 https://github.com/bkaradzic/bx.git bx
-    - git clone --depth 1 https://github.com/bkaradzic/bimg.git bimg
-    - git clone --depth 1 https://github.com/bkaradzic/bgfx.git bgfx
-    - git clone --depth 1 https://github.com/dougbinks/enkiTS enkiTS
+      init:
+      - git clone --depth 1 https://github.com/milostosic/rapp rapp
+      - git clone --depth 1 https://github.com/milostosic/build build
+      - git clone --depth 1 https://github.com/milostosic/rbase rbase
+      - git clone --depth 1 https://github.com/bkaradzic/bx.git bx
+      - git clone --depth 1 https://github.com/bkaradzic/bimg.git bimg
+      - git clone --depth 1 https://github.com/bkaradzic/bgfx.git bgfx
+      - git clone --depth 1 https://github.com/dougbinks/enkiTS enkiTS
     
-    install:
-    - ./build/tools/bin/darwin/genie --file=rapp/genie/genie.lua --gcc=osx gmake
+      install:
+      - ./build/tools/bin/darwin/genie --file=rapp/genie/genie.lua --gcc=osx gmake
     
-    build_script:
-    - cd ./.build/osx/clang/rapp/projects/
-    - make config=${buildcfg}
-
+      build_script:
+      - cd ./.build/osx/clang/rapp/projects/
+      - make config=${buildcfg}
