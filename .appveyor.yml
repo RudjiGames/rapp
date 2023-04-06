@@ -2,11 +2,11 @@
 environment:
   buildcfg: debug64
   matrix:
-    - job_name: Linux
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
-
     - job_name: Windows
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+
+    - job_name: Linux
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
 
     - job_name: OSX
       APPVEYOR_BUILD_WORKER_IMAGE: macOS
@@ -14,8 +14,7 @@ environment:
 configuration:
   - Debug
   - Release
-#  - Retail
-
+  - Retail
     
 shallow_clone: true
 
@@ -26,8 +25,9 @@ install:
 for:
   
 # ======================================
-#      Windows
+# Windows
 # ======================================
+
   -
     matrix:
       only:
@@ -48,8 +48,9 @@ for:
     build: ../.build/windows/vs2019/rapp/projects/rapp.sln
 
 # ======================================
-#      Linux
+# Linux
 # ======================================
+
   -
     matrix:
       only:
@@ -78,8 +79,9 @@ for:
     - make config=${buildcfg}
 
 # ======================================
-#      OSX
+# OSX
 # ======================================
+
   -
     matrix:
       only:
@@ -98,4 +100,6 @@ for:
     - ./build/tools/bin/darwin/genie --file=rapp/genie/genie.lua --gcc=osx gmake
     
     build_script:
-    - make -f ./.build/osx/clang/rapp/projects/Makefile
+    - cd ./.build/osx/clang/rapp/projects/
+    - make config=${buildcfg}
+

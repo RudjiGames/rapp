@@ -4,7 +4,11 @@
 --
 
 function projectDependencies_rapp()
-	return  { "rbase", "enkiTS" }
+	local dependencies = { "rbase", "enkiTS" }
+	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
+		table.insert(dependencies, "X11")
+	end
+	return dependencies
 end
 
 function projectAdd_rapp() 
@@ -13,9 +17,6 @@ end
 
 function projectDependencies_rapp_bgfx()
 	local dependencies = {}
-	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
-		table.insert(dependencies, "X11")
-	end
 	dependencies = mergeTwoTables(dependencies, { "bgfx" })
 	dependencies = mergeTables( projectDependencies_rapp(), dependencies )
 	return dependencies
