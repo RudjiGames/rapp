@@ -3,6 +3,15 @@ environment:
   matrix:
     - job_name: Windows
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      configuration: Debug
+
+    - job_name: Windows
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      configuration: Release
+
+    - job_name: Windows
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      configuration: Retail
 
     - job_name: Linux
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
