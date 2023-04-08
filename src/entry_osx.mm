@@ -563,12 +563,18 @@ namespace rapp
         void* windowGetNativeHandle(WindowHandle _handle)
         {
                 if (s_ctx.m_windows.isValid(_handle.idx))
-                        return (void*)s_ctx.m_windows.getData(_handle.idx).m_window;            
+                        return (void*)s_ctx.m_windows.getData(_handle.idx);            
                 return (void*)0;
         }       
                 
         void* windowGetNativeDisplayHandle()
         {       
+		if (s_ctx.m_windows.isValid(s_defaultWindow.idx))
+		{
+			NSWindow* window = s_ctx.m_windows.getData(s_defaultWindow.idx);
+			NSScreen* screen = [window screen];
+			return (void*)screen;
+		}
                 return 0;
         }
 
