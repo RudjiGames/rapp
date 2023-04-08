@@ -26,15 +26,15 @@ environment:
       buildcfg: retail64
 
     - job_name: OSX
-      APPVEYOR_BUILD_WORKER_IMAGE: macOS
+      APPVEYOR_BUILD_WORKER_IMAGE: macOS-monterey
       buildcfg: debug64
 
     - job_name: OSX
-      APPVEYOR_BUILD_WORKER_IMAGE: macOS
+      APPVEYOR_BUILD_WORKER_IMAGE: macOS-monterey
       buildcfg: release64
 
     - job_name: OSX
-      APPVEYOR_BUILD_WORKER_IMAGE: macOS
+      APPVEYOR_BUILD_WORKER_IMAGE: macOS-monterey
       buildcfg: retail64
     
 shallow_clone: true
