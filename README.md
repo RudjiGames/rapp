@@ -1,4 +1,4 @@
-<img src="http://rudji.com/images/lib/rapp.png"/>
+<img src="https://rudji.com/images/lib/rapp.png"/>
 
 [![Build status](https://ci.appveyor.com/api/projects/status/4wuljmu9t6rcqf00?svg=true)](https://ci.appveyor.com/project/milostosic/rapp)
 [![License](https://img.shields.io/badge/license-BSD--2%20clause-blue.svg)](https://github.com/milostosic/rapp/blob/master/LICENSE)
