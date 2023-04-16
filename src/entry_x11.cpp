@@ -514,21 +514,24 @@ namespace rapp
 								WindowHandle handle = findHandle(xbutton.window);
 								if (MouseState::Button::None != mb)
 								{
-									//m_eventQueue.postMouseEvent(handle
-									//	, xbutton.x
-									//	, xbutton.y
-									//	, m_mz
-									//	, mb
-									//	, event.type == ButtonPress
-									//	);
+									m_eventQueue.postMouseEvent(handle
+										, xbutton.x
+										, xbutton.y
+										, m_mz
+										, mb
+										, 0
+										, event.type == ButtonPress
+										, false
+										);
 								}
 								else
 								{
-									//m_eventQueue.postMouseEvent(handle
-									//		, m_mx
-									//		, m_my
-									//		, m_mz
-									//		);
+									m_eventQueue.postMouseEvent(handle
+											, m_mx
+											, m_my
+											, m_mz
+											, 0
+											);
 								}
 							}
 							break;
@@ -541,11 +544,11 @@ namespace rapp
 								m_mx = xmotion.x;
 								m_my = xmotion.y;
 
-								//m_eventQueue.postMouseEvent(handle
-								//		, m_mx
-								//		, m_my
-								//		, m_mz
-								//		);
+								m_eventQueue.postMouseEvent(handle
+										, m_mx
+										, m_my
+										, m_mz
+										, 0);
 							}
 							break;
 
