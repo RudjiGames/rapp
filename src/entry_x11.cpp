@@ -519,7 +519,7 @@ namespace rapp
 										, xbutton.y
 										, m_mz
 										, mb
-										, 0
+										, m_modifiers
 										, event.type == ButtonPress
 										, false
 										);
@@ -530,7 +530,7 @@ namespace rapp
 											, m_mx
 											, m_my
 											, m_mz
-											, 0
+											, m_modifiers
 											);
 								}
 							}
@@ -548,7 +548,7 @@ namespace rapp
 										, m_mx
 										, m_my
 										, m_mz
-										, 0);
+										, m_modifiers);
 							}
 							break;
 
