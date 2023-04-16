@@ -678,11 +678,8 @@ namespace rapp
 
 						clear(hwnd);
 
-						rtm::ScopedMutexLocker scope(m_lock);
-
 						WindowHandle handle = { (uint32_t)_wparam };
-						uint32_t index = winArrayIndex((uint32_t)_wparam);
-						WindowInfo& info = *m_windows.getDataIndexedPtr(index);
+						WindowInfo& info = *m_windows.getDataPtr(handle.idx);
 					
 						info.m_handle = _wparam & 0xffffffff;
 						if (msg->m_flags & RAPP_WINDOW_FLAG_RENDERING)
@@ -709,9 +706,8 @@ namespace rapp
 					{
 						rtm::ScopedMutexLocker scope(m_lock);
 
-						uint32_t index = winArrayIndex((uint32_t)_wparam);
 						WindowHandle handle = { (uint32_t)_wparam };
-						WindowInfo& info = *m_windows.getDataIndexedPtr(index);
+						WindowInfo& info = *m_windows.getDataPtr(handle.idx);
 						PostMessageA(info.m_window, WM_CLOSE, 0, 0);
 						m_eventQueue.postWindowEvent(handle);
 						DestroyWindow(info.m_window);
@@ -1264,7 +1260,6 @@ namespace rapp
 	{
 		s_ctx.m_lock.lock();
 		WindowHandle handle = { s_ctx.m_windows.allocate() };
-		s_ctx.m_lock.unlock();
 
 		if (s_ctx.m_windows.isValid(handle.idx))
 		{
@@ -1283,6 +1278,7 @@ namespace rapp
 
 			SendMessage(s_ctx.m_hwndRapp, WM_USER_WINDOW_CREATE, handle.idx, (LPARAM)msg);
 		}
+		s_ctx.m_lock.unlock();
 
 		return handle;
 	}
@@ -1298,6 +1294,7 @@ namespace rapp
 
 	void* windowGetNativeHandle(WindowHandle _handle)
 	{
+		rtm::ScopedMutexLocker scope(s_ctx.m_lock);
 		if (s_ctx.m_windows.isValid(_handle.idx))
 			return (void*)s_ctx.m_windows.getData(_handle.idx).m_window;
 		return (void*)0;

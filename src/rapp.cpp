@@ -13,6 +13,7 @@
 
 #if RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
+#include <../src/bgfx_p.h>
 #include <common/imgui/imgui.h>
 #include <dear-imgui/imgui_internal.h>
 #endif // RAPP_WITH_BGFX
@@ -341,16 +342,21 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 	RTM_UNUSED_2(_app, _mainWindow);
 
 #if RAPP_WITH_BGFX
+	nvgDelete(_app->m_data->m_nvg);
+	_app->m_data->m_nvg = 0;
 
 	delete _app->m_data->m_console;
+	_app->m_data->m_console = 0;
 
-	nvgDelete(_app->m_data->m_nvg);
+	delete _app->m_data;
+	_app->m_data = 0;
 
-	ImGui::ClearActiveID();
 	imguiDestroy();
 
-	bgfx::shutdown();
+	bgfx::setGraphicsDebuggerPresent(true);
 	rapp::windowDestroy(_mainWindow);
+	bgfx::frame();
+	bgfx::shutdown();
 #endif
 }
 
@@ -475,10 +481,11 @@ int appRun(App* _app, int _argc, const char* const* _argv)
 		if (g_next_app)
 		{
 			appShutDown(_app);
+
 			_app = g_next_app;
+			g_next_app = 0;
 
 			appInit(_app, _argc, _argv);
-			g_next_app = 0;
 		}
 
 		s_commChannel.frame();
