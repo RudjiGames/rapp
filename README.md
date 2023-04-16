@@ -39,7 +39,7 @@ Platform support
 | **Windows**      | ✓✓✓        |  ✓        | ✓      |    ✓     |
 | **Xbox One**     | ✓✓✓        |  ✓        | ✓      |    ✓     |
 | **PlayStation 4**| ✓✓✓        |  ✓        | ✓      |    ✓     |
-| **Linux**        | ✓XX         |  ✓        | ✓      |    ✓     |
+| **Linux**        | ✓✓X         |  ✓        | ✓      |    ✓     |
 | **Android**      | XXX         |  ✓        | ?      |    ✓     |
 | **OSX**          | ✓✓X         |  ✓        | ✓      |    ✓     |
 | **Emscripten**   | ✓✓✓         |  X        | ✓      |    ✓     |
