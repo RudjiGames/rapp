@@ -71,6 +71,10 @@ static void drawGUI(App* _app)
 		, uint16_t(_app->m_height)
 		);
 
+	// can't have zero delta time
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.DeltaTime == 0.0f) io.DeltaTime = 0.01f;
+
 	nvgBeginFrame(_app->m_data->m_nvg, (float)_app->m_width, (float)_app->m_height, 1.0f);
 
 	_app->drawGUI();

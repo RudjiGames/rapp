@@ -394,7 +394,7 @@ namespace rapp
 									, m_depth
 									, InputOutput
 									, m_visual
-									, CWBorderPixel|CWEventMask
+									, CWBorderPixel|CWEventMask|CWBackPixel|CWBitGravity
 									, &m_windowAttrs
 									);
 			m_windows.setData(0, w);
@@ -432,7 +432,6 @@ namespace rapp
 					, NULL
 					);
 
-			//
 			x11SetDisplayWindow(m_display, m_windows.getData(0));
 
 			MainThreadEntry mte;
@@ -459,7 +458,7 @@ namespace rapp
 						case Command::RunFunc:
 							{
 								RAPP_CMD_READ(rapp::ThreadFn,	fn);
-								RAPP_CMD_READ(void*,				userData);
+								RAPP_CMD_READ(void*, userData);
 
 								fn(userData);
 							}
@@ -801,12 +800,14 @@ namespace rapp
 
 	void* windowGetNativeHandle(WindowHandle _handle)
 	{
-		RTM_UNUSED_1(_handle);
+		if (s_ctx.m_windows.isValid(_handle.idx))
+			return (void*)s_ctx.m_windows.getData(_handle.idx);
+		return (void*)0;
 	}
 
 	void* windowGetNativeDisplayHandle()
 	{
-		return NULL;
+		return s_ctx.m_display;
 	}
 
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y)
