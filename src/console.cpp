@@ -114,8 +114,10 @@ void Console::draw()
 
 	float currDrawTime = rtm::CPU::time();
 	float delta = (currDrawTime - lastDrawTime);
-
-	if (m_hide && m_visible > 0.0f)
+	if (delta < 0.006f)
+		delta = 0.006f;
+    
+	if (m_hide && (m_visible > 0.0f))
 	{
 		m_visible -= delta/g_consoleToggleTime;
 		m_visible = m_visible < 0.0f ? 0.0f : m_visible;
@@ -127,6 +129,9 @@ void Console::draw()
 		m_visible = m_visible > 1.0f ? 1.0f : m_visible;
 	}
 
+	if (m_visible == 0.0f)
+		return;
+    
 	lastDrawTime = currDrawTime;
 
 	float posY = -(1.0f - m_visible) * float(m_app->m_height/2);

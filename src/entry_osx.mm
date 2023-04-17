@@ -198,14 +198,14 @@ namespace rapp
 		uint8_t translateModifiers(int flags)
 		{
 			return 0
-				| (0 != (flags & NX_DEVICELSHIFTKEYMASK ) ) ? KeyboardState::Modifier::LShift	: 0
-				| (0 != (flags & NX_DEVICERSHIFTKEYMASK ) ) ? KeyboardState::Modifier::RShift	: 0
-				| (0 != (flags & NX_DEVICELALTKEYMASK ) )   ? KeyboardState::Modifier::LAlt		: 0
-				| (0 != (flags & NX_DEVICERALTKEYMASK ) )   ? KeyboardState::Modifier::RAlt		: 0
-				| (0 != (flags & NX_DEVICELCTLKEYMASK ) )   ? KeyboardState::Modifier::LCtrl	: 0
-				| (0 != (flags & NX_DEVICERCTLKEYMASK ) )   ? KeyboardState::Modifier::RCtrl	: 0
-				| (0 != (flags & NX_DEVICELCMDKEYMASK) )    ? KeyboardState::Modifier::LMeta	: 0
-				| (0 != (flags & NX_DEVICERCMDKEYMASK) )    ? KeyboardState::Modifier::RMeta	: 0
+				| ((0 != (flags & NX_DEVICELSHIFTKEYMASK ) ) ? KeyboardState::Modifier::LShift	: 0)
+				| ((0 != (flags & NX_DEVICERSHIFTKEYMASK ) ) ? KeyboardState::Modifier::RShift	: 0)
+				| ((0 != (flags & NX_DEVICELALTKEYMASK ) )   ? KeyboardState::Modifier::LAlt	: 0)
+				| ((0 != (flags & NX_DEVICERALTKEYMASK ) )   ? KeyboardState::Modifier::RAlt	: 0)
+				| ((0 != (flags & NX_DEVICELCTLKEYMASK ) )   ? KeyboardState::Modifier::LCtrl	: 0)
+				| ((0 != (flags & NX_DEVICERCTLKEYMASK ) )   ? KeyboardState::Modifier::RCtrl	: 0)
+				| ((0 != (flags & NX_DEVICELCMDKEYMASK) )    ? KeyboardState::Modifier::LMeta	: 0)
+				| ((0 != (flags & NX_DEVICERCMDKEYMASK) )    ? KeyboardState::Modifier::RMeta	: 0)
 				;
 		}
 
@@ -222,7 +222,7 @@ namespace rapp
 			*_pressedChar = (uint8_t)keyChar;
 
 			int keyCode = keyChar;
-			*specialKeys = translateModifiers([event modifierFlags]);
+			*specialKeys = translateModifiers((int)[event modifierFlags]);
 
 			// if this is a unhandled key just return None
 			if (keyCode < 256)
@@ -532,6 +532,7 @@ namespace rapp
 
 	void appRunOnMainThread(ThreadFn _fn, void* _userData)
 	{
+		_fn(_userData);
 	}
 
 	void windowGetDefaultSize(uint32_t* _width, uint32_t* _height)
@@ -544,7 +545,8 @@ namespace rapp
 
 	WindowHandle windowCreate(App* _app, int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
 	{
-		RTM_UNUSED_6(_x, _y, _width, _height, _flags, _title);
+		RTM_UNUSED_4(_app, _x, _y, _width);
+		RTM_UNUSED_3(_height, _flags, _title);
 		WindowHandle handle = { UINT16_MAX };
 		return handle;
 	}
@@ -560,23 +562,23 @@ namespace rapp
 		}
 	}
 
-        void* windowGetNativeHandle(WindowHandle _handle)
-        {
-                if (s_ctx.m_windows.isValid(_handle.idx))
-                        return (void*)s_ctx.m_windows.getData(_handle.idx);            
-                return (void*)0;
-        }       
+	void* windowGetNativeHandle(WindowHandle _handle)
+	{
+		if (s_ctx.m_windows.isValid(_handle.idx))
+			return (void*)s_ctx.m_windows.getData(_handle.idx);
+		return (void*)0;
+	}
                 
-        void* windowGetNativeDisplayHandle()
-        {       
+	void* windowGetNativeDisplayHandle()
+	{
 		if (s_ctx.m_windows.isValid(s_defaultWindow.idx))
 		{
 			NSWindow* window = s_ctx.m_windows.getData(s_defaultWindow.idx);
 			NSScreen* screen = [window screen];
 			return (void*)screen;
 		}
-                return 0;
-        }
+		return 0;
+	}
 
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y)
 	{
@@ -715,62 +717,75 @@ namespace rapp
 
 + (Window*)sharedDelegate
 {
-	static id windowDelegate = [Window new];
-	return windowDelegate;
+    static id windowDelegate = [Window new];
+    return windowDelegate;
 }
 
 - (id)init
 {
-	self = [super init];
-	if (nil == self)
-	{
-		return nil;
-	}
-
-	self->windowCount = 0;
-	return self;
+    self = [super init];
+    if (nil == self)
+    {
+        return nil;
+    }
+    
+    self->windowCount = 0;
+    return self;
 }
 
 - (void)windowCreated:(NSWindow*)window
 {
-	assert(window);
-
-	[window setDelegate:self];
-
-	assert(self->windowCount < ~0u);
-	self->windowCount += 1;
+    assert(window);
+    
+    [window setDelegate:self];
+    
+    assert(self->windowCount < ~0u);
+    self->windowCount += 1;
 }
 
 - (void)windowWillClose:(NSNotification*)notification
 {
-	RTM_UNUSED(notification);
+    RTM_UNUSED(notification);
 }
 
 - (BOOL)windowShouldClose:(NSWindow*)window
 {
-	assert(window);
-
-	[window setDelegate:nil];
-
-	assert(self->windowCount);
-	self->windowCount -= 1;
-
-	if (self->windowCount == 0)
-	{
-		[NSApp terminate:self];
-		return false;
-	}
-
-	return true;
+    assert(window);
+    
+    [window setDelegate:nil];
+    
+    assert(self->windowCount);
+    self->windowCount -= 1;
+    
+    if (self->windowCount == 0)
+    {
+        [NSApp terminate:self];
+        return false;
+    }
+    
+    return true;
 }
 
 - (void)windowDidResize:(NSNotification*)notification
 {
-	RTM_UNUSED(notification);
-	using namespace rapp;
-	s_ctx.windowDidResize();
+    RTM_UNUSED(notification);
+    using namespace rapp;
+    s_ctx.windowDidResize();
 }
 
+- (void)windowDidResignKey:(NSNotification *)notification
+{
+    RTM_UNUSED(notification);
+    using namespace rapp;
+    //s_ctx.windowDidResize();
+}
+
+- (void)windowDidBecomeKey:(NSNotification *)notification
+{
+    RTM_UNUSED(notification);
+    using namespace rapp;
+    //s_ctx.windowDidResize();
+}
 @end
 
 int main(int _argc, char** _argv)
