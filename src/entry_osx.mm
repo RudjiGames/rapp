@@ -104,7 +104,7 @@ namespace rapp
 			, m_fullscreen(false)
 		{
 			s_translateKey[27]             = KeyboardState::Key::Esc;
-			s_translateKey[uint8_t('\n')]  = KeyboardState::Key::Return;
+			s_translateKey[13]             = KeyboardState::Key::Return;
 			s_translateKey[uint8_t('\t')]  = KeyboardState::Key::Tab;
 			s_translateKey[127]            = KeyboardState::Key::Backspace;
 			s_translateKey[uint8_t(' ')]   = KeyboardState::Key::Space;
@@ -114,6 +114,7 @@ namespace rapp
 			s_translateKey[uint8_t('_')]   =
 			s_translateKey[uint8_t('-')]   = KeyboardState::Key::Minus;
 
+			s_translateKey[96]             =
 			s_translateKey[uint8_t('~')]   =
 			s_translateKey[uint8_t('`')]   = KeyboardState::Key::Tilde;
 
@@ -370,6 +371,8 @@ namespace rapp
 
 						break;
 					}
+					default:
+						break;
 				}
 
 				[NSApp sendEvent:event];
