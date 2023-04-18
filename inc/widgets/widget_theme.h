@@ -33,7 +33,7 @@ static inline T rappMax(T _v1, T _v2) { return _v1 > _v2 ? _v1 : _v2; }
 template <typename T>
 static inline T rappMin(T _v1, T _v2) { return _v1 < _v2 ? _v1 : _v2; } 
 
-static void flashColor(ImU32& _drawColor, ImU32 _target, uint64_t _elapsedTime)
+inline static void flashColorElapsed(ImU32& _drawColor, ImU32 _target, uint64_t _elapsedTime)
 {
 	ImVec4 target = ImColor(_target);
 

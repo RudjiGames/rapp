@@ -3,10 +3,18 @@
 -- License: http://www.opensource.org/licenses/BSD-2-Clause
 --
 
+newoption {
+	trigger     = "with-rprof",
+	description = "Link with rprof.",
+}
+
 function projectDependencies_rapp()
 	local dependencies = { "rbase", "enkiTS" }
 	if (getTargetOS() == "linux" or getTargetOS() == "freebsd") then
 		table.insert(dependencies, "X11")
+	end
+	if (_OPTIONS["with-rprof"]) then
+		table.insert(dependencies, "rprof")
 	end
 	return dependencies
 end
@@ -19,6 +27,9 @@ function projectDependencies_rapp_bgfx()
 	local dependencies = {}
 	dependencies = mergeTwoTables(dependencies, { "bgfx" })
 	dependencies = mergeTables( projectDependencies_rapp(), dependencies )
+	if (_OPTIONS["with-rprof"]) then
+		defines { "RAPP_WITH_RPROF=1" }
+	end
 	return dependencies
 end
 
@@ -34,7 +45,6 @@ function projectExtraConfigExecutable_rapp()
 			"-framework Cocoa",
 			"-framework OpenGL",
 		}
-
 	configuration {}
  end
 
@@ -60,6 +70,7 @@ function projectExtraConfig_rapp_bgfx()
 		bgfxPath .. "examples/common/" 	
 	}
 	defines { "RAPP_WITH_BGFX=1" }
+
 	configuration { "debug or release" }
 		defines { "BX_CONFIG_DEBUG=1" }
 	configuration { "retail" }

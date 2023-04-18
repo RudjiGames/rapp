@@ -489,7 +489,7 @@ namespace rapp {
 				s_lastHoverTime[_button] = currTime;
 
 			if (!_editingValue)
-			flashColor(drawColor, RAPP_COLOR_WIDGET_BLINK, currTime - s_lastHoverTime[_button]);
+			flashColorElapsed(drawColor, RAPP_COLOR_WIDGET_BLINK, currTime - s_lastHoverTime[_button]);
 			hover = true;
 		}
 
@@ -504,12 +504,12 @@ namespace rapp {
 		uint64_t deltaTime = currTime - s_lastClickTime[_button];
 
 		if (!_editingValue)
-		flashColor(drawColor, RAPP_COLOR_WIDGET_HIGHLIGHT, deltaTime);
+		flashColorElapsed(drawColor, RAPP_COLOR_WIDGET_HIGHLIGHT, deltaTime);
 		_drawList->AddRectFilled(_position, maxC, drawColor, RAPP_WIDGET_OUTLINE * 3);
 
 		ImU32 numberColor = _button == 5 ? RAPP_COLOR_WIDGET : RAPP_COLOR_TEXT_STATUS;
 		if (!_editingValue)
-		flashColor(numberColor, _button == 5 ? RAPP_COLOR_TEXT_SHADOW : RAPP_COLOR_TEXT, deltaTime*2);
+		flashColorElapsed(numberColor, _button == 5 ? RAPP_COLOR_TEXT_SHADOW : RAPP_COLOR_TEXT, deltaTime*2);
 
 		char FK[] = "0";
 		FK[0] = (char)('0' + _button);
@@ -528,7 +528,7 @@ namespace rapp {
 		text_pos = ImVec2(center.x - text_size.x/2, center.y+4);
 
 		drawColor = RAPP_COLOR_TEXT_HIGHLIGHT;
-		flashColor(drawColor, IM_COL32_WHITE, deltaTime);
+		flashColorElapsed(drawColor, IM_COL32_WHITE, deltaTime);
 
 		if (!_editingValue)
 			_drawList->AddText(0, fontSizeLabel, text_pos, drawColor, _label);
