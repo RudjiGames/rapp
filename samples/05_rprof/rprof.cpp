@@ -5,6 +5,7 @@
 
 #include <rprof_pch.h>
 #include <math.h>
+#include <rapp/inc/widgets/keyboard.h>
 
 struct rprofApp : public rapp::App
 {
@@ -93,6 +94,9 @@ struct rprofApp : public rapp::App
 		ImGui::Separator();
 		ImGui::Button("Button", ImVec2(180.0f,23.0f));
 		ImGui::End();
+
+		uint32_t keys[8];
+		int numKeysPressed = rapp::rappDrawKeyboard(keys);
 
 		rapp::MouseState ms;
 		rapp::inputGetMouseState(ms);
