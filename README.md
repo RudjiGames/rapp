@@ -25,8 +25,13 @@ Features
 * Job scheduler with job stealing for fine grained parallelism
 * [ImGui](https://github.com/ocornut/imgui) and [NanoVG](https://github.com/memononen/nanovg) integration
 * Quake like console - [ImGui](https://github.com/ocornut/imgui) based
+* Built-in [**rprof**](https://github.com/milostosic/rprof) CPU profiler
 * Multiple applications in one binary
 * Window functions
+
+Built-in [**rprof**](https://github.com/milostosic/rprof) CPU profiler is optional and needs to be explicitly requested when generating project files, for example:
+
+      GENie --with-rprof vs2022
 
 Here's a screenshot of a [bgfx](https://github.com/bkaradzic/bgfx) sample showing input debugging, [ImGui](https://github.com/ocornut/imgui) dialog and Quake like console as well as [NanoVG](https://github.com/memononen/nanovg) shape (eyes):  
 <img src="https://github.com/milostosic/rapp/blob/master/img/input_debug.png">
