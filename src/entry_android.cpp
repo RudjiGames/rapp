@@ -535,6 +535,11 @@ namespace rapp
 		RTM_UNUSED_2(_handle, _lock);
 	}
 
+	void inputEmitKeyPress(KeyboardState::Key _key, uint8_t _modifiers)
+	{
+		RTM_UNUSED_2(_key, _modifiers);
+	}
+
 	int32_t MainThreadEntry::threadFunc(void* _userData)
 	{
 		int32_t result = chdir("/sdcard/rapp/");

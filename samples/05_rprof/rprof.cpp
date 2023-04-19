@@ -95,8 +95,7 @@ struct rprofApp : public rapp::App
 		ImGui::Button("Button", ImVec2(180.0f,23.0f));
 		ImGui::End();
 
-		uint32_t keys[8];
-		int numKeysPressed = rapp::rappDrawKeyboard(keys);
+		rapp::rappVirtualKeyboard();
 
 		rapp::MouseState ms;
 		rapp::inputGetMouseState(ms);

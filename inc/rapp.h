@@ -385,6 +385,9 @@ namespace rapp {
 	bool inputGetKeyState(KeyboardState::Key _key, uint8_t* _modifiers = 0);
 
 	/// 
+	void inputEmitKeyPress(KeyboardState::Key _key, uint8_t _modifiers = 0);
+
+	/// 
 	void inputDgbGamePads(int _maxGamepads = 4);
 
 	/// 

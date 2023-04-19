@@ -251,6 +251,8 @@ namespace rapp
 		WM_USER_WINDOW_TOGGLE_FRAME,
 		WM_USER_WINDOW_MOUSE_LOCK,
 		WM_USER_CALL_FUNC,
+		WM_USER_CALL_KEY_DOWN,
+		WM_USER_CALL_KEY_UP
 	};
 
 	struct TranslateKeyModifiers
@@ -792,6 +794,26 @@ namespace rapp
 						ThreadFn fn = (ThreadFn)_wparam;
 						void* userData = (void*)_lparam;
 						fn(userData);
+					}
+					break;
+
+				case WM_USER_CALL_KEY_DOWN:
+					{
+						WindowHandle handle = handleFromHwnd(_hwnd);
+						uint8_t modifiers = (uint8_t)_wparam;
+						KeyboardState::Key key = (KeyboardState::Key)_lparam;
+
+						m_eventQueue.postKeyEvent(handle, key, modifiers, true);
+					}
+					break;
+
+				case WM_USER_CALL_KEY_UP:
+					{
+						WindowHandle handle = handleFromHwnd(_hwnd);
+						uint8_t modifiers = (uint8_t)_wparam;
+						KeyboardState::Key key = (KeyboardState::Key)_lparam;
+
+						m_eventQueue.postKeyEvent(handle, key, modifiers, false);
 					}
 					break;
 
@@ -1338,6 +1360,12 @@ namespace rapp
 	void windowSetMouseLock(WindowHandle _handle, bool _lock)
 	{
 		PostMessage(s_ctx.m_hwndRapp, WM_USER_WINDOW_MOUSE_LOCK, _handle.idx, _lock);
+	}
+
+	void inputEmitKeyPress(KeyboardState::Key _key, uint8_t _modifiers)
+	{
+		PostMessage(s_ctx.m_hwndRapp, WM_USER_CALL_KEY_DOWN, (WPARAM)_modifiers, (LPARAM)_key);
+		PostMessage(s_ctx.m_hwndRapp, WM_USER_CALL_KEY_UP,   (WPARAM)_modifiers, (LPARAM)_key);
 	}
 
 	int32_t MainThreadEntry::threadFunc(void* _userData)

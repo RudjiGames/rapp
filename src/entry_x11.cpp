@@ -849,6 +849,12 @@ namespace rapp
 		RTM_UNUSED_2(_handle, _lock);
 	}
 
+	void inputEmitKeyPress(KeyboardState::Key _key, uint8_t _modifiers)
+	{
+		s_ctx.m_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, _key, _modifiers, true);
+		s_ctx.m_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, _key, _modifiers, false);
+	}
+
 } // namespace rapp
 
 int main(int _argc, const char* const* _argv)
