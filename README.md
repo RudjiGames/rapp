@@ -29,7 +29,7 @@ Features
 * Multiple applications in one binary
 * Window functions
 
-Built-in [**rprof**](https://github.com/milostosic/rprof) CPU profiler is optional and needs to be explicitly requested when generating project files, for example:
+[**rprof**](https://github.com/milostosic/rprof) CPU profiler is an optional dependency and needs to be explicitly requested when generating project files, for example:
 
       GENie --with-rprof vs2022
 
@@ -71,6 +71,9 @@ Dependencies can be obtained by cloning the following repositories:
 	git clone https://github.com/milostosic/build.git
 	git clone https://github.com/milostosic/rbase.git
 	git clone https://github.com/milostosic/enkiTS.git
+	
+Optional:	
+	git clone https://github.com/milostosic/rprof.git 
 
 To build samples based on [bgfx](https://github.com/bkaradzic/bgfx), clone the following repositories:  
 
