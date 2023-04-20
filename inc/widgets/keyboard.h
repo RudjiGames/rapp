@@ -21,8 +21,9 @@ namespace rapp {
 
 	static void rappVirtualKeyboardClick(KeyboardState::Key _key)
 	{
+		ImGui::SetWindowFocus("Console");
 		inputEmitKeyPress(_key);
-		ImGui::SetKeyboardFocusHere(-1); // TODO: kbd should have no focus
+//		ImGui::SetKeyboardFocusHere(-1); // TODO: kbd should have no focus
 	}
 
 	static void rappVirtualKeyboardLine(const char* key, KeyboardState::Key* _keyMap, float _scale)
@@ -59,7 +60,7 @@ namespace rapp {
 
 		ImGui::Text("   ");
 		ImGui::SameLine();
-		rappVirtualKeyboardLine("qwertyuiop[]\\", keys2, _scale);
+		rappVirtualKeyboardLine("QWERTYUIOP[]\\", keys2, _scale);
 
 		KeyboardState::Key keys3[] = {
 			KeyboardState::KeyA, KeyboardState::KeyS, KeyboardState::KeyD, KeyboardState::KeyF, KeyboardState::KeyG, KeyboardState::KeyH,
@@ -67,7 +68,7 @@ namespace rapp {
 
 		ImGui::Text("      ");
 		ImGui::SameLine();
-		rappVirtualKeyboardLine("asdfghjkl;'", keys3, _scale);
+		rappVirtualKeyboardLine("ASDFGHJKL;'", keys3, _scale);
 		ImGui::SameLine(0.0f, RAPP_VK_BUTTON_SPACING * _scale);
 		if (ImGui::Button("Return", ImVec2(RAPP_VK_BUTTON_SIZE_X * 1.85f * _scale, RAPP_VK_BUTTON_SIZE_Y * _scale)))
 			rappVirtualKeyboardClick(KeyboardState::Return);
@@ -78,7 +79,7 @@ namespace rapp {
 
 		ImGui::Text("         ");
 		ImGui::SameLine();
-		rappVirtualKeyboardLine("zxcvbnm,.?", keys4, _scale);
+		rappVirtualKeyboardLine("ZXCVBNM,.?", keys4, _scale);
 		ImGui::Text("                                          ");
 		ImGui::SameLine(0.0f, RAPP_VK_BUTTON_SPACING * _scale);
 		if (ImGui::Button("---------", ImVec2(RAPP_VK_BUTTON_SIZE_X * 6.0f * _scale, RAPP_VK_BUTTON_SIZE_Y * _scale)))
