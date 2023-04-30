@@ -5,6 +5,9 @@
 
 #include <rapp_pch.h>
 
+#define RTM_LIBHANDLER_DEFINE
+#include <rbase/inc/libhandler.h>
+
 #include <rapp/src/rapp_timer.h>
 #include <rapp/src/cmd.h>
 #include <rapp/src/console.h>
@@ -59,6 +62,7 @@ rtm::FixedArray<App*, RAPP_MAX_APPS>& appGetRegistered()
 
 static void drawGUI(App* _app)
 {
+	RTM_UNUSED(_app);
 #if RAPP_WITH_BGFX
 	MouseState ms;
 	inputGetMouseState(ms);

@@ -6,9 +6,6 @@
 #include <rapp_pch.h>
 #include <inttypes.h>
 
-#define RTM_LIBHANDLER_DEFINE
-#include <rbase/inc/libhandler.h>
-
 #include <rapp/inc/rapp.h>
 #include <rapp/src/entry_p.h>
 #include <rapp/src/cmd.h>

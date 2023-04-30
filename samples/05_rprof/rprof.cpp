@@ -66,7 +66,7 @@ struct rprofApp : public rapp::App
 
 		appRunOnMainThread(mainThreadFunc, this);
 
-		rtm::Console::rgb(255, 255, 0, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
+		//rtm::Console::rgb(255, 255, 0, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
 
 		// Use debug font to print information about this example.
 		bgfx::dbgTextClear();
@@ -82,6 +82,7 @@ struct rprofApp : public rapp::App
 
 	void drawGUI()
 	{
+		RTM_LOG("testera");
 #if RAPP_WITH_RPROF
 		ProfilerFrame frame;
 		rprofGetFrame(&frame);
@@ -106,14 +107,14 @@ struct rprofApp : public rapp::App
 #if RAPP_WITH_RPROF
 		rprofShutDown();
 #endif // RAPP_WITH_RPROF
-		rtm::Console::rgb(255, 255, 0, "Shutting down app\n");
+		//rtm::Console::rgb(255, 255, 0, "Shutting down app\n");
 		rapp::appGraphicsShutdown(this, m_window);
 		rapp::inputRemoveBindings("bindings");
 	}
 
 	static void mainThreadFunc(void* /*_appClass*/)
 	{
-		rtm::Console::rgb(0, 255, 0, "Printing from main thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
+		//rtm::Console::rgb(0, 255, 0, "Printing from main thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
 	}
 
 	static int cmdExit(rapp::App* _app, void* _userData, int _argc, char const* const* _argv)
