@@ -16,8 +16,10 @@ struct rprofApp : public rapp::App
 
 	virtual ~rprofApp() {}
 
-	int init(int32_t /*_argc*/, const char* const* /*_argv*/, rtmLibInterface* /*_libInterface = 0*/)
+	int init(int32_t _argc, const char* const* _argv, rtmLibInterface* _libInterface)
 	{
+		RTM_UNUSED_3(_argc, _argv, _libInterface);
+
 		m_time = 0.0f;
 
 		static const rapp::InputBinding bindings[] =
@@ -82,7 +84,6 @@ struct rprofApp : public rapp::App
 
 	void drawGUI()
 	{
-		RTM_LOG("testera");
 #if RAPP_WITH_RPROF
 		ProfilerFrame frame;
 		rprofGetFrame(&frame);

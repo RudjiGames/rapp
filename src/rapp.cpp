@@ -107,7 +107,10 @@ int32_t rappThreadFunc(void* _userData)
 					RAPP_CMD_READ(int, argc);
 					RAPP_CMD_READ(const char* const*, argv);
 
-					app->init(argc, argv, 0);
+					rtmLibInterface libInterface;
+					libInterface.m_error	= g_errorHandler;
+					libInterface.m_memory	= g_allocator;
+					app->init(argc, argv, &libInterface);
 				}
 				break;
 
@@ -503,10 +506,11 @@ int appRun(App* _app, int _argc, const char* const* _argv)
 
 int rapp_main(int _argc, const char* const* _argv)
 {
-	rtmLibInterface* errorHandler = 0;
-	//&RAPP_INSTANCE(CmdLineApp)
+	rtmLibInterface libInterface;
+	libInterface.m_error	= rtm::rbaseGetErrorHandler();
+	libInterface.m_memory	= rtm::rbaseGetMemoryManager();
 
-	rapp::init(errorHandler);
+	rapp::init(&libInterface);
 
 	int ret = rapp::appRun(rapp::appGetRegistered()[0], _argc, _argv);
 	rapp::shutDown();
