@@ -731,7 +731,7 @@ namespace rapp
 						uint32_t index = winArrayIndex((uint32_t)_wparam);
 						Msg* msg = (Msg*)_lparam;
 						WindowInfo& info = *m_windows.getDataIndexedPtr(index);
-						SetWindowTextA(info.m_window, msg->m_title );
+						SetWindowTextA(info.m_window, msg->m_title);
 						delete msg;
 					}
 					break;
@@ -1342,6 +1342,12 @@ namespace rapp
 
 	void windowSetTitle(WindowHandle _handle, const char* _title)
 	{
+		if (_handle.idx == rapp::kDefaultWindowHandle.idx)
+		{
+			SetWindowTextA(s_ctx.m_hwndRapp, _title);
+			return;
+		}
+
 		Msg* msg = new Msg;
 		rtm::strlCpy(msg->m_title, 256, _title);
 		PostMessage(s_ctx.m_hwndRapp, WM_USER_WINDOW_SET_TITLE, _handle.idx, (LPARAM)msg);

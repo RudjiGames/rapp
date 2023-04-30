@@ -13,6 +13,7 @@
 #define RAPP_MAX_APPS	64
 
 #include <rbase/inc/platform.h>
+#include <rbase/inc/libassert.h>
 
 #include <rbase/inc/atomic.h>
 #include <rbase/inc/itc.h>
