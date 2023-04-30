@@ -199,13 +199,10 @@ void Console::draw()
     // Command-line
 	if (m_visible == 1.0f)
 	{
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(147.0f/255.0f, 1.0f, 147.0f/255.0f, 1.0f));
 		ImGui::Text("$>"); 
 		ImGui::SameLine(); 
 		ImGui::SetNextItemWidth(-1);
-		ImGui::PopStyleColor();
 
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(147.0f/255.0f, 1.0f, 147.0f/255.0f, .23f));
 		if (ImGui::InputText("##", m_inputBuf, RTM_NUM_ELEMENTS(m_inputBuf), ImGuiInputTextFlags_EnterReturnsTrue|ImGuiInputTextFlags_CallbackCompletion|ImGuiInputTextFlags_CallbackHistory, &textEditCallbackStub, (void*)this))
 		{
 			char* input_end = m_inputBuf+strlen(m_inputBuf);
@@ -214,7 +211,6 @@ void Console::draw()
 				execCommand(m_inputBuf);
 			strcpy(m_inputBuf, "");
 		}
-		ImGui::PopStyleColor();
 	}
 
     // Demonstrate keeping auto focus on the input box
