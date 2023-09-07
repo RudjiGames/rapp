@@ -4,7 +4,7 @@
 --
 
 function projectDependencies_rapp()
-	return  { "rbase", "enkits" }
+	return  { "rbase", "enkiTS" }
 end
 
 function projectAdd_rapp() 
@@ -59,6 +59,13 @@ function projectExtraConfig_rapp_bgfx()
 		bgfxPath .. "examples/common/" 	
 	}
 	defines { "RAPP_WITH_BGFX=1" }
+
+	configuration { "debug" }
+		defines { "BX_CONFIG_DEBUG=1" }
+	configuration { "not debug" }
+		defines { "BX_CONFIG_DEBUG=0" }
+	configuration {}
+
 end
 
 function projectExtraConfigExecutable_rapp_bgfx()
