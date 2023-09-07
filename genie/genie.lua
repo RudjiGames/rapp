@@ -9,8 +9,8 @@ while string.len(currPath) > 2 do
 	if os.isfile(currPath .. "/build/build.lua") then dofile (currPath .. "/build/build.lua") break end
 end
 
-solution "rbase"
+solution "rapp"
 	configurations { "debug", "release", "retail" }
 	setPlatforms()
 
-	addLibProjects("rbase")
+	addLibProjects("rapp")
