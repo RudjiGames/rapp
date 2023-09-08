@@ -63,24 +63,13 @@ You can get the latest source code by cloning it from github:
 
       git clone https://github.com/RudjiGames/rapp.git 
 	  
-Dependencies
+Build and dependencies
 ======
 
-Dependencies can be obtained by cloning the following repositories:   
+There's quite a few dependencies and they can be fetched manually or using a [batch file](https://github.com/RudjiGames/rapp/blob/master/scripts/fetch_dependencies.bat).
+For the list of dependencies please refer to the batch file.
 
-	git clone https://github.com/RudjiGames/build.git
-	git clone https://github.com/RudjiGames/rbase.git
-	git clone https://github.com/milostosic/enkiTS.git
-	
-Optional:
-
-	git clone https://github.com/RudjiGames/rprof.git 
-
-To build samples based on [bgfx](https://github.com/bkaradzic/bgfx), clone the following repositories:  
-
-	git clone https://github.com/bkaradzic/bgfx.git
-	git clone https://github.com/bkaradzic/bimg.git
-	git clone https://github.com/bkaradzic/bx.git
+Once dependencies are cloned, [GENie](https://github.com/bkaradzic/genie) project generator tool can be used to generate project files/solution. [This](https://github.com/RudjiGames/rapp/blob/master/scripts/generate_project.bat) batch file is an example of generating a solution and project files for VS2022.
 
 License (BSD 2-clause)
 ======
