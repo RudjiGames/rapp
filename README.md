@@ -1,17 +1,17 @@
 <img src="https://www.rudji.com/images/lib/rapp.png"/>
 
-[![Build status](https://ci.appveyor.com/api/projects/status/4wuljmu9t6rcqf00?svg=true)](https://ci.appveyor.com/project/milostosic/rapp)
-[![License](https://img.shields.io/badge/license-BSD--2%20clause-blue.svg)](https://github.com/milostosic/rapp/blob/master/LICENSE)
+[![Build status](https://ci.appveyor.com/api/projects/status/4wuljmu9t6rcqf00?svg=true)](https://ci.appveyor.com/project/RudjiGames/rapp)
+[![License](https://img.shields.io/badge/license-BSD--2%20clause-blue.svg)](https://github.com/RudjiGames/rapp/blob/master/LICENSE)
 
 **rapp** is a library that provides cross-platform application entry point and additional functionality.
 rapp is **heavily** based on [bgfx](https://github.com/bkaradzic/bgfx) examples entry point code that can be found [here](https://github.com/bkaradzic/bgfx/tree/master/examples/common/entry). Graphics code is still [bgfx](https://github.com/bkaradzic/bgfx) based but..  
 
-...dependecy on [bx](https://github.com/bkaradzic/bx) and [bgfx](https://github.com/bkaradzic/bgfx) has been removed by aggressively copying code and by a special feature of [build](https://github.com/milostosic/build) system that allows to have the same library in a 'solution' with different configurations.  
-To clarify, in the screenshot below first sample (command line) links against **rapp** and [rbase](https://github.com/milostosic/rbase) while the second one (graphics) links against **rapp_bgfx**, [rbase](https://github.com/RudjiGames/rbase), [bx](https://github.com/bkaradzic/bx), [bimg](https://github.com/bkaradzic/bimg) and [bgfx](https://github.com/bkaradzic/bgfx) - this is all automated.   
+...dependecy on [bx](https://github.com/bkaradzic/bx) and [bgfx](https://github.com/bkaradzic/bgfx) has been removed by aggressively copying code and by a special feature of [build](https://github.com/RudjiGames/build) system that allows to have the same library in a 'solution' with different configurations.  
+To clarify, in the screenshot below first sample (command line) links against **rapp** and [rbase](https://github.com/RudjiGames/rbase) while the second one (graphics) links against **rapp_bgfx**, [rbase](https://github.com/RudjiGames/rbase), [bx](https://github.com/bkaradzic/bx), [bimg](https://github.com/bkaradzic/bimg) and [bgfx](https://github.com/bkaradzic/bgfx) - this is all automated.   
 
-<img src="https://github.com/milostosic/rapp/blob/master/img/rapp_configs.png" width=142 height=153>
+<img src="https://github.com/RudjiGames/rapp/blob/master/img/rapp_configs.png" width=142 height=153>
 
-Thanks to multiple configurations per project feature of [build](https://github.com/milostosic/build), script taking care of this is very short and can be seen [here](https://github.com/RudjiGames/rapp/blob/master/genie/rapp.lua), basically it just enables a library wide define.
+Thanks to multiple configurations per project feature of [build](https://github.com/RudjiGames/build), script taking care of this is very short and can be seen [here](https://github.com/RudjiGames/rapp/blob/master/genie/rapp.lua), basically it just enables a library wide define.
 
 Features
 ======
