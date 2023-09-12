@@ -75,6 +75,12 @@ function projectExtraConfigExecutable_rapp_bgfx()
 		bgfxPath .. "3rdparty/",
 		bgfxPath .. "examples/common/" 	
 	}
+	configuration { "linux-* or freebsd" }
+		links {
+			"X11",
+			"GL",
+		}
+	configuration {}
 end
 
 function projectAdd_rapp_bgfx()
