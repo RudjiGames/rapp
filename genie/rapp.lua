@@ -23,6 +23,9 @@ end
 
 function projectExtraConfigExecutable_rapp()
 	configuration { "linux-* or freebsd" }
+		buildoptions {
+			"-fPIC",
+		}
 		links {
 			"pthread",
 		}
