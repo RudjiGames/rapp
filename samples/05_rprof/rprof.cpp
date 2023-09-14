@@ -41,7 +41,7 @@ struct rprofApp : public rapp::App
 
 		rapp::appGraphicsInit(this, m_width, m_height);
 
-#if RAPP_WITH_RPROF
+#ifdef RAPP_WITH_RPROF
 		rprofInit();
 #endif // RAPP_WITH_RPROF
 
@@ -52,7 +52,7 @@ struct rprofApp : public rapp::App
 	void resume() {}
 	void update(float _time)
 	{
-#if RAPP_WITH_RPROF
+#ifdef RAPP_WITH_RPROF
 		RPROF_SCOPE("Update");
 #endif // RAPP_WITH_RPROF
 
@@ -61,7 +61,7 @@ struct rprofApp : public rapp::App
 
 	void draw()
 	{
-#if RAPP_WITH_RPROF
+#ifdef RAPP_WITH_RPROF
 		rprofBeginFrame();
 		RPROF_SCOPE("Draw");
 #endif // RAPP_WITH_RPROF
@@ -84,7 +84,7 @@ struct rprofApp : public rapp::App
 
 	void drawGUI()
 	{
-#if RAPP_WITH_RPROF
+#ifdef RAPP_WITH_RPROF
 		ProfilerFrame frame;
 		rprofGetFrame(&frame);
 		rprofDrawFrame(&frame);
@@ -105,7 +105,7 @@ struct rprofApp : public rapp::App
 	
 	void shutDown()
 	{
-#if RAPP_WITH_RPROF
+#ifdef RAPP_WITH_RPROF
 		rprofShutDown();
 #endif // RAPP_WITH_RPROF
 		//rtm::Console::rgb(255, 255, 0, "Shutting down app\n");

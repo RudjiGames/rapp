@@ -53,7 +53,7 @@ namespace rapp {
 
 		void ExecuteRange(enki::TaskSetPartition _range, uint32_t /*_threadnum*/) override
 		{
-#if RAPP_WITH_RPROF
+#ifdef RAPP_WITH_RPROF
 			RPROF_SCOPE("test");
 #endif // RAPP_WITH_RPROF
 
