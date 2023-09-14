@@ -39,6 +39,10 @@ function projectExtraConfigExecutable_rapp()
 
 function projectExtraConfig_rapp_bgfx()
 	local bgfxPath = find3rdPartyProject("bgfx")
+	if bgfxPath == nil then
+		return
+	end
+
 	files { 		
 		bgfxPath .. "examples/common/imgui/**.h",
 		bgfxPath .. "examples/common/imgui/**.cpp",
@@ -71,6 +75,9 @@ end
 function projectExtraConfigExecutable_rapp_bgfx()
 	projectExtraConfigExecutable_rapp()
 	local bgfxPath = find3rdPartyProject("bgfx")
+	if bgfxPath == nil then
+		return
+	end
 	includedirs {
 		bgfxPath .. "3rdparty/",
 		bgfxPath .. "examples/common/" 	
