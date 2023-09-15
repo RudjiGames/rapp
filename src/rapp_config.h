@@ -12,8 +12,4 @@
 #define RAPP_JOBS_PER_QUEUE		8*1024
 #define RAPP_JOBS_QUEUE_MASK	(RAPP_JOBS_PER_QUEUE - 1)
 
-#ifndef RAPP_WITH_BGFX
-#define RAPP_WITH_BGFX			0
-#endif
-
 #endif // RTM_RAPP_CONFIG_H
