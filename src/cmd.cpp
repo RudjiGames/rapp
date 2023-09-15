@@ -254,7 +254,7 @@ void cmdConsoleLog(App* _app, const char* _fmt, ...)
 {
 	RTM_UNUSED_2(_app, _fmt);
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
     char buf[2048];
     va_list args;
     va_start(args, _fmt);
@@ -270,7 +270,7 @@ void cmdConsoleLogRGB(uint8_t _r, uint8_t _g, uint8_t _b, App* _app, const char*
 {
 	RTM_UNUSED_5(_r, _g, _b, _app, _fmt);
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
     char buf[2048];
     va_list args;
     va_start(args, _fmt);
@@ -285,7 +285,7 @@ void cmdConsoleLogRGB(uint8_t _r, uint8_t _g, uint8_t _b, App* _app, const char*
 void cmdConsoleToggle(App* _app)
 {
 	RTM_UNUSED(_app);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	_app->m_data->m_console->toggleVisibility();
 #endif // RAPP_WITH_BGFX
 }
@@ -339,7 +339,7 @@ int cmdMouseLock(App* _app, void* _userData, int _argc, char const* const* _argv
 	return 1;
 }
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 uint32_t g_debug = BGFX_DEBUG_TEXT;
 uint32_t g_reset = BGFX_RESET_VSYNC;
 #else
@@ -350,7 +350,7 @@ int cmdGraphics(App* _app, void* _userData, int _argc, char const* const* _argv)
 {
 	RTM_UNUSED_4(_app, _userData, _argc, _argv);
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	if (_argc > 1)
 	{
 		if (rtm::striCmp(_argv[1], "help") == 0)

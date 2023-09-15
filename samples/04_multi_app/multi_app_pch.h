@@ -9,5 +9,5 @@
 #include <rbase/inc/thread.h>
 #include <rbase/inc/libassert.h>
 
-#define RAPP_WITH_BGFX 1
+#define RAPP_WITH_BGFX
 #include <rapp/inc/rapp.h>

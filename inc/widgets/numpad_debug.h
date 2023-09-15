@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 
 #include <imgui/imgui.h>
 #include <rapp/inc/widgets/widget_theme.h>

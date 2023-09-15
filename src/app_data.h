@@ -6,7 +6,7 @@
 #ifndef RTM_RAPP_APP_DATA_H
 #define RTM_RAPP_APP_DATA_H
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 
 #include <rapp/src/console.h>
 #include <common/nanovg/nanovg.h>

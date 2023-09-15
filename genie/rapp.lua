@@ -23,9 +23,6 @@ end
 
 function projectExtraConfigExecutable_rapp()
 	configuration { "linux-* or freebsd" }
-		buildoptions {
-			"-fPIC",
-		}
 		links {
 			"pthread",
 		}
@@ -65,7 +62,7 @@ function projectExtraConfig_rapp_bgfx()
 		bgfxPath .. "examples/",
 		bgfxPath .. "examples/common/" 	
 	}
-	defines { "RAPP_WITH_BGFX=1" }
+	defines { "RAPP_WITH_BGFX" }
 
 	configuration { "debug" }
 		defines { "BX_CONFIG_DEBUG=1" }
@@ -86,6 +83,9 @@ function projectExtraConfigExecutable_rapp_bgfx()
 		bgfxPath .. "examples/common/" 	
 	}
 	configuration { "linux-* or freebsd" }
+		buildoptions {
+			"-fPIC",
+		}
 		links {
 			"X11",
 			"GL",
