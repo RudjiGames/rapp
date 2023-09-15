@@ -9,7 +9,7 @@
 #include <rapp/src/console.h>
 #include <rapp/src/cmd.h>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 
 #include <dear-imgui/imgui.h>
 

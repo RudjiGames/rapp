@@ -9,7 +9,7 @@
 
 #if RTM_PLATFORM_WINDOWS
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 #include <bgfx/platform.h>
 #endif // RAPP_WITH_BGFX
 
@@ -458,7 +458,7 @@ namespace rapp
 		void winSetHwnd(::HWND _window)
 		{
 			RTM_UNUSED(_window);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 			bgfx::PlatformData pd;
 			memset(&pd, 0, sizeof(pd));
 			pd.nwh = _window;
@@ -1013,7 +1013,7 @@ namespace rapp
 						}
 						m_eventQueue.postKeyEvent(handle, key, modifiers, _id == WM_KEYDOWN || _id == WM_SYSKEYDOWN);
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 						if (ImGui::GetCurrentContext())
 						{
 							ImGui::GetIO().KeyCtrl	= modifiers & (KeyboardState::Modifier::RCtrl  | KeyboardState::Modifier::LCtrl);

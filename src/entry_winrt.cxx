@@ -10,7 +10,7 @@
 #include <rapp/src/entry_p.h>
 #include <future>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 #include <bgfx/platform.h>
 #endif // RAPP_WITH_BGFX
 
@@ -91,7 +91,7 @@ static uint8_t translateKeyModifiers(CoreWindow const ^ _sender, Windows::System
 inline void winrtSetWindow(::IUnknown* _window)
 {
 	RTM_UNUSED(_window);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	bgfx::PlatformData pd;
 	pd.ndt          = NULL;
 	pd.nwh          = _window;

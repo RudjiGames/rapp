@@ -14,7 +14,7 @@
 #include <rapp/src/entry_p.h>
 #include <rapp/src/app_data.h>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
 #include <../src/bgfx_p.h>
 #include <common/imgui/imgui.h>
@@ -63,7 +63,7 @@ rtm::FixedArray<App*, RAPP_MAX_APPS>& appGetRegistered()
 static void drawGUI(App* _app)
 {
 	RTM_UNUSED(_app);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	MouseState ms;
 	inputGetMouseState(ms);
 	imguiBeginFrame(ms.m_absolute[0], ms.m_absolute[1]
@@ -85,7 +85,7 @@ static void drawGUI(App* _app)
 #endif // RAPP_WITH_BGFX
 }
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 static uint32_t s_debug = 0;
 extern uint32_t g_debug;
 #endif // RAPP_WITH_BGFX
@@ -140,7 +140,7 @@ int32_t rappThreadFunc(void* _userData)
 			case Command::Draw:
 				{
 					RAPP_CMD_READ(App*, app);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 					if (app->m_resetView)
 					{
 						bgfx::reset(app->m_width, app->m_height);
@@ -175,7 +175,7 @@ int32_t rappThreadFunc(void* _userData)
 
 			case Command::Frame:
 				{
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 					bgfx::frame();
 #endif // RAPP_WITH_BGFX
 				}
@@ -306,7 +306,7 @@ void appFrame()
 WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 {
 	RTM_UNUSED_3(_app, _width, _height);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	WindowHandle win = rapp::windowCreate(	_app, 0, 0, _width, _height,
 											RAPP_WINDOW_FLAG_ASPECT_RATIO	|
 											RAPP_WINDOW_FLAG_FRAME			|
@@ -348,7 +348,7 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 {
 	RTM_UNUSED_2(_app, _mainWindow);
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	nvgDelete(_app->m_data->m_nvg);
 	_app->m_data->m_nvg = 0;
 
@@ -370,7 +370,7 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 void* appGetNanoVGctx(App* _app)
 {
 	RTM_UNUSED(_app);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	return _app->m_data->m_nvg;
 #else
 	return 0;
@@ -411,7 +411,7 @@ static void updateApp()
 
 		emscriptenUpdateGamepads();
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 		double dwidth, dheight;
 		emscripten_get_element_css_size(s_canvasID, &dwidth, &dheight);
 		uint32_t width	= (uint32_t)dwidth;

@@ -14,7 +14,7 @@
 #include <X11/Xlib.h> // will include X11 which #defines None... Don't mess with order of includes.
 #include <X11/Xutil.h>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 #include <bgfx/platform.h>
 #endif
 
@@ -35,7 +35,7 @@ namespace rapp
 	inline void x11SetDisplayWindow(void* _display, uint32_t _window, void* _glx = NULL)
 	{
 		RTM_UNUSED_3(_display, _window, _glx);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 		bgfx::PlatformData pd;
 		pd.ndt          = _display;
 		pd.nwh          = (void*)(uintptr_t)_window;

@@ -18,7 +18,7 @@ namespace rapp
 
 	struct CmdContext;
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	extern uint32_t g_debug;
 	extern uint32_t g_reset;
 #else
@@ -67,7 +67,7 @@ namespace rapp
 	};
 	RTM_STATIC_ASSERT(KeyboardState::Key::Count == RTM_NUM_ELEMENTS(s_keyName) );
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	ImGuiKey	s_keyMap[KeyboardState::Key::Count];
 #endif // RAPP_WITH_BGFX
 
@@ -77,7 +77,7 @@ namespace rapp
 		return s_keyName[_key];
 	}
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	static const InputBinding s_bindingsGraphics[] =
 	{
 		{ NULL, "graphics fullscreen",               1, { KeyboardState::Key::KeyF,   KeyboardState::Modifier::LCtrl  }},
@@ -102,7 +102,7 @@ namespace rapp
 	{
 		cmdInit();
 		cmdAdd("mouselock", cmdMouseLock, 0, "locks mouse to window");
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 		cmdAdd("graphics",  cmdGraphics,  0, "Graphics related commands, type 'graphics help' for list of options");
 		rapp::inputAddBindings("graphics", s_bindingsGraphics);
 
@@ -147,7 +147,7 @@ namespace rapp
 
 		rapp::jobShutdown();
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 		rapp::inputRemoveBindings("graphics");
 #endif
 		cmdShutdown();
@@ -164,7 +164,7 @@ namespace rapp
 		const Event* ev;
 		do
 		{
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 			bool keysBindings =
 #endif // RAPP_WITH_BGFX
 			inputProcess(_app);
@@ -190,7 +190,7 @@ namespace rapp
 					{
 						const CharEvent* chev = static_cast<const CharEvent*>(ev);
 						inputChar(chev->m_len, chev->m_char);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 						if (ImGui::GetIO().WantCaptureKeyboard && (keysBindings == false))
 							ImGui::GetIO().AddInputCharactersUTF8((const char*)chev->m_char);
 #endif // RAPP_WITH_BGFX
@@ -237,7 +237,7 @@ namespace rapp
 						const KeyEvent* key = static_cast<const KeyEvent*>(ev);
 						handle = key->m_handle;
 						inputSetKeyState(key->m_key, key->m_modifiers, key->m_down);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 						ImGui::GetIO().AddKeyEvent(s_keyMap[key->m_key], key->m_down);
 #endif // RAPP_WITH_BGFX
 					}
@@ -275,7 +275,7 @@ namespace rapp
 		if ((handle.idx == kDefaultWindowHandle.idx) && (reset != g_reset))
 		{
 			reset = g_reset;
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 			_app->m_resetView = true;
 #endif
 			inputSetMouseResolution((uint16_t)_app->m_width, (uint16_t)_app->m_height);

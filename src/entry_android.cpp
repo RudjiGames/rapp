@@ -9,7 +9,7 @@
 
 #if RTM_PLATFORM_ANDROID
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 #include <bgfx/platform.h>
 #endif // RAPP_WITH_BGFX
 
@@ -34,7 +34,7 @@ namespace rapp
 	inline void androidSetWindow(::ANativeWindow* _window)
 	{
 		RTM_UNUSED(_window);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 		bgfx::PlatformData pd;
 		pd.ndt          = NULL;
 		pd.nwh          = _window;
@@ -202,7 +202,7 @@ namespace rapp
 					if (m_window == NULL)
 					{
 						m_window = m_app->window;
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 						androidSetWindow(m_window);
 #endif // RAPP_WITH_BGFX
 

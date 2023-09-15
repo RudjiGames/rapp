@@ -12,7 +12,7 @@
 #include <rapp/src/input.h>
 #include <rapp/src/cmd.h>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
 #endif // RAPP_WITH_BGFX
 
@@ -739,7 +739,7 @@ char* itoaWithSign(int32_t _val, char _buf[8], int _displayChars, bool _addSign 
 void displayGamePadDbg(uint16_t _x, uint16_t _y, const GamepadState& _gp)
 {
 	RTM_UNUSED_3(_x, _y, _gp);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	if (_gp.m_buttons & GamepadState::Connected)
 	{
 		bgfx::dbgTextPrintf(_x, _y+0, 0x8b, "Tr[   ] S[ ]  Back Start Tr[   ]  S[ ]");
@@ -790,7 +790,7 @@ void displayGamePadDbg(uint16_t _x, uint16_t _y, const GamepadState& _gp)
 void inputDgbGamePads(int _maxGamepads)
 {
 	RTM_UNUSED(_maxGamepads);
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	const bgfx::Stats* stats = bgfx::getStats();
 
 	GamepadState gp;
@@ -805,7 +805,7 @@ void inputDgbGamePads(int _maxGamepads)
 
 void inputDgbMouse()
 {
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	const bgfx::Stats* stats = bgfx::getStats();
 
 	bgfx::dbgTextPrintf(1, stats->textHeight-6, 0x8b, " Mouse X[    ] Y[    ] Z[     ]  NX[        ] NY[        ] NZ[        ] LB[ ] MB[ ] RB[ ]");
@@ -834,7 +834,7 @@ void inputDgbMouse()
 
 void inputDgbKeyboard()
 {
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	const bgfx::Stats* stats = bgfx::getStats();
 
 	bgfx::dbgTextPrintf(91, stats->textHeight-7, 0x8b, "Kb LShift[ ]                                              RShift[ ]");

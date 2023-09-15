@@ -11,7 +11,7 @@
 
 #include <bx/bx.h>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 #include <bgfx/platform.h>
 #endif
 
