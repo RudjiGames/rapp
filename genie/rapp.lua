@@ -23,9 +23,15 @@ end
 
 function projectExtraConfigExecutable_rapp()
 	configuration { "linux-* or freebsd" }
+		buildoptions {
+			"-fPIC",
+		}
 		links {
 			"pthread",
+			"X11",
+			"GL",
 		}
+	configuration {}
 
 	configuration { "osx" }
 		linkoptions {
@@ -82,15 +88,6 @@ function projectExtraConfigExecutable_rapp_bgfx()
 		bgfxPath .. "3rdparty/",
 		bgfxPath .. "examples/common/" 	
 	}
-	configuration { "linux-* or freebsd" }
-		buildoptions {
-			"-fPIC",
-		}
-		links {
-			"X11",
-			"GL",
-		}
-	configuration {}
 end
 
 function projectAdd_rapp_bgfx()
