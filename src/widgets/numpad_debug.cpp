@@ -8,7 +8,7 @@
 #include <rapp/inc/widgets/numpad_debug.h>
 #include <inttypes.h>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 
 namespace rapp {
 
