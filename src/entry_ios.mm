@@ -13,7 +13,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/CAEAGLLayer.h>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 #include <bgfxplatform.h>
 #endif
 
@@ -39,7 +39,7 @@ namespace rapp
 
 			m_eventQueue.postSizeEvent(s_defaultWindow, _width, _height);
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 			// Prevent render thread creation.
 			bgfx::renderFrame();
 #endif
@@ -184,7 +184,7 @@ using namespace rapp;
 		return nil;
 	}
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	CAEAGLLayer* layer = (CAEAGLLayer*)self.layer;
 	bgfx::iosSetEaglLayer(layer);
 #endif
@@ -214,7 +214,7 @@ using namespace rapp;
 
 - (void)renderFrame
 {
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	bgfx::renderFrame();
 #endif
 }

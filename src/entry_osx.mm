@@ -11,7 +11,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 #include <bgfx/platform.h>
 #endif
 
@@ -47,7 +47,7 @@
 
 namespace rapp
 {
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	inline void osxSetNSWindow(void* _window, void* _nsgl = 0)
 	{
 		bgfx::PlatformData pd;
@@ -464,7 +464,7 @@ namespace rapp
 			*m_windows.getDataIndexedPtr(0) = window;
 			m_windowFrame = [window frame];
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 			osxSetNSWindow(window);
 #endif
 			MainThreadEntry mte;
@@ -476,7 +476,7 @@ namespace rapp
 
 			while (!(m_exit = [dg applicationHasTerminated]) )
 			{
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 				if (bgfx::RenderFrame::Exiting == bgfx::renderFrame() )
 				{
 					break;
@@ -489,7 +489,7 @@ namespace rapp
 
 			m_eventQueue.postExitEvent();
 
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 			while (bgfx::RenderFrame::NoContext != bgfx::renderFrame() ) {};
 #endif
 			thread.stop();
