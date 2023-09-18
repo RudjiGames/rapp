@@ -43,11 +43,17 @@ function projectExtraConfigExecutable_rapp()
 	configuration {}
  end
 
+ function projectExtraConfig_rapp()
+	defines { "RAPP_WITH_BGFX=0" }
+end
+
 function projectExtraConfig_rapp_bgfx()
 	local bgfxPath = find3rdPartyProject("bgfx")
 	if bgfxPath == nil then
 		return
 	end
+
+	defines { "RAPP_WITH_BGFX=1" }
 
 	files { 		
 		bgfxPath .. "examples/common/imgui/**.h",
