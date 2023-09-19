@@ -15,8 +15,9 @@ __pragma(warning(disable:4100))
 #define ENKI_CUSTOM_ALLOC_FILE_AND_LINE
 
 #if RTM_PLATFORM_POSIX
-	typedef semaphore_t sem_t;
-	extern int sem_post(sem_t *sem);
+	#include <semaphore.h>
+	#include <time.h>
+	#include <pthread.h>
 #endif
 
 #include "../3rd/enkiTS/src/LockLessMultiReadPipe.h"
