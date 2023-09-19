@@ -14,6 +14,10 @@ __pragma(warning(disable:4100))
 
 #define ENKI_CUSTOM_ALLOC_FILE_AND_LINE
 
+#ifdef RTM_PLATFORM_LINUX
+#include <semaphore.h>
+#endif
+
 #include "../3rd/enkiTS/src/LockLessMultiReadPipe.h"
 #include "../3rd/enkiTS/src/TaskScheduler.h"
 #include "../3rd/enkiTS/src/TaskScheduler.cpp"
