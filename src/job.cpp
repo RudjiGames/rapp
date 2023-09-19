@@ -14,7 +14,7 @@ __pragma(warning(disable:4100))
 
 #define ENKI_CUSTOM_ALLOC_FILE_AND_LINE
 
-#ifdef RTM_PLATFORM_LINUX
+#ifdef RTM_PLATFORM_POSIX
 #include <semaphore.h>
 #endif
 
