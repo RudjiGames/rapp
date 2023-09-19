@@ -15,7 +15,7 @@ __pragma(warning(disable:4100))
 #define ENKI_CUSTOM_ALLOC_FILE_AND_LINE
 
 #if RTM_PLATFORM_POSIX
-	typedef sem_t semaphore_t;
+	typedef semaphore_t sem_t;
 	extern int sem_post(sem_t *sem);
 #endif
 
