@@ -2,3 +2,6 @@
 	path = 3rd/nanovg
 	url = https://github.com/memononen/nanovg.git
 	branch = master
+[submodule "3rd/enkiTS"]
+	path = 3rd/enkiTS
+	url = https://github.com/dougbinks/enkiTS.git

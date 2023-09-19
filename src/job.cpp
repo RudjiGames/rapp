@@ -7,7 +7,20 @@
 #include <rapp/src/rapp_config.h>
 #include <rapp/src/job.h>
 
-#include <enkiTS/src/TaskScheduler.h>
+#if RTM_COMPILER_MSVC
+__pragma(warning(push))
+__pragma(warning(disable:4100))
+#endif
+
+#include "../3rd/enkiTS/src/LockLessMultiReadPipe.h"
+#include "../3rd/enkiTS/src/TaskScheduler.h"
+#include "../3rd/enkiTS/src/TaskScheduler.cpp"
+#include "../3rd/enkiTS/src/TaskScheduler_c.h"
+#include "../3rd/enkiTS/src/TaskScheduler_c.cpp"
+
+#if RTM_COMPILER_MSVC
+__pragma(warning(pop))
+#endif
 
 #include <atomic>
 #include <thread>

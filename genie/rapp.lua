@@ -4,7 +4,7 @@
 --
 
 function projectDependencies_rapp()
-	return  { "rbase", "enkiTS" }
+	return  { "rbase" }
 end
 
 function projectAdd_rapp() 
