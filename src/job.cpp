@@ -14,13 +14,10 @@ __pragma(warning(disable:4100))
 
 #define ENKI_CUSTOM_ALLOC_FILE_AND_LINE
 
-#ifdef RTM_PLATFORM_POSIX
-#include <semaphore.h>
-#endif
-
 #include "../3rd/enkiTS/src/LockLessMultiReadPipe.h"
 #include "../3rd/enkiTS/src/TaskScheduler_c.h"
 #include "../3rd/enkiTS/src/TaskScheduler_c.cpp"
+#include "../3rd/enkiTS/src/TaskScheduler.cpp"
 
 #if RTM_COMPILER_MSVC
 __pragma(warning(pop))
