@@ -14,10 +14,15 @@ __pragma(warning(disable:4100))
 
 #define ENKI_CUSTOM_ALLOC_FILE_AND_LINE
 
+#if RTM_PLATFORM_POSIX
+	typedef sem_t semaphore_t;
+	extern int sem_post(sem_t *sem);
+#endif
+
 #include "../3rd/enkiTS/src/LockLessMultiReadPipe.h"
 #include "../3rd/enkiTS/src/TaskScheduler_c.h"
-#include "../3rd/enkiTS/src/TaskScheduler_c.cpp"
 #include "../3rd/enkiTS/src/TaskScheduler.cpp"
+#include "../3rd/enkiTS/src/TaskScheduler_c.cpp"
 
 #if RTM_COMPILER_MSVC
 __pragma(warning(pop))
