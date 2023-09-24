@@ -330,7 +330,7 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 #endif
 
 	// Set view 0 clear state.
-	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
+	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x17132Eff, 1.0f, 0);
 
 	imguiCreate();
 
@@ -427,7 +427,7 @@ static void updateApp()
 
 		// Set view 0 default viewport.
 		bgfx::setViewRect(0, 0, 0, (uint16_t)s_app->m_width, (uint16_t)s_app->m_height);
-		bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
+		bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x17132Eff, 1.0f, 0);
 
 		if (first_frame)
 		{
