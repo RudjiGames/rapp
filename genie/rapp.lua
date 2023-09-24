@@ -76,6 +76,11 @@ function projectExtraConfig_rapp_bgfx()
 		defines { "BX_CONFIG_DEBUG=0" }
 	configuration {}
 
+ 	configuration { "vs*", "windows" }
+		-- 4324 - structure was padded due to alignment specifier
+		-- 4389 - '==': signed/unsigned mismatch
+		buildoptions { "/wd4133 /wd4389"}
+	configuration {}
 end
 
 function projectExtraConfigExecutable_rapp_bgfx()
