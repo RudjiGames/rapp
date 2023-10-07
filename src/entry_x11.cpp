@@ -606,7 +606,7 @@ namespace rapp
 							{
 								const XConfigureEvent& xev = event.xconfigure;
 								WindowHandle handle = findHandle(xev.window);
-								if (isValid(handle) )
+								if (s_ctx.m_windows.isValid(handle.idx))
 								{
 									m_eventQueue.postSizeEvent(handle, xev.width, xev.height);
 								}
@@ -771,7 +771,7 @@ namespace rapp
 		rtm::ScopedMutexLocker scope(s_ctx.m_lock);
 		WindowHandle handle = { s_ctx.m_windows.allocate() };
 
-		if (isValid(handle) )
+		if (s_ctx.m_windows.isValid(handle.idx))
 		{
 			Msg* msg = new Msg;
 			msg->m_x      = _x;
