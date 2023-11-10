@@ -606,10 +606,7 @@ namespace rapp
 							{
 								const XConfigureEvent& xev = event.xconfigure;
 								WindowHandle handle = findHandle(xev.window);
-								if (s_ctx.m_windows.isValid(handle.idx))
-								{
-									m_eventQueue.postSizeEvent(handle, xev.width, xev.height);
-								}
+								m_eventQueue.postSizeEvent(handle, xev.width, xev.height);
 							}
 							break;
 					}
@@ -724,8 +721,6 @@ namespace rapp
 
 		Display* m_display;
 	};
-
-	static Context s_ctx;
 
 	int32_t MainThreadEntry::threadFunc(void* _userData)
 	{
