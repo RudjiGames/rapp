@@ -722,6 +722,8 @@ namespace rapp
 		Display* m_display;
 	};
 
+	static Context s_ctx;
+
 	int32_t MainThreadEntry::threadFunc(void* _userData)
 	{
 		MainThreadEntry* self = (MainThreadEntry*)_userData;
