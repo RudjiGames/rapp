@@ -27,7 +27,20 @@ namespace rapp {
 			m_currentTime = rtm::CPU::time(m_startClock);
 		}
 
-		bool update()
+		inline void setFrameRate(uint32_t _fps)
+		{
+			m_startClock	= rtm::CPU::clock();
+			m_accumulator	= 0.0f;
+			m_currentTime	= 0.0f;
+			m_step			= 1.0f / float(_fps);
+		}
+
+		inline uint32_t frameRate()
+		{
+			return (uint32_t)((1.0f / m_step) + 0.5f);
+		}
+
+		inline bool update()
 		{
 			if (m_accumulator <= m_step)
 			{

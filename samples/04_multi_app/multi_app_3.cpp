@@ -40,7 +40,7 @@ struct app3 : public rapp::App
 	void resume() {}
 	void update(float /*_time*/) {}
 
-	void draw()
+	void draw(float /*_alpha*/)
 	{
 		// Use debug font to print information about this example.
 		bgfx::dbgTextClear();

@@ -140,6 +140,7 @@ int32_t rappThreadFunc(void* _userData)
 			case Command::Draw:
 				{
 					RAPP_CMD_READ(App*, app);
+					RAPP_CMD_READ(float, alpha);
 #ifdef RAPP_WITH_BGFX
 					if (app->m_resetView)
 					{
@@ -161,7 +162,7 @@ int32_t rappThreadFunc(void* _userData)
 						s_debug = g_debug;
 					}
 
-					app->draw();
+					app->draw(alpha);
 #endif // #RAPP_WITH_BGFX
 				}
 				break;
@@ -228,6 +229,7 @@ App::App(const char* _name, const char* _description)
 	, m_exitCode(0)
 	, m_width(0)
 	, m_height(0)
+	, m_frameRate(60)
 	, m_data(0)
 	, m_resetView(false)
 {
@@ -286,10 +288,11 @@ void appUpdate(App* _app, float _time)
 	s_commChannel.write(_time);
 }
 
-void appDraw(App* _app)
+void appDraw(App* _app, float _alpha)
 {
 	s_commChannel.write(Command::Draw);
 	s_commChannel.write(_app);
+	s_commChannel.write(_alpha);
 }
 
 void appDrawGUI(App* _app)
@@ -393,7 +396,7 @@ extern void emscriptenUpdateGamepads();
 static void updateApp()
 {
 	static bool first_frame = true;
-	static FrameStep fs;
+	static FrameStep fs(s_app->m_frameRate))
 
 	if (processEvents(s_app))
 	{
@@ -460,6 +463,11 @@ static void updateApp()
 }
 #endif // RTM_PLATFORM_EMSCRIPTEN
 
+void appSetUpdateFrameRate(App* _app, int32_t fps)
+{
+	_app->m_frameRate = fps;
+}
+
 int appRun(App* _app, int _argc, const char* const* _argv)
 {
 #if RTM_PLATFORM_EMSCRIPTEN
@@ -472,13 +480,16 @@ int appRun(App* _app, int _argc, const char* const* _argv)
 	FrameStep fs;
 	while (processEvents(_app))
 	{
+		if (_app->m_frameRate != fs.frameRate())
+			fs.setFrameRate(_app->m_frameRate);
+
 		while (fs.update())
 		{
 			float time = fs.step();
 			appUpdate(_app, time);
 		}
 
-		appDraw(_app);
+		appDraw(_app, fs.alpha());
 
 		if (_app->m_width && _app->m_height)
 			appDrawGUI(_app);

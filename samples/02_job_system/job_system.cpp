@@ -93,7 +93,7 @@ struct JobSystemApp : public rapp::App
 								s_tileX*s_tileY);
 	}
 
-	void draw()
+	void draw(float /*_alpha*/)
 	{
 	}
 

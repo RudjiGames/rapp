@@ -33,7 +33,7 @@ struct CmdLineApp : public rapp::App
 	{
 	}
 
-	void draw()
+	void draw(float /*_alpha*/)
 	{
 		appRunOnMainThread(mainThreadFunc, this);
 		rtm::Console::rgb(255, 255, 0, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());

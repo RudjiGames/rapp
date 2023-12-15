@@ -48,7 +48,7 @@ struct bgfxApp : public rapp::App
 		m_time += _time;
 	}
 
-	void draw()
+	void draw(float /*_alpha*/)
 	{
 		appRunOnMainThread(mainThreadFunc, this);
 

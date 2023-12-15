@@ -59,7 +59,7 @@ struct rprofApp : public rapp::App
 		m_time += _time;
 	}
 
-	void draw()
+	void draw(float /*_alpha*/)
 	{
 #ifdef RAPP_WITH_RPROF
 		rprofBeginFrame();

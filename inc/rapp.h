@@ -134,6 +134,7 @@ namespace rapp {
 		int32_t			m_exitCode;
 		uint32_t		m_width;
 		uint32_t		m_height;
+		uint32_t		m_frameRate;
 		AppData*		m_data;
 		bool			m_resetView;
 
@@ -146,7 +147,7 @@ namespace rapp {
 		virtual void	suspend()			= 0;
 		virtual void	resume()			= 0;
 		virtual void	update(float _time)	= 0;
-		virtual void	draw()				= 0;
+		virtual void	draw(float _alpha)	= 0;
 		virtual void	drawGUI() {}
 		virtual void	shutDown()			= 0;
 	};
@@ -174,6 +175,9 @@ namespace rapp {
 
 	///
 	uint32_t appGetCount();
+
+	// 
+	void appSetUpdateFrameRate(App* _app, int32_t fps);
 
 	///
 	int appRun(App* _app, int _argc, const char* const* _argv);
