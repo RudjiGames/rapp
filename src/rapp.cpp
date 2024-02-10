@@ -396,10 +396,13 @@ extern void emscriptenUpdateGamepads();
 static void updateApp()
 {
 	static bool first_frame = true;
-	static FrameStep fs(s_app->m_frameRate))
+	static FrameStep fs(s_app->m_frameRate);
 
 	if (processEvents(s_app))
 	{
+		if (s_app->m_frameRate != fs.frameRate())
+		fs.setFrameRate(s_app->m_frameRate);
+
 		while (fs.update())
 		{
 			float time = fs.step();
@@ -443,7 +446,7 @@ static void updateApp()
 		// if no other draw calls are submitted to view 0.
 		bgfx::touch(0);
 
-		s_app->draw();
+		s_app->draw(fs.alpha());
 
 		if (s_app->m_width && s_app->m_height)
 			drawGUI(s_app);
