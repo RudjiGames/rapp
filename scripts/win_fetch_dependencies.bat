@@ -17,7 +17,6 @@ if not exist ../../build  ( git clone https://github.com/RudjiGames/build.git ..
 if not exist ../../rbase  ( git clone https://github.com/RudjiGames/rbase.git ../../rbase  )  else ( echo skipping rbase  - directory exists )
 if not exist ../../rprof  ( git clone https://github.com/RudjiGames/rprof.git ../../rprof  )  else ( echo skipping rprof  - directory exists )
 
-git submodule init
-git submodule update
+git submodule update --init
 
 :exit
