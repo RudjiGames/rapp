@@ -9,10 +9,10 @@
 #ifdef RAPP_WITH_BGFX
 NVGcontext* g_currentContext = 0;
 
-inline static NVGcolor getNVGColor(uint32_t _color)
+inline static NVGcolor toNVGColor(uint32_t _color)
 {
-	return nvgRGBA( (_color >> 0) & 0xff,
-					(_color >> 8) & 0xff,
+	return nvgRGBA( (_color >>  0) & 0xff,
+					(_color >>  8) & 0xff,
 					(_color >> 16) & 0xff,
 					(_color >> 24) & 0xff);
 }
@@ -23,6 +23,15 @@ inline static NVGcolor getNVGColor(uint32_t _color)
 #endif
 
 namespace rapp {
+
+	///
+	uint32_t vgColor(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a)
+	{
+		return  (uint32_t(_r) <<  0) |
+				(uint32_t(_g) <<  8) |
+				(uint32_t(_b) << 16) |
+				(uint32_t(_a) << 24);
+	}
 
 	void vgBeginPath()
 	{
@@ -99,17 +108,58 @@ namespace rapp {
 		VG_CALL( nvgClosePath(g_currentContext); )
 	}
 
-	void vgFillPath(uint32_t _color, uint32_t _flags)
+	void vgFill(uint32_t _color, uint32_t _flags)
 	{
-		VG_CALL( nvgFillColor(g_currentContext, getNVGColor(_color)); )
+		VG_CALL( nvgFillColor(g_currentContext, toNVGColor(_color)); )
 		VG_CALL( nvgFill(g_currentContext); )
 	}
 
-	///
-	void vgStrokePath(uint32_t _color, float _width, uint32_t _flags)
+	void vgFillLinearGradient(float _sx, float _sy, float _ex, float _ey, uint32_t _icol, uint32_t _ocol)
 	{
-		VG_CALL( nvgStrokeColor(g_currentContext, getNVGColor(_color)); )
+		VG_CALL( auto pnt = nvgLinearGradient(g_currentContext, _sx, _sy, _ex, _ey, toNVGColor(_icol), toNVGColor(_ocol)); )
+		VG_CALL( nvgFillPaint(g_currentContext, pnt); )
+		VG_CALL( nvgFill(g_currentContext); )
+	}
+
+	void vgFillBoxGradient(float _x, float _y, float _w, float _h, float _r, float _f, uint32_t _icol, uint32_t _ocol)
+	{
+		VG_CALL(auto pnt = nvgBoxGradient(g_currentContext, _x, _y, _w, _h, _r, _f, toNVGColor(_icol), toNVGColor(_ocol)); )
+		VG_CALL(nvgFillPaint(g_currentContext, pnt); )
+		VG_CALL(nvgFill(g_currentContext); )
+	}
+
+	void vgFillRadialGradient(float _cx, float _cy, float _inr, float _outr, uint32_t _icol, uint32_t _ocol)
+	{
+		VG_CALL(auto pnt = nvgRadialGradient(g_currentContext, _cx, _cy, _inr, _outr, toNVGColor(_icol), toNVGColor(_ocol)); )
+		VG_CALL(nvgFillPaint(g_currentContext, pnt); )
+		VG_CALL(nvgFill(g_currentContext); )
+	}
+
+	void vgStroke(uint32_t _color, float _width, uint32_t _flags)
+	{
+		VG_CALL( nvgStrokeColor(g_currentContext, toNVGColor(_color)); )
 		VG_CALL( nvgStroke(g_currentContext); )
+	}
+
+	void vgStrokeinearGradient(float _sx, float _sy, float _ex, float _ey, uint32_t _icol, uint32_t _ocol)
+	{
+		VG_CALL(auto pnt = nvgLinearGradient(g_currentContext, _sx, _sy, _ex, _ey, toNVGColor(_icol), toNVGColor(_ocol)); )
+		VG_CALL(nvgStrokePaint(g_currentContext, pnt); )
+		VG_CALL(nvgStroke(g_currentContext); )
+	}
+
+	void vgStrokeBoxGradient(float _x, float _y, float _w, float _h, float _r, float _f, uint32_t _icol, uint32_t _ocol)
+	{
+		VG_CALL(auto pnt = nvgBoxGradient(g_currentContext, _x, _y, _w, _h, _r, _f, toNVGColor(_icol), toNVGColor(_ocol)); )
+		VG_CALL(nvgStrokePaint(g_currentContext, pnt); )
+		VG_CALL(nvgStroke(g_currentContext); )
+	}
+
+	void vgStrokeRadialGradient(float _cx, float _cy, float _inr, float _outr, uint32_t _icol, uint32_t _ocol)
+	{
+		VG_CALL(auto pnt = nvgRadialGradient(g_currentContext, _cx, _cy, _inr, _outr, toNVGColor(_icol), toNVGColor(_ocol)); )
+		VG_CALL(nvgStrokePaint(g_currentContext, pnt); )
+		VG_CALL(nvgStroke(g_currentContext); )
 	}
 
 } // namespace rapp

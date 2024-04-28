@@ -66,9 +66,8 @@ struct bgfxApp : public rapp::App
 		rapp::inputDgbTouch();
 	}
 
-	void drawEyes(struct NVGcontext* vg, float x, float y, float w, float h, float mx, float my)
+	void drawEyes(float x, float y, float w, float h, float mx, float my)
 	{
-		struct NVGpaint gloss, bg;
 		float ex = w *0.23f;
 		float ey = h * 0.5f;
 		float lx = x + ex;
@@ -79,12 +78,10 @@ struct bgfxApp : public rapp::App
 		float br = (ex < ey ? ex : ey) * 0.5f;
 		float blink = 1 - powf(sinf(m_time*0.5f),200)*0.8f;
 
-		bg = nvgLinearGradient(vg, x,y+h*0.25f,x+w*0.1f,y+h, nvgRGBA(220,220,220,255), nvgRGBA(128,128,128,255) );
-		nvgBeginPath(vg);
-		nvgEllipse(vg, lx,ly, ex,ey);
-		nvgEllipse(vg, rx,ry, ex,ey);
-		nvgFillPaint(vg, bg);
-		nvgFill(vg);
+		rapp::vgBeginPath();
+		rapp::vgEllipse(lx,ly, ex,ey);
+		rapp::vgEllipse(rx,ry, ex,ey);
+		rapp::vgFillLinearGradient(x, y + h * 0.25f, x + w * 0.1f, y + h, rapp::vgColor(220, 220, 220, 255), rapp::vgColor(128, 128, 128, 255));
 
 		dx = (mx - rx) / (ex * 10);
 		dy = (my - ry) / (ey * 10);
@@ -94,10 +91,9 @@ struct bgfxApp : public rapp::App
 		}
 		dx *= ex*0.4f;
 		dy *= ey*0.5f;
-		nvgBeginPath(vg);
-		nvgEllipse(vg, lx+dx,ly+dy+ey*0.25f*(1-blink), br,br*blink);
-		nvgFillColor(vg, nvgRGBA(32,32,32,255) );
-		nvgFill(vg);
+		rapp::vgBeginPath();
+		rapp::vgEllipse(lx+dx,ly+dy+ey*0.25f*(1-blink), br,br*blink);
+		rapp::vgFill(rapp::vgColor(32, 32, 32, 255), 0);
 
 		dx = (mx - rx) / (ex * 10);
 		dy = (my - ry) / (ey * 10);
@@ -107,23 +103,18 @@ struct bgfxApp : public rapp::App
 		}
 		dx *= ex*0.4f;
 		dy *= ey*0.5f;
-		nvgBeginPath(vg);
-		nvgEllipse(vg, rx+dx,ry+dy+ey*0.25f*(1-blink), br,br*blink);
-		nvgFillColor(vg, nvgRGBA(32,32,32,255) );
-		nvgFill(vg);
+		rapp::vgBeginPath();
+		rapp::vgEllipse(rx+dx,ry+dy+ey*0.25f*(1-blink), br,br*blink);
+		rapp::vgFill(rapp::vgColor(32, 32, 32, 255), 0);
 
-		gloss = nvgRadialGradient(vg, lx-ex*0.25f,ly-ey*0.5f, ex*0.1f,ex*0.75f, nvgRGBA(255,255,255,128), nvgRGBA(255,255,255,0) );
-		nvgBeginPath(vg);
-		nvgEllipse(vg, lx,ly, ex,ey);
-		nvgFillPaint(vg, gloss);
-		nvgFill(vg);
+		rapp::vgBeginPath();
+		rapp::vgEllipse(lx,ly, ex,ey);
+		rapp::vgFillRadialGradient(lx - ex * 0.25f, ly - ey * 0.5f, ex * 0.1f, ex * 0.75f, rapp::vgColor(255, 255, 255, 128), rapp::vgColor(255, 255, 255, 0));
 
-		gloss = nvgRadialGradient(vg, rx-ex*0.25f,ry-ey*0.5f, ex*0.1f,ex*0.75f, nvgRGBA(255,255,255,128), nvgRGBA(255,255,255,0) );
-		nvgBeginPath(vg);
-		nvgEllipse(vg, rx,ry, ex,ey);
-		nvgFillPaint(vg, gloss);
-		nvgFill(vg);
-	} 
+		rapp::vgBeginPath();
+		rapp::vgEllipse(rx,ry, ex,ey);
+		rapp::vgFillRadialGradient(rx-ex*0.25f,ry-ey*0.5f, ex*0.1f,ex*0.75f, rapp::vgColor(255,255,255,128), rapp::vgColor(255,255,255,0) );
+	}
 
 	void drawGUI()
 	{
@@ -134,11 +125,9 @@ struct bgfxApp : public rapp::App
 		ImGui::Button("Button", ImVec2(180.0f,23.0f));
 		ImGui::End();
 
-		NVGcontext* ctx = (NVGcontext*)rapp::appGetNanoVGctx(this);
-
 		rapp::MouseState ms;
 		rapp::inputGetMouseState(ms);
-		drawEyes(ctx, 150.0f, 150.0f, 150.0f, 100.0f, (float)ms.m_absolute[0], (float)ms.m_absolute[1]);
+		drawEyes(150.0f, 150.0f, 150.0f, 100.0f, (float)ms.m_absolute[0], (float)ms.m_absolute[1]);
 	}
 	
 	void shutDown()

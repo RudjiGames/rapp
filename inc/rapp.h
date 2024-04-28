@@ -199,6 +199,9 @@ namespace rapp {
 	#define VG_CW	1
 
 	///
+	uint32_t vgColor(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255);
+
+	///
 	void vgBeginPath();
 
 	///
@@ -244,10 +247,28 @@ namespace rapp {
 	void vgClosePath();
 
 	///
-	void vgFillPath(uint32_t _color, uint32_t _flags);
+	void vgFill(uint32_t _color, uint32_t _flags);
 
 	///
-	void vgStrokePath(uint32_t _color, float _width, uint32_t _flags);
+	void vgFillLinearGradient(float _sx, float _sy, float _ex, float _ey, uint32_t _icol, uint32_t _ocol);
+
+	///
+	void vgFillBoxGradient(float _x, float _y, float _w, float _h, float _r, float _f, uint32_t _icol, uint32_t _ocol);
+
+	///
+	void vgFillRadialGradient(float _cx, float _cy, float _inr, float _outr, uint32_t _icol, uint32_t _ocol);
+
+	///
+	void vgStroke(uint32_t _color, float _width, uint32_t _flags);
+
+	///
+	void vgStrokeLinearGradient(float _sx, float _sy, float _ex, float _ey, uint32_t _icol, uint32_t _ocol);
+
+	///
+	void vgStrokeBoxGradient(float _x, float _y, float _w, float _h, float _r, float _f, uint32_t _icol, uint32_t _ocol);
+
+	///
+	void vgStrokeRadialGradient(float _cx, float _cy, float _inr, float _outr, uint32_t _icol, uint32_t _ocol);
 
 	// ------------------------------------------------
 	/// Debug output functions
@@ -462,8 +483,7 @@ namespace rapp {
 
 #ifdef RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
-#include <imgui/imgui.h>
-#include <nanovg/nanovg.h>
+#include <dear-imgui/imgui.h>
 #endif
 
 #define RAPP_CLASS(_appClass)												\

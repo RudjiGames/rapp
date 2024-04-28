@@ -8,8 +8,9 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <ctype.h>	// isprint
+#if !RTM_PLATFORM_WINDOWS
 #include <alloca.h>	// alloca
-
+#endif
 #if RTM_PLATFORM_ANDROID
 #include <android/log.h>
 #endif

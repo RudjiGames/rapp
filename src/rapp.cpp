@@ -17,7 +17,7 @@
 #ifdef RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
 #include <../src/bgfx_p.h>
-#include <common/imgui/imgui.h>
+#include <dear-imgui/imgui/imgui.h>
 #include <dear-imgui/imgui_internal.h>
 extern NVGcontext* g_currentContext;
 #endif // RAPP_WITH_BGFX
