@@ -112,9 +112,6 @@ int32_t rappThreadFunc(void* _userData)
 					libInterface.m_error	= g_errorHandler;
 					libInterface.m_memory	= g_allocator;
 					app->init(argc, argv, &libInterface);
-#ifdef RAPP_WITH_BGFX
-					g_currentContext = app->m_data->m_nvg;
-#endif // RAPP_WITH_BGFX
 				}
 				break;
 
@@ -160,11 +157,7 @@ int32_t rappThreadFunc(void* _userData)
 					// if no other draw calls are submitted to view 0.
 					bgfx::touch(0);
 
-					if (s_debug != g_debug)
-					{
-						bgfx::setDebug(g_debug);
-						s_debug = g_debug;
-					}
+					g_currentContext = app->m_data->m_nvg;
 
 					app->draw(alpha);
 #endif // #RAPP_WITH_BGFX
@@ -181,7 +174,14 @@ int32_t rappThreadFunc(void* _userData)
 			case Command::Frame:
 				{
 #ifdef RAPP_WITH_BGFX
-					bgfx::frame();
+				g_currentContext = 0;
+
+				bgfx::frame();
+					if (s_debug != g_debug)
+					{
+						bgfx::setDebug(g_debug);
+						s_debug = g_debug;
+					}
 #endif // RAPP_WITH_BGFX
 				}
 				break;

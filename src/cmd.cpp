@@ -305,7 +305,7 @@ inline bool toBool(const char* _str)
 }
 
 
-bool setOrToggle(uint32_t& _flags, const char* _name, uint32_t _bit, int _first, int _argc, char const* const* _argv)
+bool toggleFlag(uint32_t& _flags, const char* _name, uint32_t _bit, int _first, int _argc, char const* const* _argv)
 {
 	if (0 == strcmp(_argv[_first], _name) )
 	{
@@ -374,23 +374,18 @@ int cmdGraphics(App* _app, void* _userData, int _argc, char const* const* _argv)
 			return 0;
 		}
 
-		if (setOrToggle(g_reset, "vsync",       BGFX_RESET_VSYNC,              1, _argc, _argv)
-		||  setOrToggle(g_reset, "maxaniso",    BGFX_RESET_MAXANISOTROPY,      1, _argc, _argv)
-		||	setOrToggle(g_reset, "msaa4",		BGFX_RESET_MSAA_X4,			   1, _argc, _argv)
-		||	setOrToggle(g_reset, "msaa8",		BGFX_RESET_MSAA_X8,			   1, _argc, _argv)
-		||  setOrToggle(g_reset, "msaa16",      BGFX_RESET_MSAA_X16,           1, _argc, _argv)
-		||  setOrToggle(g_reset, "flush",       BGFX_RESET_FLUSH_AFTER_RENDER, 1, _argc, _argv)
-		||  setOrToggle(g_reset, "flip",        BGFX_RESET_FLIP_AFTER_RENDER,  1, _argc, _argv)
-			)
+		if (	toggleFlag(g_reset, "vsync",     BGFX_RESET_VSYNC,              1, _argc, _argv)
+			||  toggleFlag(g_reset, "maxaniso",  BGFX_RESET_MAXANISOTROPY,      1, _argc, _argv)
+			||  toggleFlag(g_reset, "msaa4",	 BGFX_RESET_MSAA_X4,			1, _argc, _argv)
+			||  toggleFlag(g_reset, "msaa8",	 BGFX_RESET_MSAA_X8,			1, _argc, _argv)
+			||  toggleFlag(g_reset, "msaa16",    BGFX_RESET_MSAA_X16,           1, _argc, _argv)
+			||  toggleFlag(g_reset, "flush",     BGFX_RESET_FLUSH_AFTER_RENDER, 1, _argc, _argv)
+			||  toggleFlag(g_reset, "flip",      BGFX_RESET_FLIP_AFTER_RENDER,  1, _argc, _argv)
+			||  toggleFlag(g_debug, "stats",     BGFX_DEBUG_STATS,				1, _argc, _argv)
+			||  toggleFlag(g_debug, "ifh",       BGFX_DEBUG_IFH,				1, _argc, _argv)
+			||  toggleFlag(g_debug, "text",      BGFX_DEBUG_TEXT,				1, _argc, _argv)
+			||  toggleFlag(g_debug, "wireframe", BGFX_DEBUG_WIREFRAME,			1, _argc, _argv) )
 		{
-			return 0;
-		}
-		else if (	setOrToggle(g_debug, "stats",     BGFX_DEBUG_STATS,     1, _argc, _argv)
-				||  setOrToggle(g_debug, "ifh",       BGFX_DEBUG_IFH,       1, _argc, _argv)
-				||  setOrToggle(g_debug, "text",      BGFX_DEBUG_TEXT,      1, _argc, _argv)
-				||  setOrToggle(g_debug, "wireframe", BGFX_DEBUG_WIREFRAME, 1, _argc, _argv) )
-		{
-			//bgfx::setDebug(g_debug);
 			return 0;
 		}
 		else if (0 == strcmp(_argv[1], "screenshot") )
