@@ -19,6 +19,7 @@
 #include <../src/bgfx_p.h>
 #include <common/imgui/imgui.h>
 #include <dear-imgui/imgui_internal.h>
+extern NVGcontext* g_currentContext;
 #endif // RAPP_WITH_BGFX
 
 #if RTM_PLATFORM_EMSCRIPTEN
@@ -111,6 +112,9 @@ int32_t rappThreadFunc(void* _userData)
 					libInterface.m_error	= g_errorHandler;
 					libInterface.m_memory	= g_allocator;
 					app->init(argc, argv, &libInterface);
+#ifdef RAPP_WITH_BGFX
+					g_currentContext = app->m_data->m_nvg;
+#endif // RAPP_WITH_BGFX
 				}
 				break;
 
@@ -184,6 +188,9 @@ int32_t rappThreadFunc(void* _userData)
 
 			case Command::Shutdown:
 				{
+#ifdef RAPP_WITH_BGFX
+					g_currentContext = 0;
+#endif // RAPP_WITH_BGFX
 					RAPP_CMD_READ(App*, app);
 					app->shutDown();
 				}

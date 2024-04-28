@@ -45,6 +45,8 @@ function projectExtraConfigExecutable_rapp()
 
 function projectExtraConfig_rapp_bgfx()
 	local bgfxPath = find3rdPartyProject("bgfx")
+	local rappPath = getProjectPath("rapp")
+
 	if bgfxPath == nil then
 		return
 	end
@@ -60,8 +62,9 @@ function projectExtraConfig_rapp_bgfx()
 		bgfxPath .. "3rdparty/dear-imgui/**.h",
 		bgfxPath .. "3rdparty/dear-imgui/**.inl",
 		bgfxPath .. "3rdparty/ib-compress/**.*",
-		bgfxPath .. "examples/common/nanovg/*.h",
-		bgfxPath .. "examples/common/nanovg/*.cpp"
+
+		rappPath .. "/rapp/3rd/nanovg/**.h",
+		rappPath .. "/rapp/3rd/nanovg/**.cpp"
  	}
 	includedirs {
 		bgfxPath .. "3rdparty/",

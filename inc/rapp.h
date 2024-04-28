@@ -191,8 +191,63 @@ namespace rapp {
 	///
 	void appGraphicsShutdown(App* _app, WindowHandle _mainWindow);
 
+	// ------------------------------------------------
+	/// Vector rendering functions
+	// ------------------------------------------------
+
+	#define VG_CCW	0
+	#define VG_CW	1
+
 	///
-	void* appGetNanoVGctx(App* _app);
+	void vgBeginPath();
+
+	///
+	void vgMoveTo(float _x, float _y);
+
+	///
+	void vgLineTo(float _x, float _y);
+
+	///
+	void vgCubicTo(float _c1x, float _c1y, float _c2x, float _c2y, float _x, float _y);
+
+	///
+	void vgQuadraticTo(float _cx, float _cy, float _x, float _y);
+
+	///
+	void vgArcTo(float _x1, float _y1, float _x2, float _y2, float _r);
+
+	///
+	void vgArc(float _cx, float _cy, float _r, float _a0, float _a1, int _dir);
+
+	///
+	void vgRect(float _x, float _y, float _w, float _h);
+
+	///
+	void vgRect(float _x, float _y, float _w, float _h, float _r);
+
+	///
+	void vgRoundedRectVarying(float _x, float _y, float _w, float _h, float _rtl, float _rtr, float _rbr, float _rbl);
+
+	///
+	void vgCircle(float _cx, float _cy, float _radius);
+
+	///
+	void vgEllipse(float _cx, float _cy, float _rx, float _ry);
+
+	///
+	void vgPolyline(const float* _coords, uint32_t _numPoints);
+
+	///
+	void vgPathWinding(int _winding);
+
+	///
+	void vgClosePath();
+
+	///
+	void vgFillPath(uint32_t _color, uint32_t _flags);
+
+	///
+	void vgStrokePath(uint32_t _color, float _width, uint32_t _flags);
 
 	// ------------------------------------------------
 	/// Debug output functions
