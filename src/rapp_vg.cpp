@@ -24,7 +24,14 @@ inline static NVGcolor toNVGColor(uint32_t _color)
 
 namespace rapp {
 
-	///
+	static float gs_opacity = 1.0f;
+	
+	void vgGlobalAlpha(float _opacity)
+	{
+		RTM_ASSERT((_opacity >= 0.0f) && (_opacity <= 1.0f), "Invalid opacity value!");
+		gs_opacity = _opacity;
+	}
+
 	uint32_t vgColor(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a)
 	{
 		return  (uint32_t(_r) <<  0) |
@@ -95,7 +102,8 @@ namespace rapp {
 
 	void vgPolyline(const float* _coords, uint32_t _numPoints)
 	{
-		//VG_CALL( nvgPolyline(g_currentContext, _coords, _numPoints); )
+		VG_CALL( for (uint32_t i=0; i<_numPoints; ++i) )
+		VG_CALL(	nvgLineTo(g_currentContext, _coords[i*2+0], _coords[i*2+1]); )
 	}
 
 	void vgPathWinding(int _winding)
