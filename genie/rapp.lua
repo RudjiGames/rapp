@@ -53,19 +53,19 @@ function projectExtraConfig_rapp_bgfx()
 
 	files { 		
 		bgfxPath .. "3rdparty/ib-compress/**.*",
-		rappPath .. "/rapp/3rd/dear-imgui/imgui/**.h",
-		rappPath .. "/rapp/3rd/dear-imgui/imgui/**.cpp",
-		rappPath .. "/rapp/3rd/dear-imgui/imgui/**.inl",
-		rappPath .. "/rapp/3rd/dear-imgui/imgui.cpp",
-		rappPath .. "/rapp/3rd/dear-imgui/imgui_draw.cpp",
-		rappPath .. "/rapp/3rd/dear-imgui/imgui_tables.cpp",
-		rappPath .. "/rapp/3rd/dear-imgui/imgui_widgets.cpp",
-		rappPath .. "/rapp/3rd/dear-imgui/**.h",
-		rappPath .. "/rapp/3rd/dear-imgui/**.inl",
-		rappPath .. "/rapp/3rd/nanovg/**.h",
-		rappPath .. "/rapp/3rd/nanovg/**.cpp",
-		rappPath .. "/rapp/3rd/nanovg/**.h",
-		rappPath .. "/rapp/3rd/nanovg/**.cpp"
+		rappPath .. "/3rd/dear-imgui/imgui/**.h",
+		rappPath .. "/3rd/dear-imgui/imgui/**.cpp",
+		rappPath .. "/3rd/dear-imgui/imgui/**.inl",
+		rappPath .. "/3rd/dear-imgui/imgui.cpp",
+		rappPath .. "/3rd/dear-imgui/imgui_draw.cpp",
+		rappPath .. "/3rd/dear-imgui/imgui_tables.cpp",
+		rappPath .. "/3rd/dear-imgui/imgui_widgets.cpp",
+		rappPath .. "/3rd/dear-imgui/**.h",
+		rappPath .. "/3rd/dear-imgui/**.inl",
+		rappPath .. "/3rd/nanovg/**.h",
+		rappPath .. "/3rd/nanovg/**.cpp",
+		rappPath .. "/3rd/nanovg/**.h",
+		rappPath .. "/3rd/nanovg/**.cpp"
  	}
 	includedirs {
 		bgfxPath .. "3rdparty/",
