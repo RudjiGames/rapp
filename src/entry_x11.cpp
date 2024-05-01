@@ -623,6 +623,8 @@ namespace rapp
 			XUnmapWindow(m_display, m_windows.getData(0));
 			XDestroyWindow(m_display, m_windows.getData(0));
 
+			XCloseDisplay(m_display);
+
 			return thread.getExitCode();
 		}
 
@@ -644,7 +646,7 @@ namespace rapp
 									, m_depth
 									, InputOutput
 									, m_visual
-									, CWBorderPixel|CWEventMask
+									, CWBorderPixel|CWEventMask|CWBackPixel|CWBitGravity
 									, &m_windowAttrs
 									);
 			m_windows.setData(_handle.idx, window);
