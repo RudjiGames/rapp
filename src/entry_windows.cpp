@@ -15,6 +15,7 @@
 
 #include <windowsx.h>
 #include <xinput.h>
+#include <objbase.h>
 
 #ifndef XINPUT_GAMEPAD_GUIDE
 #	define XINPUT_GAMEPAD_GUIDE 0x400
