@@ -13,7 +13,7 @@ namespace rapp {
 		CmdContext()
 			: m_maxCommandLength(0)
 		{
-			memset(m_lookup, 0, sizeof(m_lookup));
+			rtm::memSet(m_lookup, 0, sizeof(m_lookup));
 		}
 
 		void add(const char* _name, ConsoleFn _fn, void* _userData, const char* _description);

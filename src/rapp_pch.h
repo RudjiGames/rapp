@@ -23,6 +23,7 @@
 #include <rbase/inc/mutex.h>
 #include <rbase/inc/path.h>
 #include <rbase/inc/queue.h>
+#include <rbase/inc/stringfn.h>
 
 #ifdef RAPP_WITH_RPROF
 #include <rprof/inc/rprof.h>
