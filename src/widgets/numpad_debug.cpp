@@ -564,7 +564,7 @@ namespace rapp {
 		if (ImGui::Begin("##rappDebugMenu", 0, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize))
 		{
 			const ImVec2 drag_delta = ImVec2(ImGui::GetIO().MousePos.x - screenRes.x, ImGui::GetIO().MousePos.y - screenRes.y);
-			const float drag_dist2 = drag_delta.x*drag_delta.x + drag_delta.y*drag_delta.y;
+			//const float drag_dist2 = drag_delta.x*drag_delta.x + drag_delta.y*drag_delta.y;
 
 			ImDrawList* draw_list = ImGui::GetWindowDrawList();
 			draw_list->PushClipRectFullScreen();

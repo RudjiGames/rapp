@@ -1,5 +1,5 @@
 --
--- Copyright 2023 Milos Tosic. All rights reserved.
+-- Copyright 2024 Milos Tosic. All rights reserved.
 -- License: http://www.opensource.org/licenses/BSD-2-Clause
 --
 
@@ -62,14 +62,14 @@ function projectExtraConfig_rapp_bgfx()
 		rappPath .. "/3rd/dear-imgui/imgui_widgets.cpp",
 		rappPath .. "/3rd/dear-imgui/**.h",
 		rappPath .. "/3rd/dear-imgui/**.inl",
-		rappPath .. "/3rd/nanovg/**.h",
-		rappPath .. "/3rd/nanovg/**.cpp",
-		rappPath .. "/3rd/nanovg/**.h",
-		rappPath .. "/3rd/nanovg/**.cpp"
+		rappPath .. "/3rd/vg-renderer/**.h",
+		rappPath .. "/3rd/vg-renderer/**.cpp",
+		rappPath .. "/3rd/vg-renderer/**.c"
  	}
 	includedirs {
 		bgfxPath .. "3rdparty/",
-		bgfxPath .. "/rapp/3rd/" 	
+		rappPath .. "/3rd/",
+		rappPath .. "/3rd/vg-renderer/include"
 	}
 	defines { "RAPP_WITH_BGFX" }
 
@@ -96,6 +96,7 @@ function projectExtraConfigExecutable_rapp_bgfx()
 		bgfxPath .. "3rdparty/",
 		bgfxPath .. "examples/common/" 	
 	}
+	defines { "IMGUI_STB_NAMESPACE=ImStb" }
 end
 
 function projectAdd_rapp_bgfx()

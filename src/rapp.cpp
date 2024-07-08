@@ -8,6 +8,8 @@
 #define RTM_LIBHANDLER_DEFINE
 #include <rbase/inc/libhandler.h>
 
+#include <bx/string.h>
+
 #include <rapp/src/rapp_timer.h>
 #include <rapp/src/cmd.h>
 #include <rapp/src/console.h>
@@ -15,11 +17,11 @@
 #include <rapp/src/app_data.h>
 
 #ifdef RAPP_WITH_BGFX
+#include <bx/allocator.h>
 #include <bgfx/bgfx.h>
-#include <../src/bgfx_p.h>
 #include <dear-imgui/imgui/imgui.h>
 #include <dear-imgui/imgui_internal.h>
-extern NVGcontext* g_currentContext;
+extern vg::Context* g_currentContext;
 #endif // RAPP_WITH_BGFX
 
 #if RTM_PLATFORM_EMSCRIPTEN
@@ -30,6 +32,8 @@ extern NVGcontext* g_currentContext;
 #define RAPP_CMD_READ(_type, _name)		\
 	_type _name;						\
 	cc->read(_name)
+
+extern bool svgPathFromString(vg::Context* ctx, vg::CommandListHandle cl, const bx::StringView& str);
 
 namespace rapp {
 
@@ -76,12 +80,14 @@ static void drawGUI(App* _app)
 		, uint16_t(_app->m_height)
 		);
 
-	nvgBeginFrame(_app->m_data->m_nvg, (float)_app->m_width, (float)_app->m_height, 1.0f);
+	vg::begin(_app->m_data->m_vg, 0, (uint16_t)_app->m_width, (uint16_t)_app->m_height, 1.0f);
+	vg::circle(_app->m_data->m_vg, 960, 540, 333);
 
 	_app->drawGUI();
 	_app->m_data->m_console->draw();
 
-	nvgEndFrame(_app->m_data->m_nvg);
+	vg::end(_app->m_data->m_vg);
+	vg::frame(_app->m_data->m_vg);
 	imguiEndFrame();
 #endif // RAPP_WITH_BGFX
 }
@@ -157,7 +163,7 @@ int32_t rappThreadFunc(void* _userData)
 					// if no other draw calls are submitted to view 0.
 					bgfx::touch(0);
 
-					g_currentContext = app->m_data->m_nvg;
+					g_currentContext = app->m_data->m_vg;
 
 					app->draw(alpha);
 #endif // #RAPP_WITH_BGFX
@@ -344,9 +350,11 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 
 	imguiCreate();
 
+	static bx::DefaultAllocator vg_allocator;
+
 	_app->m_data			= new AppData;
 	_app->m_data->m_console = new Console(_app);
-	_app->m_data->m_nvg		= nvgCreate(1, 0); 
+	_app->m_data->m_vg		= vg::createContext(&vg_allocator);
 
 	return win;
 #else
@@ -359,8 +367,8 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 	RTM_UNUSED_2(_app, _mainWindow);
 
 #ifdef RAPP_WITH_BGFX
-	nvgDelete(_app->m_data->m_nvg);
-	_app->m_data->m_nvg = 0;
+	vg::destroyContext(_app->m_data->m_vg);
+	_app->m_data->m_vg = 0;
 
 	delete _app->m_data->m_console;
 	_app->m_data->m_console = 0;
@@ -370,7 +378,6 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 
 	imguiDestroy();
 
-	bgfx::setGraphicsDebuggerPresent(true);
 	rapp::windowDestroy(_mainWindow);
 	bgfx::frame();
 	bgfx::shutdown();
@@ -381,7 +388,7 @@ void* appGetNanoVGctx(App* _app)
 {
 	RTM_UNUSED(_app);
 #ifdef RAPP_WITH_BGFX
-	return _app->m_data->m_nvg;
+	return _app->m_data->m_vg;
 #else
 	return 0;
 #endif
