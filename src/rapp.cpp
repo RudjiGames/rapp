@@ -8,8 +8,6 @@
 #define RTM_LIBHANDLER_DEFINE
 #include <rbase/inc/libhandler.h>
 
-#include <bx/string.h>
-
 #include <rapp/src/rapp_timer.h>
 #include <rapp/src/cmd.h>
 #include <rapp/src/console.h>
@@ -32,8 +30,6 @@ extern vg::Context* g_currentContext;
 #define RAPP_CMD_READ(_type, _name)		\
 	_type _name;						\
 	cc->read(_name)
-
-extern bool svgPathFromString(vg::Context* ctx, vg::CommandListHandle cl, const bx::StringView& str);
 
 namespace rapp {
 
@@ -80,8 +76,6 @@ static void drawGUI(App* _app)
 		, uint16_t(_app->m_height)
 		);
 
-	vg::begin(_app->m_data->m_vg, 0, (uint16_t)_app->m_width, (uint16_t)_app->m_height, 1.0f);
-	vg::circle(_app->m_data->m_vg, 960, 540, 333);
 
 	_app->drawGUI();
 	_app->m_data->m_console->draw();
@@ -162,6 +156,8 @@ int32_t rappThreadFunc(void* _userData)
 					// This dummy draw call is here to make sure that view 0 is cleared
 					// if no other draw calls are submitted to view 0.
 					bgfx::touch(0);
+
+					vg::begin(app->m_data->m_vg, 0, (uint16_t)app->m_width, (uint16_t)app->m_height, 1.0f);
 
 					g_currentContext = app->m_data->m_vg;
 
