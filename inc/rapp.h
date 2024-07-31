@@ -214,7 +214,7 @@ namespace rapp {
 	void vgLineTo(float _x, float _y);
 
 	///
-	void vgCubicTo(float _c1x, float _c1y, float _c2x, float _c2y, float _x, float _y);
+	void vgBezierTo(float _c1x, float _c1y, float _c2x, float _c2y, float _x, float _y);
 
 	///
 	void vgQuadraticTo(float _cx, float _cy, float _x, float _y);
@@ -272,6 +272,9 @@ namespace rapp {
 
 	///
 	void vgStrokeRadialGradient(float _cx, float _cy, float _inr, float _outr, uint32_t _icol, uint32_t _ocol, float _width);
+
+	///
+	void vgLineCapJoin(int _lineCap, int _lineJoin);
 
 	// ------------------------------------------------
 	/// Debug output functions

@@ -19,7 +19,7 @@
 #include <bgfx/bgfx.h>
 #include <dear-imgui/imgui/imgui.h>
 #include <dear-imgui/imgui_internal.h>
-extern vg::Context* g_currentContext;
+extern NVGcontext* g_currentContext;
 #endif // RAPP_WITH_BGFX
 
 #if RTM_PLATFORM_EMSCRIPTEN
@@ -76,12 +76,12 @@ static void drawGUI(App* _app)
 		, uint16_t(_app->m_height)
 		);
 
+	nvgBeginFrame(_app->m_data->m_vg, (float)_app->m_width, (float)_app->m_height, 1.0f);
 
 	_app->drawGUI();
 	_app->m_data->m_console->draw();
 
-	vg::end(_app->m_data->m_vg);
-	vg::frame(_app->m_data->m_vg);
+	nvgEndFrame(_app->m_data->m_vg);
 	imguiEndFrame();
 #endif // RAPP_WITH_BGFX
 }
@@ -157,8 +157,6 @@ int32_t rappThreadFunc(void* _userData)
 					// if no other draw calls are submitted to view 0.
 					bgfx::touch(0);
 
-					vg::begin(app->m_data->m_vg, 0, (uint16_t)app->m_width, (uint16_t)app->m_height, 1.0f);
-
 					g_currentContext = app->m_data->m_vg;
 
 					app->draw(alpha);
@@ -176,9 +174,9 @@ int32_t rappThreadFunc(void* _userData)
 			case Command::Frame:
 				{
 #ifdef RAPP_WITH_BGFX
-				g_currentContext = 0;
+					g_currentContext = 0;
 
-				bgfx::frame();
+					bgfx::frame();
 					if (s_debug != g_debug)
 					{
 						bgfx::setDebug(g_debug);
@@ -190,11 +188,11 @@ int32_t rappThreadFunc(void* _userData)
 
 			case Command::Shutdown:
 				{
+					RAPP_CMD_READ(App*, app);
+					app->shutDown();
 #ifdef RAPP_WITH_BGFX
 					g_currentContext = 0;
 #endif // RAPP_WITH_BGFX
-					RAPP_CMD_READ(App*, app);
-					app->shutDown();
 				}
 				break;
 
@@ -342,15 +340,15 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 #endif
 
 	// Set view 0 clear state.
-	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x17132Eff, 1.0f, 0);
+	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH|BGFX_CLEAR_STENCIL, 0x17132Eff, 1.0f, 0);
 
 	imguiCreate();
 
-	static bx::DefaultAllocator vg_allocator;
-
 	_app->m_data			= new AppData;
 	_app->m_data->m_console = new Console(_app);
-	_app->m_data->m_vg		= vg::createContext(&vg_allocator);
+	_app->m_data->m_vg		= nvgCreate(1, 0);
+
+	bgfx::setViewMode(0, bgfx::ViewMode::Sequential);
 
 	return win;
 #else
@@ -363,7 +361,7 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 	RTM_UNUSED_2(_app, _mainWindow);
 
 #ifdef RAPP_WITH_BGFX
-	vg::destroyContext(_app->m_data->m_vg);
+	nvgDelete(_app->m_data->m_vg);
 	_app->m_data->m_vg = 0;
 
 	delete _app->m_data->m_console;
@@ -374,9 +372,9 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 
 	imguiDestroy();
 
-	rapp::windowDestroy(_mainWindow);
 	bgfx::frame();
 	bgfx::shutdown();
+	rapp::windowDestroy(_mainWindow);
 #endif
 }
 
@@ -443,7 +441,7 @@ static void updateApp()
 
 		// Set view 0 default viewport.
 		bgfx::setViewRect(0, 0, 0, (uint16_t)s_app->m_width, (uint16_t)s_app->m_height);
-		bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x17132Eff, 1.0f, 0);
+		bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH | BGFX_CLEAR_STENCIL, 0x17132Eff, 1.0f, 0);
 
 		if (first_frame)
 		{
