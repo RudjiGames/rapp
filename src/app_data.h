@@ -9,8 +9,8 @@
 #ifdef RAPP_WITH_BGFX
 
 #include <rapp/src/console.h>
-#include <../3rd/nanovg/nanovg_bgfx.h>
-#include <../3rd/nanovg/nanovg.h>
+#include <../3rd/nanovg_bgfx/nanovg_bgfx.h>
+#include <../3rd/nanovg_bgfx/nanovg.h>
 
 namespace rapp {
 

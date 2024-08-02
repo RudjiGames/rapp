@@ -62,9 +62,9 @@ function projectExtraConfig_rapp_bgfx()
 		rappPath .. "/3rd/dear-imgui/imgui_widgets.cpp",
 		rappPath .. "/3rd/dear-imgui/**.h",
 		rappPath .. "/3rd/dear-imgui/**.inl",
-		rappPath .. "/3rd/nanovg/**.h",
-		rappPath .. "/3rd/nanovg/**.cpp",
-		rappPath .. "/3rd/nanovg/**.c"
+		rappPath .. "/3rd/nanovg_bgfx/**.h",
+		rappPath .. "/3rd/nanovg_bgfx/**.cpp",
+		rappPath .. "/3rd/nanovg_bgfx/**.c"
  	}
 	includedirs {
 		bgfxPath .. "3rdparty/",

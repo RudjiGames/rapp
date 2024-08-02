@@ -202,6 +202,12 @@ namespace rapp {
 	uint32_t vgColor(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255);
 
 	///
+	void vgSave();
+
+	///
+	void vgRestore();
+
+	///
 	void vgGlobalAlpha(float _opacity);
 
 	///
