@@ -212,4 +212,65 @@ namespace rapp {
 		VG_CALL(nvgLineJoin(g_currentContext, _lineJoin);)
 	}
 
+	void vgTransformPoint(float* dx, float* dy, const float* t, float sx, float sy)
+	{
+		*dx = sx * t[0] + sy * t[2] + t[4];
+		*dy = sx * t[1] + sy * t[3] + t[5];
+	}
+
+	void vgTransformScale(float* _xform, float _scaleX, float _scaleY)
+	{
+		_xform[0] = _scaleX;
+		_xform[1] = 0.0f;
+		_xform[2] = 0.0f;
+		_xform[3] = _scaleY;
+		_xform[4] = 0.0f;
+		_xform[5] = 0.0f;
+	}
+
+	void vgTransformTranslate(float* _xform, float _translateX, float _translateY)
+	{
+		_xform[0] = 1.0f;
+		_xform[1] = 0.0f;
+		_xform[2] = 0.0f;
+		_xform[3] = 1.0f;
+		_xform[4] = _translateX;
+		_xform[5] = _translateY;
+	}
+
+	void vgTransformTranslateScale(float* _xform, float _translateX, float _translateY, float _scaleX, float _scaleY)
+	{
+		_xform[0] = _scaleX;
+		_xform[1] = 0.0f;
+		_xform[2] = 0.0f;
+		_xform[3] = _scaleY;
+		_xform[4] = _translateX;
+		_xform[5] = _translateY;
+	}
+
+	void vgTransformRotate(float* _xform, float _angleRadian)
+	{
+		float cs = cosf(_angleRadian);
+		float sn = sinf(_angleRadian);
+		_xform[0] = cs;
+		_xform[1] = sn;
+		_xform[2] = -sn;
+		_xform[3] = cs;
+		_xform[4] = 0.0f;
+		_xform[5] = 0.0f;
+	}
+
+	void vgTransformMultiply(float* _xform, const float* _left, const float* _right)
+	{
+		float t0 = _left[0] * _right[0] + _left[1] * _right[2];
+		float t2 = _left[2] * _right[0] + _left[3] * _right[2];
+		float t4 = _left[4] * _right[0] + _left[5] * _right[2] + _right[4];
+		_xform[1] = _left[0] * _right[1] + _left[1] * _right[3];
+		_xform[3] = _left[2] * _right[1] + _left[3] * _right[3];
+		_xform[5] = _left[4] * _right[1] + _left[5] * _right[3] + _right[5];
+		_xform[0] = t0;
+		_xform[2] = t2;
+		_xform[4] = t4;
+	}
+
 } // namespace rapp

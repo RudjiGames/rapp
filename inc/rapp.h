@@ -282,6 +282,24 @@ namespace rapp {
 	///
 	void vgLineCapJoin(int _lineCap, int _lineJoin);
 
+	///
+	void vgTransformPoint(float* dx, float* dy, const float* t, float sx, float sy);
+
+	///
+	void vgTransformScale(float* _xform, float _scaleX, float _scaleY);
+
+	///
+	void vgTransformTranslate(float* _xform, float _translateX, float _translateY);
+
+	///
+	void vgTransformTranslateScale(float* _xform, float _translateX, float _translateY, float _scaleX, float _scaleY);
+
+	///
+	void vgTransformRotate(float* _xform, float _angleRadian);
+
+	///
+	void vgTransformMultiply(float* _xform, const float* _left, const float* _right);
+
 	// ------------------------------------------------
 	/// Debug output functions
 	// ------------------------------------------------
