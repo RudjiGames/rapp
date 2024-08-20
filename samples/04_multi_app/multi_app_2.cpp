@@ -11,8 +11,6 @@ struct app2 : public rapp::App
 
 	rapp::WindowHandle	m_window;
 
-	virtual ~app2() {}
-
 	int init(int32_t /*_argc*/, const char* const* /*_argv*/, rtmLibInterface* /*_libInterface = 0*/)
 	{
 		static const rapp::InputBinding bindings[] =

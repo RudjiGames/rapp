@@ -9,8 +9,6 @@ struct JobSystemApp : public rapp::App
 {
 	RAPP_CLASS(JobSystemApp)
 
-	virtual ~JobSystemApp() {}
-
 	enum Mode
 	{
 		Serial,

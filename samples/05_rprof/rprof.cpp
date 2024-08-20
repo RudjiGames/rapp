@@ -14,8 +14,6 @@ struct rprofApp : public rapp::App
 	rapp::WindowHandle	m_window;
 	float				m_time;
 
-	virtual ~rprofApp() {}
-
 	int init(int32_t _argc, const char* const* _argv, rtmLibInterface* _libInterface)
 	{
 		RTM_UNUSED_3(_argc, _argv, _libInterface);

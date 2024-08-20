@@ -13,8 +13,6 @@ struct bgfxApp : public rapp::App
 	rapp::WindowHandle	m_window;
 	float				m_time;
 
-	virtual ~bgfxApp() {}
-
 	int init(int32_t /*_argc*/, const char* const* /*_argv*/, rtmLibInterface* /*_libInterface = 0*/)
 	{
 		m_time = 0.0f;

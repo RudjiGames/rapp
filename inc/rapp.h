@@ -518,7 +518,8 @@ namespace rapp {
 
 #define RAPP_CLASS(_appClass)												\
 	_appClass(const char* _name, const char* _description = 0)				\
-		: App(_name, _description) {}
+		: App(_name, _description) {}										\
+	virtual ~_appClass() {}
 
 #define RAPP_INSTANCE(_appClass)											\
 	s_ ## _appClass ## _app

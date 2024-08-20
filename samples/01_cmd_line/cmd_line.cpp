@@ -9,8 +9,6 @@ struct CmdLineApp : public rapp::App
 {
 	RAPP_CLASS(CmdLineApp)
 
-	virtual ~CmdLineApp() {}
-
 	int init(int32_t /*_argc*/, const char* const* /*_argv*/, rtmLibInterface* /*_libInterface = 0*/)
 	{
 		static const rapp::InputBinding bindings[] =
