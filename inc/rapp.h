@@ -150,6 +150,7 @@ namespace rapp {
 		virtual void	draw(float _alpha)	= 0;
 		virtual void	drawGUI() {}
 		virtual void	shutDown()			= 0;
+		virtual bool	isGUImode() { return true; }
 	};
 
 	typedef int(*ConsoleFn)(App* _app, void* _userData, int _argc, char const* const* _argv);

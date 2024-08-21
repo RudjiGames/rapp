@@ -143,23 +143,26 @@ int32_t rappThreadFunc(void* _userData)
 					RAPP_CMD_READ(App*, app);
 					RAPP_CMD_READ(float, alpha);
 #ifdef RAPP_WITH_BGFX
-					if (app->m_resetView)
+					if (app->isGUImode())
 					{
-						bgfx::reset(app->m_width, app->m_height);
+						if (app->m_resetView)
+						{
+							bgfx::reset(app->m_width, app->m_height);
 
-						app->m_resetView = false;
+							app->m_resetView = false;
+						}
+
+						// Set view 0 default viewport.
+						bgfx::setViewRect(0, 0, 0, (uint16_t)app->m_width, (uint16_t)app->m_height);
+
+						// This dummy draw call is here to make sure that view 0 is cleared
+						// if no other draw calls are submitted to view 0.
+						bgfx::touch(0);
+
+						g_currentContext = app->m_data->m_vg;
+
+						app->draw(alpha);
 					}
-
-					// Set view 0 default viewport.
-					bgfx::setViewRect(0, 0, 0, (uint16_t)app->m_width, (uint16_t)app->m_height);
-
-					// This dummy draw call is here to make sure that view 0 is cleared
-					// if no other draw calls are submitted to view 0.
-					bgfx::touch(0);
-
-					g_currentContext = app->m_data->m_vg;
-
-					app->draw(alpha);
 #endif // #RAPP_WITH_BGFX
 				}
 				break;
@@ -167,20 +170,25 @@ int32_t rappThreadFunc(void* _userData)
 			case Command::DrawGUI:
 				{
 					RAPP_CMD_READ(App*, app);
-					drawGUI(app);
+					if (app->isGUImode())
+						drawGUI(app);
 				}
 				break;
 
 			case Command::Frame:
 				{
+					RAPP_CMD_READ(App*, app);
 #ifdef RAPP_WITH_BGFX
 					g_currentContext = 0;
 
-					bgfx::frame();
-					if (s_debug != g_debug)
+					if (app->isGUImode())
 					{
-						bgfx::setDebug(g_debug);
-						s_debug = g_debug;
+						bgfx::frame();
+						if (s_debug != g_debug)
+						{
+							bgfx::setDebug(g_debug);
+							s_debug = g_debug;
+						}
 					}
 #endif // RAPP_WITH_BGFX
 				}
@@ -308,9 +316,10 @@ void appDrawGUI(App* _app)
 	s_commChannel.write(_app);
 }
 
-void appFrame()
+void appFrame(App* _app)
 {
 	s_commChannel.write(Command::Frame);
+	s_commChannel.write(_app);
 }
 
 WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
@@ -505,7 +514,7 @@ int appRun(App* _app, int _argc, const char* const* _argv)
 		if (_app->m_width && _app->m_height)
 			appDrawGUI(_app);
 
-		appFrame();
+		appFrame(_app);
 
 		if (g_next_app)
 		{
