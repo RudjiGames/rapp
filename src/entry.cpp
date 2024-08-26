@@ -191,6 +191,7 @@ namespace rapp
 						const CharEvent* chev = static_cast<const CharEvent*>(ev);
 						inputChar(chev->m_len, chev->m_char);
 #ifdef RAPP_WITH_BGFX
+						if (_app->isGUImode())
 						if (ImGui::GetIO().WantCaptureKeyboard && (keysBindings == false))
 							ImGui::GetIO().AddInputCharactersUTF8((const char*)chev->m_char);
 #endif // RAPP_WITH_BGFX
@@ -238,7 +239,8 @@ namespace rapp
 						handle = key->m_handle;
 						inputSetKeyState(key->m_key, key->m_modifiers, key->m_down);
 #ifdef RAPP_WITH_BGFX
-						ImGui::GetIO().AddKeyEvent(s_keyMap[key->m_key], key->m_down);
+						if (_app->isGUImode())
+							ImGui::GetIO().AddKeyEvent(s_keyMap[key->m_key], key->m_down);
 #endif // RAPP_WITH_BGFX
 					}
 					break;
