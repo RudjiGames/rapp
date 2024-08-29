@@ -322,6 +322,15 @@ void appFrame(App* _app)
 	s_commChannel.write(_app);
 }
 
+#ifdef RAPP_WITH_BGFX
+void ImGui_ImplWin32_EnableDpiAwareness()
+{
+#if _WIN32_WINNT >= 0x0600
+	::SetProcessDPIAware();
+#endif
+}
+#endif
+
 WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 {
 	RTM_UNUSED_3(_app, _width, _height);
@@ -352,6 +361,10 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH|BGFX_CLEAR_STENCIL, 0x17132Eff, 1.0f, 0);
 
 	imguiCreate();
+
+#ifdef RAPP_WITH_BGFX
+	ImGui_ImplWin32_EnableDpiAwareness();
+#endif // RAPP_WITH_BGFX
 
 	_app->m_data			= new AppData;
 	_app->m_data->m_console = new Console(_app);

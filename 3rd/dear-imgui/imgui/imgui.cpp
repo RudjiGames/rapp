@@ -205,7 +205,7 @@ struct OcornutImguiContext
 		ImGui::SetAllocatorFunctions(memAlloc, memFree, NULL);
 
 		m_imgui = ImGui::CreateContext();
-
+		
 		ImGuiIO& io = ImGui::GetIO();
 
 		io.DisplaySize = ImVec2(1280.0f, 720.0f);
