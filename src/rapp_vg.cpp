@@ -160,6 +160,9 @@ namespace rapp {
 	{
 		RTM_UNUSED_6(_x, _y, _w, _h, _r, _f);
 		RTM_UNUSED_2(_icol, _ocol);
+		VG_CALL(NVGpaint grad = nvgBoxGradient(g_currentContext, _x, _y, _w, _h, _r, _f, getNVGColor(_icol), getNVGColor(_ocol)));
+		VG_CALL(nvgFillPaint(g_currentContext, grad));
+		VG_CALL(nvgFill(g_currentContext);)
 	}
 
 	void vgFillRadialGradient(float _cx, float _cy, float _inr, float _outr, uint32_t _icol, uint32_t _ocol)
@@ -193,6 +196,10 @@ namespace rapp {
 	{
 		RTM_UNUSED_6(_x, _y, _w, _h, _r, _f);
 		RTM_UNUSED_3(_icol, _ocol, _width);
+		VG_CALL(nvgStrokeWidth(g_currentContext, _width));
+		VG_CALL(NVGpaint grad = nvgBoxGradient(g_currentContext, _x, _y, _w, _h, _r, _f, getNVGColor(_icol), getNVGColor(_ocol)));
+		VG_CALL(nvgStrokePaint(g_currentContext, grad));
+		VG_CALL(nvgStroke(g_currentContext);)
 	}
 
 	void vgStrokeRadialGradient(float _cx, float _cy, float _inr, float _outr, uint32_t _icol, uint32_t _ocol, float _width)
