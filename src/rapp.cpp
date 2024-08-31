@@ -347,7 +347,9 @@ void ImGui_ImplWin32_EnableDpiAwareness()
 }
 #endif
 
+#ifdef RAPP_WITH_BGFX
 static bx::DefaultAllocator allocator;
+#endif
 
 WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 {
