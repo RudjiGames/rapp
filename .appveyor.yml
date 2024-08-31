@@ -51,7 +51,7 @@ for:
       - job_name: Windows
   
     init:
-      - git clone --recursive --depth 1 https://github.com/RudjiGames/rapp    rapp
+      - git clone --recursive https://github.com/RudjiGames/rapp    rapp
       - git clone --depth 1 https://github.com/RudjiGames/build   build
       - git clone --depth 1 https://github.com/RudjiGames/rbase   rbase
       - git clone --depth 1 https://github.com/bkaradzic/bx.git   bx
@@ -74,7 +74,7 @@ for:
 
     init:
       - sudo apt update -y && sudo apt install -y xorg libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libegl1-mesa-dev libx11-dev
-      - git clone --recursive --depth 1 https://github.com/RudjiGames/rapp  rapp
+      - git clone --recursive https://github.com/RudjiGames/rapp  rapp
       - git clone --depth 1 https://github.com/RudjiGames/build build
       - git clone --depth 1 https://github.com/RudjiGames/rbase rbase
       - git clone --depth 1 https://github.com/bkaradzic/bx     bx
@@ -102,7 +102,7 @@ for:
       - job_name: OSX
 
     init:
-      - git clone --recursive --depth 1 https://github.com/RudjiGames/rapp    rapp
+      - git clone --recursive https://github.com/RudjiGames/rapp    rapp
       - git clone --depth 1 https://github.com/RudjiGames/build   build
       - git clone --depth 1 https://github.com/RudjiGames/rbase   rbase
       - git clone --depth 1 https://github.com/bkaradzic/bx.git   bx
