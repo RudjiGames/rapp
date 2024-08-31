@@ -9,16 +9,26 @@
 #ifdef RAPP_WITH_BGFX
 
 #include <rapp/src/console.h>
+#if !RAPP_WITH_VG_RENDER
 #include <../3rd/nanovg_bgfx/nanovg_bgfx.h>
 #include <../3rd/nanovg_bgfx/nanovg.h>
+#else
+#include <../3rd/vg-renderer/include/vg/vg.h>
+#include <../3rd/vg-renderer/include/vg/path.h>
+#include <../3rd/vg-renderer/include/vg/stroker.h>
+#endif
 
 namespace rapp {
 
 	struct AppData
 	{
-		Console*	m_console;
-		NVGcontext*	m_vg;
+		Console*		m_console;
 
+#if !RAPP_WITH_VG_RENDER
+		NVGcontext*		m_vg;
+#else
+		vg::Context*	m_vg;
+#endif
 		AppData()
 			: m_console(0)
 			, m_vg(0)

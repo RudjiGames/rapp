@@ -64,8 +64,16 @@ function projectExtraConfig_rapp_bgfx()
 		rappPath .. "/3rd/dear-imgui/**.inl",
 		rappPath .. "/3rd/nanovg_bgfx/**.h",
 		rappPath .. "/3rd/nanovg_bgfx/**.cpp",
-		rappPath .. "/3rd/nanovg_bgfx/**.c"
+		rappPath .. "/3rd/nanovg_bgfx/**.c",
+		rappPath .. "/3rd/vg-renderer/include/**.h",
+		rappPath .. "/3rd/vg-renderer/include/**.inl",
+		rappPath .. "/3rd/vg-renderer/src/**.c",
+		rappPath .. "/3rd/vg-renderer/src/**.cpp",
+		rappPath .. "/3rd/vg-renderer/src/**.h"
  	}
+	excludes {
+		rappPath .. "/3rd/vg-renderer/src/libs/stb_truetype.cpp"
+	}
 	includedirs {
 		bgfxPath .. "3rdparty/",
 		rappPath .. "/3rd/",
@@ -82,7 +90,9 @@ function projectExtraConfig_rapp_bgfx()
  	configuration { "vs*", "windows" }
 		-- 4324 - structure was padded due to alignment specifier
 		-- 4389 - '==': signed/unsigned mismatch
-		buildoptions { "/wd4133 /wd4389"}
+		-- 4244 - vg-renderer: 'argument': conversion from 'float' to 'uint16_t', possible loss of data
+		-- 4334 - vg-renderer: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
+		buildoptions { "/wd4133 /wd4389 /wd4244 /wd4334"}
 	configuration {}
 end
 
