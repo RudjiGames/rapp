@@ -199,6 +199,14 @@ namespace rapp {
 	#define VG_CCW	0
 	#define VG_CW	1
 
+	#define VG_LINE_CAP_BUTT	0
+	#define VG_LINE_CAP_ROUND	1
+	#define VG_LINE_CAP_SQUARE	2
+
+	#define VG_LINE_JOIN_MITER	0
+	#define VG_LINE_JOIN_ROUND	1
+	#define VG_LINE_JOIN_BEVEL	2
+
 	///
 	uint32_t vgColor(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255);
 
