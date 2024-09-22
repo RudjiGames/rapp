@@ -408,6 +408,8 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 	RTM_UNUSED_2(_app, _mainWindow);
 
 #ifdef RAPP_WITH_BGFX
+	bgfx::frame();
+
 #if !RAPP_WITH_VG_RENDER
 	nvgDelete(_app->m_data->m_vg);
 #else

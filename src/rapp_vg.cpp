@@ -345,8 +345,10 @@ namespace rapp {
 #if RAPP_WITH_VG_RENDER
 		VG_CALL(g_strokeFlags = (vg::StrokeFlags::Enum)VG_STROKE_FLAGS(_lineCap, _lineJoin, 1);)
 #else
-		RTM_ASSERT(_lineJoin >= 0 && _lineJoin <= 2, "")
-		VG_CALL(static NVGlineCap cap[3] = { NVG_MITER, NVG_ROUND, NVG_BEVEL };)
+		RTM_ASSERT(_lineJoin >= 0 && _lineJoin <= 2, "");
+#ifdef RAPP_WITH_BGFX
+		static NVGlineCap cap[3] = { NVG_MITER, NVG_ROUND, NVG_BEVEL };
+#endif
 		VG_CALL(nvgLineCap(g_currentContext, _lineCap);)
 		VG_CALL(nvgLineJoin(g_currentContext, cap[_lineJoin]);)
 #endif
