@@ -20,10 +20,7 @@ __pragma(warning(disable:4100))
 	#include <pthread.h>
 #endif
 
-#include "../3rd/enkiTS/src/LockLessMultiReadPipe.h"
-#include "../3rd/enkiTS/src/TaskScheduler_c.h"
-#include "../3rd/enkiTS/src/TaskScheduler.cpp"
-#include "../3rd/enkiTS/src/TaskScheduler_c.cpp"
+#include "../3rd/enkiTS/src/TaskScheduler.h"
 
 #if RTM_COMPILER_MSVC
 __pragma(warning(pop))
