@@ -89,7 +89,7 @@ for:
       - ./GENie/bin/linux/genie --file=rapp/genie/genie.lua --gcc=linux-gcc gmake
   
     build_script:
-      - cd ./.build/linux/gcc/rapp/projects/
+      - cd ./.build/linux/linux-gcc/rapp/projects/
       - make config=${buildcfg}
 
 # ======================================
