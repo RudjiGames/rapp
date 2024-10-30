@@ -9,7 +9,6 @@ if os.isfile(tp) then dofile (tp) break end end if RTM_ROOT_DIR == nil then
 print("EROR: dependency missing - build. Cannot continue.") os.exit() end
 
 solution "rapp"
-	configurations { "debug", "release", "retail" }
 	setPlatforms()
 
 	addLibProjects("rapp")
