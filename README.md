@@ -1,4 +1,4 @@
-<img src="https://rudji.com/images/lib/rapp.png"/>
+<img height="81" src="https://rudji.com/rudji_games_logo_bright.svg"/>
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5ai0w0mu6ay2wcme?svg=true)](https://ci.appveyor.com/project/milostosic/rapp-6qu5f)
 [![License](https://img.shields.io/badge/license-BSD--2%20clause-blue.svg)](https://github.com/RudjiGames/rapp/blob/master/LICENSE)
