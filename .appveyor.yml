@@ -2,15 +2,15 @@
 environment:
   matrix:
     - job_name: Windows
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
       configuration: Debug
 
     - job_name: Windows
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
       configuration: Release
 
     - job_name: Windows
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
       configuration: Retail
 
     - job_name: Linux
@@ -59,9 +59,9 @@ for:
       - git clone --depth 1 https://github.com/bkaradzic/bgfx.git bgfx
      
     install:
-      - build\tools\bin\windows\genie.exe --file=rapp\genie\genie.lua vs2019
+      - build\tools\bin\windows\genie.exe --file=rapp\genie\genie.lua vs2022
       
-    build: ../.build/windows/vs2019/rapp/projects/rapp.sln
+    build: ../.build/windows/vs2022/rapp/projects/rapp.sln
 
 # ======================================
 # Linux
