@@ -112,7 +112,7 @@ for:
       - cd GENie && make && cd ..
     
     install:
-      - ./GENie/bin/darwin/genie --file=rapp/genie/genie.lua --gcc=osx gmake
+      - ./GENie/bin/darwin/genie --file=rapp/genie/genie.lua --gcc=osx-x64 gmake
     
     build_script:
       - cd ./.build/osx/clang/rapp/projects/
