@@ -20,12 +20,7 @@
 #include <dear-imgui/imgui/imgui.h>
 #include <dear-imgui/imgui_internal.h>
 
-#if !RAPP_WITH_VG_RENDER
-extern NVGcontext* g_currentContext;
-#else
 extern vg::Context* g_currentContext;
-#endif
-
 #endif // RAPP_WITH_BGFX
 
 #if RTM_PLATFORM_EMSCRIPTEN
@@ -85,12 +80,8 @@ static void drawGUI(App* _app)
 	_app->drawGUI();
 	_app->m_data->m_console->draw();
 
-#if !RAPP_WITH_VG_RENDER
-	nvgEndFrame(_app->m_data->m_vg);
-#else
 	vg::end(_app->m_data->m_vg);
 	vg::frame(_app->m_data->m_vg);
-#endif
 
 	imguiEndFrame();
 #endif // RAPP_WITH_BGFX
@@ -171,11 +162,7 @@ int32_t rappThreadFunc(void* _userData)
 
 						g_currentContext = app->m_data->m_vg;
 
-#if !RAPP_WITH_VG_RENDER
-						nvgBeginFrame(app->m_data->m_vg, (float)app->m_width, (float)app->m_height, 1.0f);
-#else
 						vg::begin(app->m_data->m_vg, 0, uint16_t(app->m_width), uint16_t(app->m_height), 1.0f);
-#endif
 
 						app->draw(alpha);
 					}
@@ -389,11 +376,7 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
 	_app->m_data			= new AppData;
 	_app->m_data->m_console = new Console(_app);
 
-#if !RAPP_WITH_VG_RENDER
-	_app->m_data->m_vg		= nvgCreate(1, 0);
-#else
 	_app->m_data->m_vg		= vg::createContext(&allocator);
-#endif
 
 	bgfx::setViewMode(0, bgfx::ViewMode::Sequential);
 
@@ -410,11 +393,7 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 #ifdef RAPP_WITH_BGFX
 	bgfx::frame();
 
-#if !RAPP_WITH_VG_RENDER
-	nvgDelete(_app->m_data->m_vg);
-#else
 	vg::destroyContext(_app->m_data->m_vg);
-#endif
 	_app->m_data->m_vg = 0;
 
 	delete _app->m_data->m_console;
