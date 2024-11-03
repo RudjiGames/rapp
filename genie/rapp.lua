@@ -92,7 +92,8 @@ function projectExtraConfig_rapp_bgfx()
 		-- 4389 - '==': signed/unsigned mismatch
 		-- 4244 - vg-renderer: 'argument': conversion from 'float' to 'uint16_t', possible loss of data
 		-- 4334 - vg-renderer: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
-		buildoptions { "/wd4133 /wd4389 /wd4244 /wd4334"}
+		-- 4505 - unreferenced function with internal linkage has been removed
+		buildoptions { "/wd4133 /wd4389 /wd4244 /wd4334 /wd4505"}
 	configuration {}
 end
 
