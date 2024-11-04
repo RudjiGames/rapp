@@ -186,6 +186,7 @@ namespace rapp {
 	void vgStrokeBoxGradient(float _x, float _y, float _w, float _h, float _r, float _f, uint32_t _icol, uint32_t _ocol, float _width)
 	{
 		RTM_UNUSED_6(_x, _y, _w, _h, _r, _f);
+		RTM_UNUSED_3(_icol, _ocol, _width);
 		VG_CALL(vg::GradientHandle gradient = vg::createBoxGradient(g_currentContext, _x, _y, _w, _h, _r, _f, getVGColor(_icol), getVGColor(_ocol));)
 		VG_CALL(vg::strokePath(g_currentContext, gradient, _width, g_strokeFlags);)
 	}

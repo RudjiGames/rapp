@@ -98,7 +98,7 @@ int32_t rappThreadFunc(void* _userData)
 
 	while (cc->dataAvailable())
 	{
-		uint8_t cmd;
+		uint8_t cmd = Command::Count;
 		cc->read(cmd);
 
 		switch (cmd)
