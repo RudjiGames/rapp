@@ -328,9 +328,11 @@ void appFrame(App* _app)
 #ifdef RAPP_WITH_BGFX
 void ImGui_ImplWin32_EnableDpiAwareness()
 {
+#if RTM_PLATFORM_WINDOWS
 #if _WIN32_WINNT >= 0x0600
 	::SetProcessDPIAware();
 #endif
+#endif // RTM_PLATFORM_WINDOWS
 }
 #endif
 
@@ -430,12 +432,15 @@ void appSwitch(App* _app)
 bool processEvents(App* _app);
 
 #if RTM_PLATFORM_EMSCRIPTEN
+#ifdef RAPP_WITH_BGFX
 static const char* s_canvasID = "#canvas";
-
+#endif
 extern void emscriptenUpdateGamepads();
 static void updateApp()
 {
+#ifdef RAPP_WITH_BGFX
 	static bool first_frame = true;
+#endif
 	static FrameStep fs(s_app->m_frameRate);
 
 	if (processEvents(s_app))
@@ -449,11 +454,13 @@ static void updateApp()
 			s_app->update(time);
 		}
 
+#ifdef RAPP_WITH_BGFX
 		if (s_debug != g_debug)
 		{
 			bgfx::setDebug(g_debug);
 			s_debug = g_debug;
 		}
+#endif
 
 		emscriptenUpdateGamepads();
 

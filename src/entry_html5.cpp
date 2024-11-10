@@ -9,9 +9,8 @@
 
 #if RTM_PLATFORM_EMSCRIPTEN
 
-#include <bx/bx.h>
-
 #ifdef RAPP_WITH_BGFX
+#include <bx/bx.h>
 #include <bgfx/platform.h>
 #endif
 
@@ -27,13 +26,13 @@ extern "C" void entry_emscripten_yield()
 static const char* s_canvasID = "#canvas";
 
 #define _EMSCRIPTEN_CHECK(_check, _call)                                                                  \
-	BX_MACRO_BLOCK_BEGIN                                                                                  \
+	for(;;) {			                                                                                  \
 		EMSCRIPTEN_RESULT __result__ = _call;                                                             \
 		_check(EMSCRIPTEN_RESULT_SUCCESS == __result__, #_call " FAILED 0x%08x\n", (uint32_t)__result__); \
-		BX_UNUSED(__result__);                                                                            \
-	BX_MACRO_BLOCK_END
+		RTM_UNUSED(__result__);                                                                           \
+	break; }
 
-#define EMSCRIPTEN_CHECK(_call) _EMSCRIPTEN_CHECK(BX_ASSERT, _call)
+#define EMSCRIPTEN_CHECK(_call) _EMSCRIPTEN_CHECK(RTM_ASSERT, _call)
 
 namespace rapp
 {
@@ -204,7 +203,7 @@ namespace rapp
 
 	EM_BOOL Context::mouseCb(int32_t _eventType, const EmscriptenMouseEvent* _event, void* _userData)
 	{
-		BX_UNUSED(_userData);
+		RTM_UNUSED(_userData);
 
 		if (_event)
 		{
@@ -244,7 +243,7 @@ namespace rapp
 
 	EM_BOOL Context::wheelCb(int32_t _eventType, const EmscriptenWheelEvent* _event, void* _userData)
 	{
-		BX_UNUSED(_userData);
+		RTM_UNUSED(_userData);
 
 		if (_event)
 		{
@@ -336,7 +335,7 @@ namespace rapp
 
 	EM_BOOL Context::keyCb(int32_t _eventType, const EmscriptenKeyboardEvent* _event, void* _userData)
 	{
-		BX_UNUSED(_userData);
+		RTM_UNUSED(_userData);
 
 		bool ret =  _event->keyCode == DOM_VK_BACK_SPACE // Don't navigate away from this test page on backspace.
 				||  _event->keyCode == DOM_VK_TAB // Don't change keyboard focus to different browser UI elements while testing.
@@ -385,7 +384,7 @@ namespace rapp
 
 	EM_BOOL Context::resizeCb(int32_t _eventType, const EmscriptenUiEvent* _event, void* _userData)
 	{
-		BX_UNUSED(_eventType, _event, _userData);
+		RTM_UNUSED_3(_eventType, _event, _userData);
 		int width, height;
 		emscripten_get_canvas_element_size(s_canvasID, &width, &height);
 		s_ctx.m_eventQueue.postSizeEvent(rapp::kDefaultWindowHandle, width, height);
@@ -394,7 +393,7 @@ namespace rapp
 
 	EM_BOOL Context::canvasResizeCb(int32_t _eventType, const void* _reserved, void* _userData)
 	{
-		BX_UNUSED(_eventType, _reserved, _userData);
+		RTM_UNUSED_3(_eventType, _reserved, _userData);
 		int width, height;
 		emscripten_get_canvas_element_size(s_canvasID, &width, &height);
 		s_ctx.m_eventQueue.postSizeEvent(rapp::kDefaultWindowHandle, width, height);
@@ -403,7 +402,7 @@ namespace rapp
 
 	EM_BOOL Context::focusCb(int32_t _eventType, const EmscriptenFocusEvent* _event, void* _userData)
 	{
-		BX_UNUSED(_event, _userData);
+		RTM_UNUSED_2(_event, _userData);
 
 		if (_event)
 		{
@@ -506,7 +505,7 @@ namespace rapp
 
 	EM_BOOL Context::gamepadCb(int _eventType, const EmscriptenGamepadEvent* _gamepadEvent, void* _userData)
 	{
-		BX_UNUSED(_eventType, _userData);
+		RTM_UNUSED_2(_eventType, _userData);
 		if (_gamepadEvent->connected)
 		{
 			GamepadHandle handle = { static_cast<uint16_t>(_gamepadEvent->index) };
@@ -549,7 +548,8 @@ namespace rapp
 
 	WindowHandle windowCreate(App* _app, int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
 	{
-		BX_UNUSED(_app, _x, _y, _width, _height, _flags, _title);
+		RTM_UNUSED_4(_app, _x, _y, _width);
+		RTM_UNUSED_3(_height, _flags, _title);
 		WindowHandle handle = { kDefaultWindowHandle.idx };
 
 		return handle;
@@ -557,35 +557,35 @@ namespace rapp
 
 	void windowDestroy(WindowHandle _handle)
 	{
-		BX_UNUSED(_handle);
+		RTM_UNUSED(_handle);
 	}
 
 	void setWindowPos(WindowHandle _handle, int32_t _x, int32_t _y)
 	{
-		BX_UNUSED(_handle, _x, _y);
+		RTM_UNUSED_3(_handle, _x, _y);
 	}
 
 	void windowSetSize(WindowHandle _handle, uint32_t _width, uint32_t _height)
 	{
-		BX_UNUSED(_handle, _width, _height);
+		RTM_UNUSED_3(_handle, _width, _height);
 		//if (_handle.idx == rapp::kDefaultWindowHandle.idx)
 		//	emscripten_set_canvas_element_size(s_canvasID, _width, _height);  css_element?
 	}
 
 	void windowSetTitle(WindowHandle _handle, const char* _title)
 	{
-		BX_UNUSED(_handle);
+		RTM_UNUSED(_handle);
 		emscripten_set_window_title(_title);
 	}
 
 	void setWindowFlags(WindowHandle _handle, uint32_t _flags, bool _enabled)
 	{
-		BX_UNUSED(_handle, _flags, _enabled);
+		RTM_UNUSED_3(_handle, _flags, _enabled);
 	}
 
 	void windowToggleFullscreen(WindowHandle _handle)
 	{
-		BX_UNUSED(_handle);
+		RTM_UNUSED(_handle);
 
 		//EmscriptenFullscreenChangeEvent state;
 		//emscripten_get_fullscreen_status(&state);
@@ -607,7 +607,7 @@ namespace rapp
 
 	void windowSetMouseLock(WindowHandle _handle, bool _lock)
 	{
-		BX_UNUSED(_handle, _lock);
+		RTM_UNUSED_2(_handle, _lock);
 	}
 	 
 	void* windowGetNativeHandle(WindowHandle _handle)
