@@ -8,9 +8,9 @@
 
 #ifdef RAPP_WITH_BGFX
 
-#include <../3rd/vg-renderer/include/vg/vg.h>
-#include <../3rd/vg-renderer/include/vg/path.h>
-#include <../3rd/vg-renderer/include/vg/stroker.h>
+#include <../3rd/vg_renderer/include/vg/vg.h>
+#include <../3rd/vg_renderer/include/vg/path.h>
+#include <../3rd/vg_renderer/include/vg/stroker.h>
 
 vg::Context*			g_currentContext	= 0;
 vg::FillFlags::Enum		g_fillFlags			= vg::FillFlags::ConvexAA;

@@ -65,19 +65,19 @@ function projectExtraConfig_rapp_bgfx()
 		rappPath .. "/3rd/nanovg_bgfx/**.h",
 		rappPath .. "/3rd/nanovg_bgfx/**.cpp",
 		rappPath .. "/3rd/nanovg_bgfx/**.c",
-		rappPath .. "/3rd/vg-renderer/include/**.h",
-		rappPath .. "/3rd/vg-renderer/include/**.inl",
-		rappPath .. "/3rd/vg-renderer/src/**.c",
-		rappPath .. "/3rd/vg-renderer/src/**.cpp",
-		rappPath .. "/3rd/vg-renderer/src/**.h"
+		rappPath .. "/3rd/vg_renderer/include/**.h",
+		rappPath .. "/3rd/vg_renderer/include/**.inl",
+		rappPath .. "/3rd/vg_renderer/src/**.c",
+		rappPath .. "/3rd/vg_renderer/src/**.cpp",
+		rappPath .. "/3rd/vg_renderer/src/**.h"
  	}
 	excludes {
-		rappPath .. "/3rd/vg-renderer/src/libs/stb_truetype.cpp"
+		rappPath .. "/3rd/vg_renderer/src/libs/stb_truetype.cpp"
 	}
 	includedirs {
 		bgfxPath .. "3rdparty/",
 		rappPath .. "/3rd/",
-		rappPath .. "/3rd/vg-renderer/include"
+		rappPath .. "/3rd/vg_renderer/include"
 	}
 	defines { "RAPP_WITH_BGFX" }
 
@@ -90,8 +90,8 @@ function projectExtraConfig_rapp_bgfx()
  	configuration { "vs*", "windows" }
 		-- 4324 - structure was padded due to alignment specifier
 		-- 4389 - '==': signed/unsigned mismatch
-		-- 4244 - vg-renderer: 'argument': conversion from 'float' to 'uint16_t', possible loss of data
-		-- 4334 - vg-renderer: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
+		-- 4244 - vg_renderer: 'argument': conversion from 'float' to 'uint16_t', possible loss of data
+		-- 4334 - vg_renderer: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
 		-- 4505 - unreferenced function with internal linkage has been removed
 		buildoptions { "/wd4133 /wd4389 /wd4244 /wd4334 /wd4505"}
 	configuration {}
