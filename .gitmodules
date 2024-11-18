@@ -5,6 +5,3 @@
 [submodule "3rd/enkiTS"]
 	path = 3rd/enkiTS
 	url = https://github.com/dougbinks/enkiTS.git
-[submodule "3rd/vg_renderer"]
-	path = 3rd/vg_renderer
-	url = https://github.com/RudjiGames/vg_renderer
