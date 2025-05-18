@@ -4,7 +4,6 @@
 //--------------------------------------------------------------------------//
 
 #include <rapp_pch.h>
-#include "app_data.h"
 
 #ifdef RAPP_WITH_BGFX
 

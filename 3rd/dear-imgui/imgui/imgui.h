@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2024 Branimir Karadzic. All rights reserved.
+ * Copyright 2011-2025 Branimir Karadzic. All rights reserved.
  * License: https://github.com/bkaradzic/bgfx/blob/master/LICENSE
  */
 
@@ -62,7 +62,7 @@ namespace ImGui
 		, const ImVec4& _borderCol = ImVec4(0.0f, 0.0f, 0.0f, 0.0f)
 		)
 	{
-		Image(toId(_handle, _flags, _mip), _size, _uv0, _uv1, _tintCol, _borderCol);
+		ImageWithBg(toId(_handle, _flags, _mip), _size, _uv0, _uv1, _borderCol, _tintCol);
 	}
 
 	// Helper function for passing bgfx::TextureHandle to ImGui::Image.

@@ -9,9 +9,9 @@
 #ifdef RAPP_WITH_BGFX
 
 #include <rapp/src/console.h>
-#include <../3rd/vg_renderer/include/vg/vg.h>
-#include <../3rd/vg_renderer/include/vg/path.h>
-#include <../3rd/vg_renderer/include/vg/stroker.h>
+#include "../3rd/vg_renderer/include/vg/vg.h"
+#include "../3rd/vg_renderer/include/vg/path.h"
+#include "../3rd/vg_renderer/include/vg/stroker.h"
 
 namespace rapp {
 
