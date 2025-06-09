@@ -61,8 +61,8 @@ for:
     install:
       - build\tools\bin\windows\genie.exe --file=rapp\genie\genie.lua vs2022
       
-    build:
-      project: ../.build/windows/vs2022/rapp/projects/rapp.sln
+    build: 
+      project: rapp\.build\windows\vs2022\app\projects\app.sln
 
 # ======================================
 # Linux
