@@ -6,6 +6,8 @@
 #ifndef RTM_RAPP_CMD_H
 #define RTM_RAPP_CMD_H
 
+#include <rbase/inc/stringfn.h>
+
 namespace rapp {
 
 	struct CmdContext

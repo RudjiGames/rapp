@@ -11,7 +11,7 @@
 
 #ifdef RAPP_WITH_BGFX
 
-#include <dear-imgui/imgui.h>
+#include <imgui_bgfx/imgui_bgfx.h>
 
 namespace rapp {
 

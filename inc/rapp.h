@@ -522,7 +522,7 @@ namespace rapp {
 
 #ifdef RAPP_WITH_BGFX
 #include <bgfx/bgfx.h>
-#include <dear-imgui/imgui.h>
+#include <imgui/imgui.h>
 #endif
 
 #define RAPP_CLASS(_appClass)												\

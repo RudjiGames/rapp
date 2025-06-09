@@ -10,11 +10,12 @@
 #include <rapp/src/app_data.h>
 #include <rapp/src/entry_p.h>
 
-#include <time.h>	// time
-#include <ctype.h>  // isspace
+#include <time.h>		// time
+#include <ctype.h>		// isspace
 #include <stdint.h>
-#include <stdlib.h> // size_t
-#include <string.h> // strlen
+#include <stdlib.h>		// size_t
+#include <string.h>		// strlen
+#include <inttypes.h>	// PRId64
 
 namespace rapp {
 

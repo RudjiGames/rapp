@@ -4,7 +4,7 @@
 --
 
 function projectDependencies_rapp()
-	return  { "rbase", "enkiTS" }
+	return  { "rbase", "enkiTS", "stb" }
 end
 
 function projectAdd_rapp() 
@@ -44,39 +44,30 @@ function projectExtraConfigExecutable_rapp()
  end
 
 function projectExtraConfig_rapp_bgfx()
-	local bgfxPath = find3rdPartyProject("bgfx")
 	local rappPath = getProjectPath("rapp")
 
-	if bgfxPath == nil then
-		return
-	end
-
 	files { 		
-		bgfxPath .. "3rdparty/ib-compress/**.*",
-		rappPath .. "/3rd/dear-imgui/imgui/**.h",
-		rappPath .. "/3rd/dear-imgui/imgui/**.cpp",
-		rappPath .. "/3rd/dear-imgui/imgui/**.inl",
-		rappPath .. "/3rd/dear-imgui/imgui.cpp",
-		rappPath .. "/3rd/dear-imgui/imgui_draw.cpp",
-		rappPath .. "/3rd/dear-imgui/imgui_tables.cpp",
-		rappPath .. "/3rd/dear-imgui/imgui_widgets.cpp",
-		rappPath .. "/3rd/dear-imgui/**.h",
-		rappPath .. "/3rd/dear-imgui/**.inl",
-		rappPath .. "/3rd/nanovg_bgfx/**.h",
-		rappPath .. "/3rd/nanovg_bgfx/**.cpp",
-		rappPath .. "/3rd/nanovg_bgfx/**.c",
+		rappPath .. "/3rd/imgui/imgui/**.h",
+		rappPath .. "/3rd/imgui/imgui/**.cpp",
+		rappPath .. "/3rd/imgui/imgui/**.inl",
+		rappPath .. "/3rd/imgui/imgui.cpp",
+		rappPath .. "/3rd/imgui/imgui_draw.cpp",
+		rappPath .. "/3rd/imgui/imgui_tables.cpp",
+		rappPath .. "/3rd/imgui/imgui_widgets.cpp",
+		rappPath .. "/3rd/imgui/**.h",
+		rappPath .. "/3rd/imgui/**.inl",
+		rappPath .. "/3rd/imgui_bgfx/imgui_bgfx.h",
+		rappPath .. "/3rd/imgui_bgfx/imgui_bgfx.cpp",
+--		rappPath .. "/3rd/nanovg_bgfx/**.h",
+--		rappPath .. "/3rd/nanovg_bgfx/**.cpp",
+--		rappPath .. "/3rd/nanovg_bgfx/**.c",
 		rappPath .. "/3rd/vg_renderer/include/**.h",
 		rappPath .. "/3rd/vg_renderer/include/**.inl",
 		rappPath .. "/3rd/vg_renderer/src/**.c",
 		rappPath .. "/3rd/vg_renderer/src/**.cpp",
 		rappPath .. "/3rd/vg_renderer/src/**.h"
  	}
-	excludes {
-		rappPath .. "/3rd/vg_renderer/src/libs/stb_truetype.cpp"
-	}
 	includedirs {
-		bgfxPath .. "3rdparty/",
-		rappPath .. "/3rd/",
 		rappPath .. "/3rd/vg_renderer/include"
 	}
 	defines { "RAPP_WITH_BGFX" }

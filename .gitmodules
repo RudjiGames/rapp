@@ -8,3 +8,9 @@
 [submodule "3rd/vg_renderer"]
 	path = 3rd/vg_renderer
 	url = https://github.com/RudjiGames/vg_renderer.git
+[submodule "3rd/imgui"]
+	path = 3rd/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "3rd/stb"]
+	path = 3rd/stb
+	url = https://github.com/nothings/stb.git

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2025 Branimir Karadzic. All rights reserved.
+ * Copyright 2011-2023 Branimir Karadzic. All rights reserved.
  * License: https://github.com/bkaradzic/bgfx/blob/master/LICENSE
  */
 
@@ -7,13 +7,27 @@
 #define IMGUI_H_HEADER_GUARD
 
 #include <bgfx/bgfx.h>
-#include <dear-imgui/imgui.h>
+#include <imgui/imgui.h>
 #include <iconfontheaders/icons_kenney.h>
 #include <iconfontheaders/icons_font_awesome.h>
 
 #define IMGUI_MBUT_LEFT   0x01
 #define IMGUI_MBUT_RIGHT  0x02
 #define IMGUI_MBUT_MIDDLE 0x04
+
+namespace ImGui
+{
+	struct Font
+	{
+		enum Enum
+		{
+			Regular,
+			Mono,
+
+			Count
+		};
+	};
+}
 
 inline uint32_t imguiRGBA(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255)
 {
@@ -62,7 +76,7 @@ namespace ImGui
 		, const ImVec4& _borderCol = ImVec4(0.0f, 0.0f, 0.0f, 0.0f)
 		)
 	{
-		ImageWithBg(toId(_handle, _flags, _mip), _size, _uv0, _uv1, _borderCol, _tintCol);
+		Image(toId(_handle, _flags, _mip), _size, _uv0, _uv1, _tintCol, _borderCol);
 	}
 
 	// Helper function for passing bgfx::TextureHandle to ImGui::Image.
@@ -125,6 +139,8 @@ namespace ImGui
 
 	///
 	void PopEnabled();
+
+	void PushFont(Font::Enum);
 
 } // namespace ImGui
 
