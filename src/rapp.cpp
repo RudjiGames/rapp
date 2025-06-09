@@ -34,6 +34,14 @@ extern vg::Context* g_currentContext;
 
 namespace rapp {
 
+#ifdef RAPP_WITH_BGFX
+	uint32_t g_debug = BGFX_DEBUG_TEXT;
+	uint32_t g_reset = BGFX_RESET_VSYNC;
+#else
+	uint32_t g_debug = 0;
+	uint32_t g_reset = 0;
+#endif
+
 struct Command
 {
 	enum Enum : uint8_t
@@ -148,7 +156,7 @@ int32_t rappThreadFunc(void* _userData)
 					{
 						if (app->m_resetView)
 						{
-							bgfx::reset(app->m_width, app->m_height);
+							bgfx::reset(app->m_width, app->m_height, g_reset);
 
 							app->m_resetView = false;
 						}
@@ -340,12 +348,12 @@ void ImGui_ImplWin32_EnableDpiAwareness()
 static bx::DefaultAllocator allocator;
 #endif
 
-WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height)
+WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, bool _keepAspect)
 {
 	RTM_UNUSED_3(_app, _width, _height);
 #ifdef RAPP_WITH_BGFX
 	WindowHandle win = rapp::windowCreate(	_app, 0, 0, _width, _height,
-											RAPP_WINDOW_FLAG_ASPECT_RATIO	|
+											_keepAspect ? RAPP_WINDOW_FLAG_ASPECT_RATIO : 0	|
 											RAPP_WINDOW_FLAG_FRAME			|
 											RAPP_WINDOW_FLAG_RENDERING		|
 											RAPP_WINDOW_FLAG_MAIN_WINDOW,
@@ -406,7 +414,11 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 
 	imguiDestroy();
 
-	bgfx::frame();
+	for (int i=0; i<3; ++i)
+	{
+		bgfx::frame();
+	}
+	
 	bgfx::shutdown();
 	rapp::windowDestroy(_mainWindow);
 #endif
@@ -475,7 +487,7 @@ static void updateApp()
 			s_app->m_width = width;
 			s_app->m_height = height;
 			s_app->m_resetView = false;
-			bgfx::reset(s_app->m_width, s_app->m_height);
+			bgfx::reset(s_app->m_width, s_app->m_height, g_reset);
 		}
 
 		// Set view 0 default viewport.
@@ -485,7 +497,7 @@ static void updateApp()
 		if (first_frame)
 		{
 			// reset view in first frame to match canvas size
-			bgfx::reset(s_app->m_width, s_app->m_height);
+			bgfx::reset(s_app->m_width, s_app->m_height, g_reset);
 			first_frame = false;
 		}
 

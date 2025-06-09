@@ -187,7 +187,7 @@ namespace rapp {
 	void appRunOnMainThread(ThreadFn _fn, void* _userData);
 
 	///
-	WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height);
+	WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, bool _keepAspect = true);
 
 	///
 	void appGraphicsShutdown(App* _app, WindowHandle _mainWindow);

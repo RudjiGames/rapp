@@ -340,13 +340,9 @@ int cmdMouseLock(App* _app, void* _userData, int _argc, char const* const* _argv
 	return 1;
 }
 
-#ifdef RAPP_WITH_BGFX
-uint32_t g_debug = BGFX_DEBUG_TEXT;
-uint32_t g_reset = BGFX_RESET_VSYNC;
-#else
-uint32_t g_debug = 0;
-uint32_t g_reset = 0;
-#endif
+extern uint32_t g_debug;
+extern uint32_t g_reset;
+
 int cmdGraphics(App* _app, void* _userData, int _argc, char const* const* _argv)
 {
 	RTM_UNUSED_4(_app, _userData, _argc, _argv);
