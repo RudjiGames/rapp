@@ -19,7 +19,7 @@
 
 namespace rapp {
 
-	bool isSpace(char _ch)
+	bool charIsSpace(char _ch)
 	{
 		return ' '  == _ch
 			|| '\t' == _ch
@@ -58,7 +58,7 @@ namespace rapp {
 			switch (state)
 			{
 				case SkipWhitespace:
-					for (; isSpace(*curr); ++curr) {}; // skip whitespace
+					for (; charIsSpace(*curr); ++curr) {}; // skip whitespace
 					state = SetTerm;
 					break;
 
@@ -89,7 +89,7 @@ namespace rapp {
 					{
 						sub = !sub;
 					}
-					else if (isSpace(*curr) && !sub)
+					else if (charIsSpace(*curr) && !sub)
 					{
 						state = End;
 					}
@@ -301,7 +301,7 @@ void cmdConsoleSetToggleTime(float _time)
 
 inline bool toBool(const char* _str)
 {
-	char ch = rtm::toLower(_str[0]);
+	char ch = rtm::charToLower(_str[0]);
 	return ch == 't' ||  ch == '1';
 }
 

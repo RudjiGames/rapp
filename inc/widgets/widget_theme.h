@@ -37,7 +37,7 @@ inline static void flashColorElapsed(ImU32& _drawColor, ImU32 _target, uint64_t 
 {
 	ImVec4 target = ImColor(_target);
 
-	float msSince = rtm::CPU::time(_elapsedTime, rtm::CPU::frequency());
+	float msSince = rtm::cpuTime(_elapsedTime, rtm::cpuFrequency());
 	msSince = rappMin(msSince * 1000.0f, RAPP_FLASH_TIME_IN_MS);
 	msSince = 1.0f - (msSince / RAPP_FLASH_TIME_IN_MS);
 	
