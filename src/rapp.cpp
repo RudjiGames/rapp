@@ -352,6 +352,12 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint3
 {
 	RTM_UNUSED_4(_app, _width, _height, _mainwindowFlags);
 #ifdef RAPP_WITH_BGFX
+
+	if (_mainwindowFlags & RAPP_WINDOW_FLAG_DPI_AWARE)
+	{
+		ImGui_ImplWin32_EnableDpiAwareness();
+	}
+
 	WindowHandle win = rapp::windowCreate(	_app, 0, 0, _width, _height,
 											_mainwindowFlags & (
 											RAPP_WINDOW_FLAG_FRAME		|
@@ -378,13 +384,6 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint3
 	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH|BGFX_CLEAR_STENCIL, 0x17132Eff, 1.0f, 0);
 
 	imguiCreate();
-
-#ifdef RAPP_WITH_BGFX
-	if (_mainwindowFlags & RAPP_WINDOW_FLAG_DPI_AWARE)
-	{
-		ImGui_ImplWin32_EnableDpiAwareness();
-	}
-#endif // RAPP_WITH_BGFX
 
 	_app->m_data			= new AppData;
 	_app->m_data->m_console = new Console(_app);
