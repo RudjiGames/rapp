@@ -503,6 +503,9 @@ namespace rapp {
 	///
 	bool inputGetKeyState(KeyboardState::Key _key, uint8_t* _modifiers = 0);
 
+	///
+	uint8_t inputGetModifiersState();
+
 	/// 
 	void inputEmitKeyPress(KeyboardState::Key _key, uint8_t _modifiers = 0);
 
