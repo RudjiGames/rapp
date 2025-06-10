@@ -348,15 +348,15 @@ void ImGui_ImplWin32_EnableDpiAwareness()
 static bx::DefaultAllocator allocator;
 #endif
 
-WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, bool _keepAspect)
+WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint32_t _mainwindowFlags)
 {
-	RTM_UNUSED_4(_app, _width, _height, _keepAspect);
+	RTM_UNUSED_4(_app, _width, _height, _mainwindowFlags);
 #ifdef RAPP_WITH_BGFX
 	WindowHandle win = rapp::windowCreate(	_app, 0, 0, _width, _height,
-											_keepAspect ? RAPP_WINDOW_FLAG_ASPECT_RATIO : 0	|
-											RAPP_WINDOW_FLAG_FRAME			|
-											RAPP_WINDOW_FLAG_RENDERING		|
-											RAPP_WINDOW_FLAG_MAIN_WINDOW,
+											_mainwindowFlags & (
+											RAPP_WINDOW_FLAG_FRAME		|
+											RAPP_WINDOW_FLAG_RENDERING	|
+											RAPP_WINDOW_FLAG_MAIN_WINDOW),
 											_app->m_name);
 
 	bgfx::Init init;
@@ -380,7 +380,10 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, bool 
 	imguiCreate();
 
 #ifdef RAPP_WITH_BGFX
-	ImGui_ImplWin32_EnableDpiAwareness();
+	if (_mainwindowFlags & RAPP_WINDOW_FLAG_DPI_AWARE)
+	{
+		ImGui_ImplWin32_EnableDpiAwareness();
+	}
 #endif // RAPP_WITH_BGFX
 
 	_app->m_data			= new AppData;

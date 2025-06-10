@@ -119,11 +119,12 @@ namespace rapp {
 	inline bool isValid(WindowHandle _handle)  { return UINT32_MAX != _handle.idx; }
 	constexpr WindowHandle kDefaultWindowHandle = { 0 };
 
-	#define RAPP_WINDOW_FLAG_ASPECT_NONE	0x0
-	#define RAPP_WINDOW_FLAG_ASPECT_RATIO	0x1
-	#define RAPP_WINDOW_FLAG_FRAME			0x2
-	#define RAPP_WINDOW_FLAG_RENDERING		0x4
-	#define RAPP_WINDOW_FLAG_MAIN_WINDOW	0x8
+	#define RAPP_WINDOW_FLAG_ASPECT_NONE	0x00
+	#define RAPP_WINDOW_FLAG_ASPECT_RATIO	0x01
+	#define RAPP_WINDOW_FLAG_FRAME			0x02
+	#define RAPP_WINDOW_FLAG_RENDERING		0x04
+	#define RAPP_WINDOW_FLAG_MAIN_WINDOW	0x08
+	#define RAPP_WINDOW_FLAG_DPI_AWARE		0x10
 
 	struct AppData;
 
@@ -187,7 +188,7 @@ namespace rapp {
 	void appRunOnMainThread(ThreadFn _fn, void* _userData);
 
 	///
-	WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, bool _keepAspect = true);
+	WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint32_t _mainwindowFlags = RAPP_WINDOW_FLAG_ASPECT_RATIO);
 
 	///
 	void appGraphicsShutdown(App* _app, WindowHandle _mainWindow);
