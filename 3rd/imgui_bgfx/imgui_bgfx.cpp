@@ -9,7 +9,7 @@
 #include <bx/math.h>
 #include <bx/timer.h>
 #include <imgui/imgui.h>
-#include <imgui/imgui_internal.h>
+#include <dear-imgui/imgui_internal.h>
 
 #include "../../inc/rapp.h"
 
@@ -440,10 +440,10 @@ struct OcornutImguiContext
 		m_lastScroll = _scroll;
 
 		uint8_t modifiers = rapp::inputGetModifiersState();
-		io.AddKeyEvent(ImGuiKey_ModShift, 0 != (modifiers & (rapp::KeyboardState::Modifier::LShift | rapp::KeyboardState::Modifier::RShift) ) );
-		io.AddKeyEvent(ImGuiKey_ModCtrl,  0 != (modifiers & (rapp::KeyboardState::Modifier::LCtrl  | rapp::KeyboardState::Modifier::RCtrl ) ) );
-		io.AddKeyEvent(ImGuiKey_ModAlt,   0 != (modifiers & (rapp::KeyboardState::Modifier::LAlt   | rapp::KeyboardState::Modifier::RAlt  ) ) );
-		io.AddKeyEvent(ImGuiKey_ModSuper, 0 != (modifiers & (rapp::KeyboardState::Modifier::LMeta  | rapp::KeyboardState::Modifier::RMeta ) ) );
+		io.AddKeyEvent(ImGuiMod_Shift, 0 != (modifiers & (rapp::KeyboardState::Modifier::LShift | rapp::KeyboardState::Modifier::RShift) ) );
+		io.AddKeyEvent(ImGuiMod_Ctrl,  0 != (modifiers & (rapp::KeyboardState::Modifier::LCtrl  | rapp::KeyboardState::Modifier::RCtrl ) ) );
+		io.AddKeyEvent(ImGuiMod_Alt,   0 != (modifiers & (rapp::KeyboardState::Modifier::LAlt   | rapp::KeyboardState::Modifier::RAlt  ) ) );
+		io.AddKeyEvent(ImGuiMod_Super, 0 != (modifiers & (rapp::KeyboardState::Modifier::LMeta  | rapp::KeyboardState::Modifier::RMeta ) ) );
 		for (int32_t ii = 0; ii < (int32_t)rapp::KeyboardState::Key::Count; ++ii)
 		{
 			io.AddKeyEvent(m_keyMap[ii], rapp::inputGetKeyState(rapp::KeyboardState::Key(ii) ) );
