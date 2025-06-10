@@ -350,7 +350,7 @@ static bx::DefaultAllocator allocator;
 
 WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, bool _keepAspect)
 {
-	RTM_UNUSED_3(_app, _width, _height);
+	RTM_UNUSED_4(_app, _width, _height, _keepAspect);
 #ifdef RAPP_WITH_BGFX
 	WindowHandle win = rapp::windowCreate(	_app, 0, 0, _width, _height,
 											_keepAspect ? RAPP_WINDOW_FLAG_ASPECT_RATIO : 0	|
