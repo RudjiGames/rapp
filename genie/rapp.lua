@@ -84,7 +84,9 @@ function projectExtraConfig_rapp_bgfx()
 		-- 4244 - vg_renderer: 'argument': conversion from 'float' to 'uint16_t', possible loss of data
 		-- 4334 - vg_renderer: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
 		-- 4505 - unreferenced function with internal linkage has been removed
-		buildoptions { "/wd4133 /wd4389 /wd4244 /wd4334 /wd4505"}
+		buildoptions { "/wd4133 /wd4389 /wd4244 /wd4334 /wd4505" }
+ 	configuration { "*clang*" }
+		buildoptions { "-Wunused-but-set-variable -Wunused-function" }
 	configuration {}
 end
 
