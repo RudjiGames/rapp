@@ -480,7 +480,7 @@ namespace rapp {
 		ImU32 drawColor = RAPP_COLOR_WIDGET;
 
 		ImVec2 mousePos(ImGui::GetIO().MousePos);
-		uint64_t currTime = rtm::CPU::clock();
+		uint64_t currTime = rtm::cpuClock();
 		bool hover = false;
 
 		if (ImGui::IsMouseHoveringRect(_position, ImVec2(maxC.x, maxC.y)))

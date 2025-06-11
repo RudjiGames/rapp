@@ -19,17 +19,17 @@ namespace rapp {
 
 	public:
 		FrameStep(uint32_t _fps = 60)
-			: m_startClock(rtm::CPU::clock())
+			: m_startClock(rtm::cpuClock())
 			, m_accumulator(0.0f)
 			, m_currentTime(0.0f)
 			, m_step(1.0f / float(_fps))
 		{
-			m_currentTime = rtm::CPU::time(m_startClock);
+			m_currentTime = rtm::cpuTime(m_startClock);
 		}
 
 		inline void setFrameRate(uint32_t _fps)
 		{
-			m_startClock	= rtm::CPU::clock();
+			m_startClock	= rtm::cpuClock();
 			m_accumulator	= 0.0f;
 			m_currentTime	= 0.0f;
 			m_step			= 1.0f / float(_fps);
@@ -44,7 +44,7 @@ namespace rapp {
 		{
 			if (m_accumulator <= m_step)
 			{
-				float newTime = rtm::CPU::time(m_startClock);
+				float newTime = rtm::cpuTime(m_startClock);
 				float frameTime = newTime - m_currentTime;
 				if (frameTime > 0.25f)
 					frameTime = 0.25f;

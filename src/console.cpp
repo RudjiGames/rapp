@@ -110,9 +110,9 @@ extern float g_consoleToggleTime;
 
 void Console::draw()
 {
-	static float lastDrawTime = rtm::CPU::time();
+	static float lastDrawTime = rtm::cpuTime();
 
-	float currDrawTime = rtm::CPU::time();
+	float currDrawTime = rtm::cpuTime();
 	float delta = (currDrawTime - lastDrawTime);
 	if (delta < 0.006f)
 		delta = 0.006f;
@@ -325,8 +325,8 @@ int Console::textEditCallback(ImGuiInputTextCallbackData* data)
                     bool all_candidates_matches = true;
                     for (int i = 0; i < candidates.Size && all_candidates_matches; i++)
                         if (i == 0)
-                            c = rtm::toUpper(candidates[i]->m_name[match_len]);
-                        else if (c == 0 || c != rtm::toUpper(candidates[i]->m_name[match_len]))
+                            c = rtm::charToUpper(candidates[i]->m_name[match_len]);
+                        else if (c == 0 || c != rtm::charToUpper(candidates[i]->m_name[match_len]))
                             all_candidates_matches = false;
                     if (!all_candidates_matches)
                         break;
