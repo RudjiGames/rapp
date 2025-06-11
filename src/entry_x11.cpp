@@ -478,7 +478,7 @@ namespace rapp
 
 				if (!xpending)
 				{
-					rtm::Thread::sleep(joystick ? 8 : 16);
+					rtm::threadSleep(joystick ? 8 : 16);
 				}
 				else
 				{
