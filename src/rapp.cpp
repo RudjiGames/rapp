@@ -359,10 +359,10 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint3
 	}
 
 	WindowHandle win = rapp::windowCreate(	_app, 0, 0, _width, _height,
-											_mainwindowFlags & (
+											_mainwindowFlags			|
 											RAPP_WINDOW_FLAG_FRAME		|
 											RAPP_WINDOW_FLAG_RENDERING	|
-											RAPP_WINDOW_FLAG_MAIN_WINDOW),
+											RAPP_WINDOW_FLAG_MAIN_WINDOW,
 											_app->m_name);
 
 	bgfx::Init init;
