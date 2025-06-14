@@ -103,55 +103,55 @@ namespace rapp
 			, m_exit(false)
 			, m_fullscreen(false)
 		{
-			s_translateKey[27]             = KeyboardState::Key::Esc;
-			s_translateKey[13]             = KeyboardState::Key::Return;
-			s_translateKey[uint8_t('\t')]  = KeyboardState::Key::Tab;
-			s_translateKey[127]            = KeyboardState::Key::Backspace;
-			s_translateKey[uint8_t(' ')]   = KeyboardState::Key::Space;
+			s_translateKey[27]             = KeyboardKey::Esc;
+			s_translateKey[13]             = KeyboardKey::Return;
+			s_translateKey[uint8_t('\t')]  = KeyboardKey::Tab;
+			s_translateKey[127]            = KeyboardKey::Backspace;
+			s_translateKey[uint8_t(' ')]   = KeyboardKey::Space;
 
 			s_translateKey[uint8_t('+')]   =
-			s_translateKey[uint8_t('=')]   = KeyboardState::Key::Plus;
+			s_translateKey[uint8_t('=')]   = KeyboardKey::Plus;
 			s_translateKey[uint8_t('_')]   =
-			s_translateKey[uint8_t('-')]   = KeyboardState::Key::Minus;
+			s_translateKey[uint8_t('-')]   = KeyboardKey::Minus;
 
 			s_translateKey[96]             =
 			s_translateKey[uint8_t('~')]   =
-			s_translateKey[uint8_t('`')]   = KeyboardState::Key::Tilde;
+			s_translateKey[uint8_t('`')]   = KeyboardKey::Tilde;
 
 			s_translateKey[uint8_t(':')]   =
-			s_translateKey[uint8_t(';')]   = KeyboardState::Key::Semicolon;
+			s_translateKey[uint8_t(';')]   = KeyboardKey::Semicolon;
 			s_translateKey[uint8_t('"')]   =
-			s_translateKey[uint8_t('\'')]  = KeyboardState::Key::Quote;
+			s_translateKey[uint8_t('\'')]  = KeyboardKey::Quote;
 
 			s_translateKey[uint8_t('{')]   =
-			s_translateKey[uint8_t('[')]   = KeyboardState::Key::LeftBracket;
+			s_translateKey[uint8_t('[')]   = KeyboardKey::LeftBracket;
 			s_translateKey[uint8_t('}')]   =
-			s_translateKey[uint8_t(']')]   = KeyboardState::Key::RightBracket;
+			s_translateKey[uint8_t(']')]   = KeyboardKey::RightBracket;
 
 			s_translateKey[uint8_t('<')]   =
-			s_translateKey[uint8_t(',')]   = KeyboardState::Key::Comma;
+			s_translateKey[uint8_t(',')]   = KeyboardKey::Comma;
 			s_translateKey[uint8_t('>')]   =
-			s_translateKey[uint8_t('.')]   = KeyboardState::Key::Period;
+			s_translateKey[uint8_t('.')]   = KeyboardKey::Period;
 			s_translateKey[uint8_t('?')]   =
-			s_translateKey[uint8_t('/')]   = KeyboardState::Key::Slash;
+			s_translateKey[uint8_t('/')]   = KeyboardKey::Slash;
 			s_translateKey[uint8_t('|')]   =
-			s_translateKey[uint8_t('\\')]  = KeyboardState::Key::Backslash;
+			s_translateKey[uint8_t('\\')]  = KeyboardKey::Backslash;
 
-			s_translateKey[uint8_t('0')]   = KeyboardState::Key::Key0;
-			s_translateKey[uint8_t('1')]   = KeyboardState::Key::Key1;
-			s_translateKey[uint8_t('2')]   = KeyboardState::Key::Key2;
-			s_translateKey[uint8_t('3')]   = KeyboardState::Key::Key3;
-			s_translateKey[uint8_t('4')]   = KeyboardState::Key::Key4;
-			s_translateKey[uint8_t('5')]   = KeyboardState::Key::Key5;
-			s_translateKey[uint8_t('6')]   = KeyboardState::Key::Key6;
-			s_translateKey[uint8_t('7')]   = KeyboardState::Key::Key7;
-			s_translateKey[uint8_t('8')]   = KeyboardState::Key::Key8;
-			s_translateKey[uint8_t('9')]   = KeyboardState::Key::Key9;
+			s_translateKey[uint8_t('0')]   = KeyboardKey::Key0;
+			s_translateKey[uint8_t('1')]   = KeyboardKey::Key1;
+			s_translateKey[uint8_t('2')]   = KeyboardKey::Key2;
+			s_translateKey[uint8_t('3')]   = KeyboardKey::Key3;
+			s_translateKey[uint8_t('4')]   = KeyboardKey::Key4;
+			s_translateKey[uint8_t('5')]   = KeyboardKey::Key5;
+			s_translateKey[uint8_t('6')]   = KeyboardKey::Key6;
+			s_translateKey[uint8_t('7')]   = KeyboardKey::Key7;
+			s_translateKey[uint8_t('8')]   = KeyboardKey::Key8;
+			s_translateKey[uint8_t('9')]   = KeyboardKey::Key9;
 
 			for (char ch = 'a'; ch <= 'z'; ++ch)
 			{
 				s_translateKey[uint8_t(ch)]       =
-				s_translateKey[uint8_t(ch - ' ')] = KeyboardState::Key::KeyA + (ch - 'a');
+				s_translateKey[uint8_t(ch - ' ')] = KeyboardKey::KeyA + (ch - 'a');
 			}
 		}
 
@@ -210,13 +210,13 @@ namespace rapp
 				;
 		}
 
-		KeyboardState::Key handleKeyEvent(NSEvent* event, uint8_t* specialKeys, uint8_t* _pressedChar)
+		KeyboardKey handleKeyEvent(NSEvent* event, uint8_t* specialKeys, uint8_t* _pressedChar)
 		{
 			NSString* key = [event charactersIgnoringModifiers];
 			unichar keyChar = 0;
 			if ([key length] == 0)
 			{
-				return KeyboardState::Key::None;
+				return KeyboardKey::None;
 			}
 
 			keyChar = [key characterAtIndex:0];
@@ -228,38 +228,38 @@ namespace rapp
 			// if this is a unhandled key just return None
 			if (keyCode < 256)
 			{
-				return (KeyboardState::Key)s_translateKey[keyCode];
+				return (KeyboardKey)s_translateKey[keyCode];
 			}
 
 			switch (keyCode)
 			{
-			case NSF1FunctionKey:  return KeyboardState::Key::F1;
-			case NSF2FunctionKey:  return KeyboardState::Key::F2;
-			case NSF3FunctionKey:  return KeyboardState::Key::F3;
-			case NSF4FunctionKey:  return KeyboardState::Key::F4;
-			case NSF5FunctionKey:  return KeyboardState::Key::F5;
-			case NSF6FunctionKey:  return KeyboardState::Key::F6;
-			case NSF7FunctionKey:  return KeyboardState::Key::F7;
-			case NSF8FunctionKey:  return KeyboardState::Key::F8;
-			case NSF9FunctionKey:  return KeyboardState::Key::F9;
-			case NSF10FunctionKey: return KeyboardState::Key::F10;
-			case NSF11FunctionKey: return KeyboardState::Key::F11;
-			case NSF12FunctionKey: return KeyboardState::Key::F12;
+			case NSF1FunctionKey:  return KeyboardKey::F1;
+			case NSF2FunctionKey:  return KeyboardKey::F2;
+			case NSF3FunctionKey:  return KeyboardKey::F3;
+			case NSF4FunctionKey:  return KeyboardKey::F4;
+			case NSF5FunctionKey:  return KeyboardKey::F5;
+			case NSF6FunctionKey:  return KeyboardKey::F6;
+			case NSF7FunctionKey:  return KeyboardKey::F7;
+			case NSF8FunctionKey:  return KeyboardKey::F8;
+			case NSF9FunctionKey:  return KeyboardKey::F9;
+			case NSF10FunctionKey: return KeyboardKey::F10;
+			case NSF11FunctionKey: return KeyboardKey::F11;
+			case NSF12FunctionKey: return KeyboardKey::F12;
 
-			case NSLeftArrowFunctionKey:   return KeyboardState::Key::Left;
-			case NSRightArrowFunctionKey:  return KeyboardState::Key::Right;
-			case NSUpArrowFunctionKey:     return KeyboardState::Key::Up;
-			case NSDownArrowFunctionKey:   return KeyboardState::Key::Down;
+			case NSLeftArrowFunctionKey:   return KeyboardKey::Left;
+			case NSRightArrowFunctionKey:  return KeyboardKey::Right;
+			case NSUpArrowFunctionKey:     return KeyboardKey::Up;
+			case NSDownArrowFunctionKey:   return KeyboardKey::Down;
 
-			case NSPageUpFunctionKey:      return KeyboardState::Key::PageUp;
-			case NSPageDownFunctionKey:    return KeyboardState::Key::PageDown;
-			case NSHomeFunctionKey:        return KeyboardState::Key::Home;
-			case NSEndFunctionKey:         return KeyboardState::Key::End;
+			case NSPageUpFunctionKey:      return KeyboardKey::PageUp;
+			case NSPageDownFunctionKey:    return KeyboardKey::PageDown;
+			case NSHomeFunctionKey:        return KeyboardKey::Home;
+			case NSEndFunctionKey:         return KeyboardKey::End;
 
-			case NSPrintScreenFunctionKey: return KeyboardState::Key::Print;
+			case NSPrintScreenFunctionKey: return KeyboardKey::Print;
 			}
 
-			return KeyboardState::Key::None;
+			return KeyboardKey::None;
 		}
 
 		bool dispatchEvent(NSEvent* event)
@@ -335,12 +335,12 @@ namespace rapp
 					{
 						uint8_t modifiers = 0;
 						uint8_t pressedChar[4];
-						KeyboardState::Key key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
+						KeyboardKey key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
 
 						// Returning false means that we take care of the key (instead of the default behavior)
-						if (key != KeyboardState::Key::None)
+						if (key != KeyboardKey::None)
 						{
-							if (key == KeyboardState::Key::KeyQ && (modifiers & KeyboardState::Modifier::RMeta) )
+							if (key == KeyboardKey::KeyQ && (modifiers & KeyboardState::Modifier::RMeta) )
 							{
 								m_eventQueue.postExitEvent();
 							}
@@ -360,11 +360,11 @@ namespace rapp
 					{
 						uint8_t modifiers  = 0;
 						uint8_t pressedChar[4];
-						KeyboardState::Key key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
+						KeyboardKey key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
 
 						RTM_UNUSED(pressedChar);
 
-						if (key != KeyboardState::Key::None)
+						if (key != KeyboardKey::None)
 						{
 							m_eventQueue.postKeyEvent(s_defaultWindow, key, modifiers, false);
 							return false;
@@ -680,7 +680,7 @@ namespace rapp
 		RTM_UNUSED_2(_handle, _lock);
 	}
 
-	void inputEmitKeyPress(KeyboardState::Key _key, uint8_t _modifiers)
+	void inputEmitKeyPress(KeyboardKey _key, uint8_t _modifiers)
 	{
 		s_ctx.m_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, _key, _modifiers, true);
 		s_ctx.m_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, _key, _modifiers, false);
