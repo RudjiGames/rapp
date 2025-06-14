@@ -85,18 +85,18 @@ namespace rapp
 
 	struct AxisDpadRemap
 	{
-		GamepadButtons first;
-		GamepadButtons second;
+		GamepadButton first;
+		GamepadButton second;
 	};
 
 	static AxisDpadRemap s_axisDpad[] =
 	{
-		{ GamepadButtons::Left, GamepadButtons::Right },
-		{ GamepadButtons::Up,   GamepadButtons::Down  },
-		{ GamepadButtons::None, GamepadButtons::None  },
-		{ GamepadButtons::Left, GamepadButtons::Right },
-		{ GamepadButtons::Up,   GamepadButtons::Down  },
-		{ GamepadButtons::None, GamepadButtons::None  },
+		{ GamepadButton::Left, GamepadButton::Right },
+		{ GamepadButton::Up,   GamepadButton::Down  },
+		{ GamepadButton::None, GamepadButton::None  },
+		{ GamepadButton::Left, GamepadButton::Right },
+		{ GamepadButton::Up,   GamepadButton::Down  },
+		{ GamepadButton::None, GamepadButton::None  },
 	};
 	RTM_STATIC_ASSERT(RTM_NUM_ELEMENTS(s_translateAxis) == RTM_NUM_ELEMENTS(s_axisDpad) );
 
@@ -174,7 +174,7 @@ namespace rapp
 					{
 						_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, axis, value);
 
-						if (GamepadButtons::None != s_axisDpad[axis].first)
+						if (GamepadButton::None != s_axisDpad[axis].first)
 						{
 							if (m_value[axis] == 0)
 							{
