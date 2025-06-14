@@ -199,18 +199,18 @@ namespace rapp
 		uint8_t translateModifiers(int flags)
 		{
 			return 0
-				| ((0 != (flags & NX_DEVICELSHIFTKEYMASK ) ) ? KeyboardState::Modifier::LShift	: 0)
-				| ((0 != (flags & NX_DEVICERSHIFTKEYMASK ) ) ? KeyboardState::Modifier::RShift	: 0)
-				| ((0 != (flags & NX_DEVICELALTKEYMASK ) )   ? KeyboardState::Modifier::LAlt	: 0)
-				| ((0 != (flags & NX_DEVICERALTKEYMASK ) )   ? KeyboardState::Modifier::RAlt	: 0)
-				| ((0 != (flags & NX_DEVICELCTLKEYMASK ) )   ? KeyboardState::Modifier::LCtrl	: 0)
-				| ((0 != (flags & NX_DEVICERCTLKEYMASK ) )   ? KeyboardState::Modifier::RCtrl	: 0)
-				| ((0 != (flags & NX_DEVICELCMDKEYMASK) )    ? KeyboardState::Modifier::LMeta	: 0)
-				| ((0 != (flags & NX_DEVICERCMDKEYMASK) )    ? KeyboardState::Modifier::RMeta	: 0)
+				| ((0 != (flags & NX_DEVICELSHIFTKEYMASK ) ) ? KeyboardModifier::LShift	: 0)
+				| ((0 != (flags & NX_DEVICERSHIFTKEYMASK ) ) ? KeyboardModifier::RShift	: 0)
+				| ((0 != (flags & NX_DEVICELALTKEYMASK ) )   ? KeyboardModifier::LAlt	: 0)
+				| ((0 != (flags & NX_DEVICERALTKEYMASK ) )   ? KeyboardModifier::RAlt	: 0)
+				| ((0 != (flags & NX_DEVICELCTLKEYMASK ) )   ? KeyboardModifier::LCtrl	: 0)
+				| ((0 != (flags & NX_DEVICERCTLKEYMASK ) )   ? KeyboardModifier::RCtrl	: 0)
+				| ((0 != (flags & NX_DEVICELCMDKEYMASK) )    ? KeyboardModifier::LMeta	: 0)
+				| ((0 != (flags & NX_DEVICERCMDKEYMASK) )    ? KeyboardModifier::RMeta	: 0)
 				;
 		}
 
-		KeyboardKey handleKeyEvent(NSEvent* event, uint8_t* specialKeys, uint8_t* _pressedChar)
+		KeyboardKey::Enum handleKeyEvent(NSEvent* event, uint8_t* specialKeys, uint8_t* _pressedChar)
 		{
 			NSString* key = [event charactersIgnoringModifiers];
 			unichar keyChar = 0;
@@ -228,7 +228,7 @@ namespace rapp
 			// if this is a unhandled key just return None
 			if (keyCode < 256)
 			{
-				return (KeyboardKey)s_translateKey[keyCode];
+				return (KeyboardKey::Enum)s_translateKey[keyCode];
 			}
 
 			switch (keyCode)
@@ -335,18 +335,18 @@ namespace rapp
 					{
 						uint8_t modifiers = 0;
 						uint8_t pressedChar[4];
-						KeyboardKey key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
+						KeyboardKey::Enum key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
 
 						// Returning false means that we take care of the key (instead of the default behavior)
 						if (key != KeyboardKey::None)
 						{
-							if (key == KeyboardKey::KeyQ && (modifiers & KeyboardState::Modifier::RMeta) )
+							if (key == KeyboardKey::KeyQ && (modifiers & KeyboardModifier::RMeta) )
 							{
 								m_eventQueue.postExitEvent();
 							}
 							else
 							{
-								enum { ShiftMask = KeyboardState::Modifier::LShift|KeyboardState::Modifier::RShift };
+								enum { ShiftMask = KeyboardModifier::LShift|KeyboardModifier::RShift };
 								m_eventQueue.postCharEvent(s_defaultWindow, 1, pressedChar);
 								m_eventQueue.postKeyEvent(s_defaultWindow, key, modifiers, true);
 								return false;
@@ -360,7 +360,7 @@ namespace rapp
 					{
 						uint8_t modifiers  = 0;
 						uint8_t pressedChar[4];
-						KeyboardKey key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
+						KeyboardKey::Enum key = handleKeyEvent(event, &modifiers, &pressedChar[0]);
 
 						RTM_UNUSED(pressedChar);
 
@@ -680,7 +680,7 @@ namespace rapp
 		RTM_UNUSED_2(_handle, _lock);
 	}
 
-	void inputEmitKeyPress(KeyboardKey _key, uint8_t _modifiers)
+	void inputEmitKeyPress(KeyboardKey::Enum _key, uint8_t _modifiers)
 	{
 		s_ctx.m_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, _key, _modifiers, true);
 		s_ctx.m_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, _key, _modifiers, false);
