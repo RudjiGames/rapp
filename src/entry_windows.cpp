@@ -51,10 +51,10 @@ namespace rapp
 
 	static XInputRemap s_xinputRemap[] =
 	{
-		{ XINPUT_GAMEPAD_DPAD_UP,        GamepadButton::MoveUp    },
-		{ XINPUT_GAMEPAD_DPAD_DOWN,      GamepadButton::MoveDown  },
-		{ XINPUT_GAMEPAD_DPAD_LEFT,      GamepadButton::MoveLeft  },
-		{ XINPUT_GAMEPAD_DPAD_RIGHT,     GamepadButton::MoveRight },
+		{ XINPUT_GAMEPAD_DPAD_UP,        GamepadButton::Up	      },
+		{ XINPUT_GAMEPAD_DPAD_DOWN,      GamepadButton::Down      },
+		{ XINPUT_GAMEPAD_DPAD_LEFT,      GamepadButton::Left      },
+		{ XINPUT_GAMEPAD_DPAD_RIGHT,     GamepadButton::Right     },
 		{ XINPUT_GAMEPAD_START,          GamepadButton::Start     },
 		{ XINPUT_GAMEPAD_BACK,           GamepadButton::Back      },
 		{ XINPUT_GAMEPAD_LEFT_THUMB,     GamepadButton::LThumb    },

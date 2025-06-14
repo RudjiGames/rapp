@@ -216,10 +216,10 @@ namespace rapp
 		s_translateKey[_xk&0x1ff] = (uint8_t)_key;
 	}
 
-	KeyboardKey fromXk(uint16_t _xk)
+	KeyboardKey::Enum fromXk(uint16_t _xk)
 	{
 		_xk += 256;
-		return 512 > _xk ? (KeyboardKey)s_translateKey[_xk] : KeyboardKey::None;
+		return 512 > _xk ? (KeyboardKey::Enum)s_translateKey[_xk] : KeyboardKey::None;
 	}
 
 	enum Command : uint8_t
@@ -501,12 +501,12 @@ namespace rapp
 						case ButtonRelease:
 							{
 								const XButtonEvent& xbutton = event.xbutton;
-								MouseButton mb = MouseButton::None;
+								MouseButton::Enum mb = MouseButton::None;
 								switch (xbutton.button)
 								{
 									case Button1: mb = MouseButton::Left;   break;
 									case Button2: mb = MouseButton::Middle; break;
-									case Button3: mb = MouseButton::RightButton;  break;
+									case Button3: mb = MouseButton::Right;  break;
 									case Button4: ++m_mz; break;
 									case Button5: --m_mz; break;
 								}
@@ -628,7 +628,7 @@ namespace rapp
 			return thread.getExitCode();
 		}
 
-		void setModifier(KeyboardModifier _modifier, bool _set)
+		void setModifier(KeyboardModifier::Enum _modifier, bool _set)
 		{
 			m_modifiers &= ~_modifier;
 			m_modifiers |= _set ? _modifier : 0;

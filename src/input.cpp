@@ -768,10 +768,10 @@ void displayGamePadDbg(uint16_t _x, uint16_t _y, const GamepadState& _gp)
 		if (_gp.m_buttons & GamepadButton::A)			bgfx::dbgTextPrintf(_x+31, _y+3, 0, "\x1b[7;2m[A]");
 		if (_gp.m_buttons & GamepadButton::B)			bgfx::dbgTextPrintf(_x+34, _y+2, 0, "\x1b[7;4m[B]");
 
-		if (_gp.m_buttons & GamepadButton::MoveUp)		bgfx::dbgTextPrintf(_x+12, _y+1, 0x3b, "[^]");
-		if (_gp.m_buttons & GamepadButton::MoveDown)	bgfx::dbgTextPrintf(_x+12, _y+3, 0x3b, "[v]");
-		if (_gp.m_buttons & GamepadButton::MoveLeft)	bgfx::dbgTextPrintf(_x+10, _y+2, 0x3b, "[<]");;
-		if (_gp.m_buttons & GamepadButton::MoveRight)	bgfx::dbgTextPrintf(_x+14, _y+2, 0x3b, "[>]");
+		if (_gp.m_buttons & GamepadButton::Up)			bgfx::dbgTextPrintf(_x+12, _y+1, 0x3b, "[^]");
+		if (_gp.m_buttons & GamepadButton::Down)		bgfx::dbgTextPrintf(_x+12, _y+3, 0x3b, "[v]");
+		if (_gp.m_buttons & GamepadButton::Left)		bgfx::dbgTextPrintf(_x+10, _y+2, 0x3b, "[<]");;
+		if (_gp.m_buttons & GamepadButton::Right)		bgfx::dbgTextPrintf(_x+14, _y+2, 0x3b, "[>]");
 
 		if (_gp.m_buttons & GamepadButton::LThumb)		bgfx::dbgTextPrintf(_x+2,  _y+3, 0x8f, "\xfe");
 		if (_gp.m_buttons & GamepadButton::RThumb)		bgfx::dbgTextPrintf(_x+20, _y+3, 0x8f, "\xfe");
