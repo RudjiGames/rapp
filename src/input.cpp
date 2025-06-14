@@ -433,7 +433,7 @@ struct Input
 
 					rapp::Gamepad& gp = m_gamepad[binding->m_bindingGamepad.m_gamepadIndex];
 
-					if (button == rapp::GamepadButton::NoButtonGP)
+					if (button == rapp::GamepadButton::None)
 					{
 						RTM_ASSERT(binding->m_bindingGamepad.m_stick != rapp::GamepadStick::NoStick, "");
 

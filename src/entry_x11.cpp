@@ -591,7 +591,7 @@ namespace rapp
 											}
 										}
 
-										KeyboardKey key = fromXk(keysym);
+										KeyboardKey::Enum key = fromXk(keysym);
 										if (KeyboardKey::None != key)
 										{
 											m_eventQueue.postKeyEvent(handle, key, m_modifiers, KeyPress == event.type);

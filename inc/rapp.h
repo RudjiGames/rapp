@@ -650,7 +650,7 @@ namespace rapp {
 	{
 		enum Enum
 		{
-			NoButtonGP	= 0,
+			None		= 0x0000,
 			X			= 0x0001,
 			Y			= 0x0002,
 			A			= 0x0004,
