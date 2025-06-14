@@ -15,7 +15,7 @@
 #endif // ENTRY_CONFIG_MAX_GAMEPADS
 
 #define ENTRY_IMPLEMENT_EVENT(_class, _type) \
-			_class(WindowHandle _handle) : Event(_type, _handle) {}
+	_class(WindowHandle _handle) : Event(_type, _handle) {}
 
 namespace rapp
 {
@@ -29,7 +29,7 @@ namespace rapp
 			Char,
 			Exit,
 			Gamepad,
-			GamepadButton,
+			GamepadButtons,
 			Key,
 			Mouse,
 			Size,
@@ -49,80 +49,80 @@ namespace rapp
 		{
 		}
 
-		Event::Enum m_type;
-		WindowHandle m_handle;
+		Event::Enum			m_type;
+		WindowHandle		m_handle;
 	};
 
 	struct AxisEvent : public Event
 	{
 		ENTRY_IMPLEMENT_EVENT(AxisEvent, Event::Axis);
 
-		GamepadAxis::Enum m_axis;
-		int32_t m_value;
-		GamepadHandle m_gamepad;
+		GamepadAxis::Enum	m_axis;
+		int32_t				m_value;
+		GamepadHandle		m_gamepad;
 	};
 
 	struct CharEvent : public Event
 	{
 		ENTRY_IMPLEMENT_EVENT(CharEvent, Event::Char);
 
-		uint8_t m_len;
-		uint8_t m_char[4];
+		uint8_t				m_len;
+		uint8_t				m_char[4];
 	};
 
 	struct GamepadEvent : public Event
 	{
 		ENTRY_IMPLEMENT_EVENT(GamepadEvent, Event::Gamepad);
 
-		GamepadHandle m_gamepad;
-		bool m_connected;
+		GamepadHandle		m_gamepad;
+		bool				m_connected;
 	};
 
-	struct GamepadButtonEvent : public Event
+	struct GamepadButtonsEvent : public Event
 	{
-		ENTRY_IMPLEMENT_EVENT(GamepadButtonEvent, Event::GamepadButton);
+		ENTRY_IMPLEMENT_EVENT(GamepadButtonsEvent, Event::GamepadButtons);
 
-		GamepadHandle m_gamepad;
-		GamepadState::Buttons m_button;
-		bool m_pressed;
+		GamepadHandle		m_gamepad;
+		GamepadButton::Enum	m_button;
+		bool				m_pressed;
 	};
 
 	struct KeyEvent : public Event
 	{
 		ENTRY_IMPLEMENT_EVENT(KeyEvent, Event::Key);
 
-		KeyboardState::Key m_key;
-		uint8_t m_modifiers;
-		bool m_down;
+		KeyboardKey::Enum	m_key;
+		uint8_t				m_modifiers;
+		bool				m_down;
 	};
 
 	struct MouseEvent : public Event
 	{
 		ENTRY_IMPLEMENT_EVENT(MouseEvent, Event::Mouse);
 
-		int32_t m_mx;
-		int32_t m_my;
-		int32_t m_mz;
-		MouseState::Button m_button;
-		bool m_down;
-		bool m_doubleClick;
-		bool m_move;
-		uint8_t m_modifiers;
+		int32_t				m_mx;
+		int32_t				m_my;
+		int32_t				m_mz;
+		MouseButton::Enum	m_button;
+		bool				m_down;
+		bool				m_doubleClick;
+		bool				m_move;
+		uint8_t				m_modifiers;
 	};
 
 	struct SizeEvent : public Event
 	{
 		ENTRY_IMPLEMENT_EVENT(SizeEvent, Event::Size);
 
-		uint16_t m_width;
-		uint16_t m_height;
+		uint16_t			m_width;
+		uint16_t			m_height;
 	};
 
 	struct WindowEvent : public Event
 	{
 		ENTRY_IMPLEMENT_EVENT(WindowEvent, Event::Window);
 
-		void* m_nwh;
+		void*				m_nwh;
 	};
 
 	struct SuspendEvent : public Event
@@ -138,7 +138,7 @@ namespace rapp
 		ENTRY_IMPLEMENT_EVENT(SuspendEvent, Event::Suspend);
 
 		void* m_nwh;
-		SuspendEvent::Enum m_eventState;
+		SuspendEvent::Enum	m_eventState;
 	};
 
 	const Event* poll();
@@ -191,16 +191,16 @@ namespace rapp
 			while(!m_queue.write(ev));
 		}
 
-		void postGamepadButtonEvent(WindowHandle _handle, GamepadHandle _gamepad, GamepadState::Buttons _button, bool _pressed)
+		void postGamepadButtonsEvent(WindowHandle _handle, GamepadHandle _gamepad, GamepadButton::Enum _button, bool _pressed)
 		{
-			GamepadButtonEvent* ev = new GamepadButtonEvent(_handle);
+			GamepadButtonsEvent* ev = new GamepadButtonsEvent(_handle);
 			ev->m_gamepad	= _gamepad;
 			ev->m_button	= _button;
 			ev->m_pressed	= _pressed;
 			while(!m_queue.write(ev));
 		}
 
-		void postKeyEvent(WindowHandle _handle, KeyboardState::Key _key, uint8_t _modifiers, bool _down)
+		void postKeyEvent(WindowHandle _handle, KeyboardKey::Enum _key, uint8_t _modifiers, bool _down)
 		{
 			KeyEvent* ev = new KeyEvent(_handle);
 			ev->m_key       = _key;
@@ -216,7 +216,7 @@ namespace rapp
 			ev->m_mx          = _mx;
 			ev->m_my          = _my;
 			ev->m_mz          = _mz;
-			ev->m_button      = MouseState::Button::None;
+			ev->m_button      = MouseButton::None;
 			ev->m_down        = false;
 			ev->m_move        = true;
 			ev->m_modifiers   = _modifiers;
@@ -224,7 +224,7 @@ namespace rapp
 			while(!m_queue.write(ev));
 		}
 
-		void postMouseEvent(WindowHandle _handle, int32_t _mx, int32_t _my, int32_t _mz, MouseState::Button _button, uint8_t _modifiers, bool _down, bool _double)
+		void postMouseEvent(WindowHandle _handle, int32_t _mx, int32_t _my, int32_t _mz, MouseButton::Enum _button, uint8_t _modifiers, bool _down, bool _double)
 		{
 			MouseEvent* ev = new MouseEvent(_handle);
 			ev->m_mx          = _mx;

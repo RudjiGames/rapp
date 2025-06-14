@@ -237,30 +237,30 @@ namespace rapp {
 
 		static const rapp::InputBinding bindings[] =
 		{
-			{ 0, "num0",	1, { rapp::KeyboardState::Key::NumPad0,	rapp::KeyboardState::Modifier::NoMods }},
-			{ 0, "num1",	1, { rapp::KeyboardState::Key::NumPad1,	rapp::KeyboardState::Modifier::NoMods }},
-			{ 0, "num2",	1, { rapp::KeyboardState::Key::NumPad2,	rapp::KeyboardState::Modifier::NoMods }},
-			{ 0, "num3",	1, { rapp::KeyboardState::Key::NumPad3,	rapp::KeyboardState::Modifier::NoMods }},
-			{ 0, "num4",	1, { rapp::KeyboardState::Key::NumPad4,	rapp::KeyboardState::Modifier::NoMods }},
-			{ 0, "num5",	1, { rapp::KeyboardState::Key::NumPad5,	rapp::KeyboardState::Modifier::NoMods }},
-			{ 0, "num6",	1, { rapp::KeyboardState::Key::NumPad6,	rapp::KeyboardState::Modifier::NoMods }},
-			{ 0, "num7",	1, { rapp::KeyboardState::Key::NumPad7,	rapp::KeyboardState::Modifier::NoMods }},
-			{ 0, "num8",	1, { rapp::KeyboardState::Key::NumPad8,	rapp::KeyboardState::Modifier::NoMods }},
-			{ 0, "num9",	1, { rapp::KeyboardState::Key::NumPad9,	rapp::KeyboardState::Modifier::NoMods }},
+			{ 0, "num0",	1, { rapp::KeyboardKey::NumPad0,	rapp::KeyboardModifier::None }},
+			{ 0, "num1",	1, { rapp::KeyboardKey::NumPad1,	rapp::KeyboardModifier::None }},
+			{ 0, "num2",	1, { rapp::KeyboardKey::NumPad2,	rapp::KeyboardModifier::None }},
+			{ 0, "num3",	1, { rapp::KeyboardKey::NumPad3,	rapp::KeyboardModifier::None }},
+			{ 0, "num4",	1, { rapp::KeyboardKey::NumPad4,	rapp::KeyboardModifier::None }},
+			{ 0, "num5",	1, { rapp::KeyboardKey::NumPad5,	rapp::KeyboardModifier::None }},
+			{ 0, "num6",	1, { rapp::KeyboardKey::NumPad6,	rapp::KeyboardModifier::None }},
+			{ 0, "num7",	1, { rapp::KeyboardKey::NumPad7,	rapp::KeyboardModifier::None }},
+			{ 0, "num8",	1, { rapp::KeyboardKey::NumPad8,	rapp::KeyboardModifier::None }},
+			{ 0, "num9",	1, { rapp::KeyboardKey::NumPad9,	rapp::KeyboardModifier::None }},
 			RAPP_INPUT_BINDING_END
 		};
 
 		rapp::inputAddBindings("debug_bindings", bindings);
-		rapp::cmdAdd("num0",	cmdKey, (void*)KeyboardState::Key::NumPad0,	"");
-		rapp::cmdAdd("num1",	cmdKey, (void*)KeyboardState::Key::NumPad1,	"");
-		rapp::cmdAdd("num2",	cmdKey, (void*)KeyboardState::Key::NumPad2,	"");
-		rapp::cmdAdd("num3",	cmdKey, (void*)KeyboardState::Key::NumPad3,	"");
-		rapp::cmdAdd("num4",	cmdKey, (void*)KeyboardState::Key::NumPad4,	"");
-		rapp::cmdAdd("num5",	cmdKey, (void*)KeyboardState::Key::NumPad5,	"");
-		rapp::cmdAdd("num6",	cmdKey, (void*)KeyboardState::Key::NumPad6,	"");
-		rapp::cmdAdd("num7",	cmdKey, (void*)KeyboardState::Key::NumPad7,	"");
-		rapp::cmdAdd("num8",	cmdKey, (void*)KeyboardState::Key::NumPad8,	"");
-		rapp::cmdAdd("num9",	cmdKey, (void*)KeyboardState::Key::NumPad9,	"");
+		rapp::cmdAdd("num0",	cmdKey, (void*)KeyboardKey::NumPad0,	"");
+		rapp::cmdAdd("num1",	cmdKey, (void*)KeyboardKey::NumPad1,	"");
+		rapp::cmdAdd("num2",	cmdKey, (void*)KeyboardKey::NumPad2,	"");
+		rapp::cmdAdd("num3",	cmdKey, (void*)KeyboardKey::NumPad3,	"");
+		rapp::cmdAdd("num4",	cmdKey, (void*)KeyboardKey::NumPad4,	"");
+		rapp::cmdAdd("num5",	cmdKey, (void*)KeyboardKey::NumPad5,	"");
+		rapp::cmdAdd("num6",	cmdKey, (void*)KeyboardKey::NumPad6,	"");
+		rapp::cmdAdd("num7",	cmdKey, (void*)KeyboardKey::NumPad7,	"");
+		rapp::cmdAdd("num8",	cmdKey, (void*)KeyboardKey::NumPad8,	"");
+		rapp::cmdAdd("num9",	cmdKey, (void*)KeyboardKey::NumPad9,	"");
 	}
 
 	static void rappPropertyTypeEditor_scalar(DebugMenu* _menu, ImGuiDataType _type, int _cnt = -1)
@@ -394,11 +394,11 @@ namespace rapp {
 			ImGui::EndPopup();
 		}
 
-		if (rapp::inputGetKeyState(rapp::KeyboardState::Key::Esc))
+		if (rapp::inputGetKeyState(rapp::KeyboardKey::Esc))
 			return Property::Cancel;
 
-		if (rapp::inputGetKeyState(rapp::KeyboardState::Key::Return)	||
-			rapp::inputGetKeyState(rapp::KeyboardState::Key::NumPad5))
+		if (rapp::inputGetKeyState(rapp::KeyboardKey::Return)	||
+			rapp::inputGetKeyState(rapp::KeyboardKey::NumPad5))
 			return Property::Accept;
 
 		return Property::Editing;
@@ -598,7 +598,7 @@ namespace rapp {
 					label		= g_currentDebugMenu->m_label;
 				}
 
-	bool keyPressed = rapp::inputGetKeyState(rapp::KeyboardState::Key(rapp::KeyboardState::Key::NumPad0 + displayIndex));
+	bool keyPressed = rapp::inputGetKeyState(rapp::KeyboardKey::Enum(rapp::KeyboardKey::NumPad0 + displayIndex));
 
 				if (rappRoundedButton(child, draw_list, minC, buttonSize, displayIndex, label, editingValue) && !editingValue)
 				{

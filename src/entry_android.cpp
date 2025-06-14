@@ -48,26 +48,26 @@ namespace rapp
 	struct GamepadRemap
 	{
 		uint16_t				m_keyCode;
-		GamepadState::Buttons	m_key;
+		GamepadButtons	m_key;
 	};
 
 	static GamepadRemap s_gamepadRemap[] =
 	{
-		{ AKEYCODE_DPAD_UP,       GamepadState::Buttons::Up        },
-		{ AKEYCODE_DPAD_DOWN,     GamepadState::Buttons::Down      },
-		{ AKEYCODE_DPAD_LEFT,     GamepadState::Buttons::Left      },
-		{ AKEYCODE_DPAD_RIGHT,    GamepadState::Buttons::Right     },
-		{ AKEYCODE_BUTTON_START,  GamepadState::Buttons::Start     },
-		{ AKEYCODE_BACK,          GamepadState::Buttons::Back      },
-		{ AKEYCODE_BUTTON_THUMBL, GamepadState::Buttons::LThumb    },
-		{ AKEYCODE_BUTTON_THUMBR, GamepadState::Buttons::RThumb    },
-		{ AKEYCODE_BUTTON_L1,     GamepadState::Buttons::LShoulder },
-		{ AKEYCODE_BUTTON_R1,     GamepadState::Buttons::RShoulder },
-		{ AKEYCODE_GUIDE,         GamepadState::Buttons::Guide     },
-		{ AKEYCODE_BUTTON_A,      GamepadState::Buttons::A         },
-		{ AKEYCODE_BUTTON_B,      GamepadState::Buttons::B         },
-		{ AKEYCODE_BUTTON_X,      GamepadState::Buttons::X         },
-		{ AKEYCODE_BUTTON_Y,      GamepadState::Buttons::Y         },
+		{ AKEYCODE_DPAD_UP,       GamepadButtons::Up        },
+		{ AKEYCODE_DPAD_DOWN,     GamepadButtons::Down      },
+		{ AKEYCODE_DPAD_LEFT,     GamepadButtons::Left      },
+		{ AKEYCODE_DPAD_RIGHT,    GamepadButtons::Right     },
+		{ AKEYCODE_BUTTON_START,  GamepadButtons::Start     },
+		{ AKEYCODE_BACK,          GamepadButtons::Back      },
+		{ AKEYCODE_BUTTON_THUMBL, GamepadButtons::LThumb    },
+		{ AKEYCODE_BUTTON_THUMBR, GamepadButtons::RThumb    },
+		{ AKEYCODE_BUTTON_L1,     GamepadButtons::LShoulder },
+		{ AKEYCODE_BUTTON_R1,     GamepadButtons::RShoulder },
+		{ AKEYCODE_GUIDE,         GamepadButtons::Guide     },
+		{ AKEYCODE_BUTTON_A,      GamepadButtons::A         },
+		{ AKEYCODE_BUTTON_B,      GamepadButtons::B         },
+		{ AKEYCODE_BUTTON_X,      GamepadButtons::X         },
+		{ AKEYCODE_BUTTON_Y,      GamepadButtons::Y         },
 	};
 
 	struct GamepadAxisRemap
@@ -362,7 +362,7 @@ namespace rapp
 							//	, (int32_t)mx
 							//	, (int32_t)my
 							//	, 0
-							//	, 1 == count ? MouseState::Button::Left : MouseState::Button::Right
+							//	, 1 == count ? MouseButton::Left : MouseButton::RightButton
 							//	, false
 							//	);
 
@@ -372,7 +372,7 @@ namespace rapp
 								//	, (int32_t)mx
 								//	, (int32_t)my
 								//	, 0
-								//	, 1 == m_count ? MouseState::Button::Left : MouseState::Button::Right
+								//	, 1 == m_count ? MouseButton::Left : MouseButton::RightButton
 								//	, true
 								//	);
 							}
@@ -535,7 +535,7 @@ namespace rapp
 		RTM_UNUSED_2(_handle, _lock);
 	}
 
-	void inputEmitKeyPress(KeyboardState::Key _key, uint8_t _modifiers)
+	void inputEmitKeyPress(KeyboardKey::Enum _key, uint8_t _modifiers)
 	{
 		RTM_UNUSED_2(_key, _modifiers);
 	}

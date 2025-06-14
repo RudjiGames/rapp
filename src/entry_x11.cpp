@@ -58,19 +58,19 @@ namespace rapp
 		uint8_t  number; /* axis/button number */
 	};
 
-	static GamepadState::Buttons s_translateButton[] =
+	static GamepadButtons s_translateButton[] =
 	{
-		GamepadState::Buttons::A,
-		GamepadState::Buttons::B,
-		GamepadState::Buttons::X,
-		GamepadState::Buttons::Y,
-		GamepadState::Buttons::LShoulder,
-		GamepadState::Buttons::RShoulder,
-		GamepadState::Buttons::Back,
-		GamepadState::Buttons::Start,
-		GamepadState::Buttons::Guide,
-		GamepadState::Buttons::LThumb,
-		GamepadState::Buttons::RThumb,
+		GamepadButtons::A,
+		GamepadButtons::B,
+		GamepadButtons::X,
+		GamepadButtons::Y,
+		GamepadButtons::LShoulder,
+		GamepadButtons::RShoulder,
+		GamepadButtons::Back,
+		GamepadButtons::Start,
+		GamepadButtons::Guide,
+		GamepadButtons::LThumb,
+		GamepadButtons::RThumb,
 	};
 
 	static GamepadAxis::Enum s_translateAxis[] =
@@ -85,18 +85,18 @@ namespace rapp
 
 	struct AxisDpadRemap
 	{
-		GamepadState::Buttons first;
-		GamepadState::Buttons second;
+		GamepadButtons first;
+		GamepadButtons second;
 	};
 
 	static AxisDpadRemap s_axisDpad[] =
 	{
-		{ GamepadState::Buttons::Left, GamepadState::Buttons::Right },
-		{ GamepadState::Buttons::Up,   GamepadState::Buttons::Down  },
-		{ GamepadState::Buttons::None, GamepadState::Buttons::None  },
-		{ GamepadState::Buttons::Left, GamepadState::Buttons::Right },
-		{ GamepadState::Buttons::Up,   GamepadState::Buttons::Down  },
-		{ GamepadState::Buttons::None, GamepadState::Buttons::None  },
+		{ GamepadButtons::Left, GamepadButtons::Right },
+		{ GamepadButtons::Up,   GamepadButtons::Down  },
+		{ GamepadButtons::None, GamepadButtons::None  },
+		{ GamepadButtons::Left, GamepadButtons::Right },
+		{ GamepadButtons::Up,   GamepadButtons::Down  },
+		{ GamepadButtons::None, GamepadButtons::None  },
 	};
 	RTM_STATIC_ASSERT(RTM_NUM_ELEMENTS(s_translateAxis) == RTM_NUM_ELEMENTS(s_axisDpad) );
 
@@ -161,7 +161,7 @@ namespace rapp
 			{
 				if (event.number < RTM_NUM_ELEMENTS(s_translateButton) )
 				{
-					_eventQueue.postGamepadButtonEvent(rapp::kDefaultWindowHandle, handle, s_translateButton[event.number], 0 != event.value);
+					_eventQueue.postGamepadButtonsEvent(rapp::kDefaultWindowHandle, handle, s_translateButton[event.number], 0 != event.value);
 				}
 			}
 			else if (event.type & JS_EVENT_AXIS)
@@ -174,7 +174,7 @@ namespace rapp
 					{
 						_eventQueue.postAxisEvent(rapp::kDefaultWindowHandle, handle, axis, value);
 
-						if (GamepadState::Buttons::None != s_axisDpad[axis].first)
+						if (GamepadButtons::None != s_axisDpad[axis].first)
 						{
 							if (m_value[axis] == 0)
 							{
@@ -209,17 +209,17 @@ namespace rapp
 
 	static uint8_t s_translateKey[512];
 
-	static void initTranslateKey(uint16_t _xk, KeyboardState::Key _key)
+	static void initTranslateKey(uint16_t _xk, KeyboardKey _key)
 	{
 		_xk += 256;
 		RTM_ASSERT(_xk < RTM_NUM_ELEMENTS(s_translateKey), "Out of bounds %d.", _xk);
 		s_translateKey[_xk&0x1ff] = (uint8_t)_key;
 	}
 
-	KeyboardState::Key fromXk(uint16_t _xk)
+	KeyboardKey fromXk(uint16_t _xk)
 	{
 		_xk += 256;
-		return 512 > _xk ? (KeyboardState::Key)s_translateKey[_xk] : KeyboardState::Key::None;
+		return 512 > _xk ? (KeyboardKey)s_translateKey[_xk] : KeyboardKey::None;
 	}
 
 	enum Command : uint8_t
@@ -268,95 +268,95 @@ namespace rapp
 	struct Context
 	{
 		Context()
-			: m_modifiers(KeyboardState::Modifier::NoMods)
+			: m_modifiers(KeyboardModifier::NoMods)
 			, m_exit(false)
 		{
 			memset(s_translateKey, 0, sizeof(s_translateKey) );
-			initTranslateKey(XK_Escape,       KeyboardState::Key::Esc);
-			initTranslateKey(XK_Return,       KeyboardState::Key::Return);
-			initTranslateKey(XK_Tab,          KeyboardState::Key::Tab);
-			initTranslateKey(XK_BackSpace,    KeyboardState::Key::Backspace);
-			initTranslateKey(XK_space,        KeyboardState::Key::Space);
-			initTranslateKey(XK_Up,           KeyboardState::Key::Up);
-			initTranslateKey(XK_Down,         KeyboardState::Key::Down);
-			initTranslateKey(XK_Left,         KeyboardState::Key::Left);
-			initTranslateKey(XK_Right,        KeyboardState::Key::Right);
-			initTranslateKey(XK_Insert,       KeyboardState::Key::Insert);
-			initTranslateKey(XK_Delete,       KeyboardState::Key::Delete);
-			initTranslateKey(XK_Home,         KeyboardState::Key::Home);
-			initTranslateKey(XK_KP_End,       KeyboardState::Key::End);
-			initTranslateKey(XK_Page_Up,      KeyboardState::Key::PageUp);
-			initTranslateKey(XK_Page_Down,    KeyboardState::Key::PageDown);
-			initTranslateKey(XK_Print,        KeyboardState::Key::Print);
-			initTranslateKey(XK_equal,        KeyboardState::Key::Plus);
-			initTranslateKey(XK_minus,        KeyboardState::Key::Minus);
-			initTranslateKey(XK_bracketleft,  KeyboardState::Key::LeftBracket);
-			initTranslateKey(XK_bracketright, KeyboardState::Key::RightBracket);
-			initTranslateKey(XK_semicolon,    KeyboardState::Key::Semicolon);
-			initTranslateKey(XK_apostrophe,   KeyboardState::Key::Quote);
-			initTranslateKey(XK_comma,        KeyboardState::Key::Comma);
-			initTranslateKey(XK_period,       KeyboardState::Key::Period);
-			initTranslateKey(XK_slash,        KeyboardState::Key::Slash);
-			initTranslateKey(XK_backslash,    KeyboardState::Key::Backslash);
-			initTranslateKey(XK_grave,        KeyboardState::Key::Tilde);
-			initTranslateKey(XK_F1,           KeyboardState::Key::F1);
-			initTranslateKey(XK_F2,           KeyboardState::Key::F2);
-			initTranslateKey(XK_F3,           KeyboardState::Key::F3);
-			initTranslateKey(XK_F4,           KeyboardState::Key::F4);
-			initTranslateKey(XK_F5,           KeyboardState::Key::F5);
-			initTranslateKey(XK_F6,           KeyboardState::Key::F6);
-			initTranslateKey(XK_F7,           KeyboardState::Key::F7);
-			initTranslateKey(XK_F8,           KeyboardState::Key::F8);
-			initTranslateKey(XK_F9,           KeyboardState::Key::F9);
-			initTranslateKey(XK_F10,          KeyboardState::Key::F10);
-			initTranslateKey(XK_F11,          KeyboardState::Key::F11);
-			initTranslateKey(XK_F12,          KeyboardState::Key::F12);
-			initTranslateKey(XK_KP_Insert,    KeyboardState::Key::NumPad0);
-			initTranslateKey(XK_KP_End,       KeyboardState::Key::NumPad1);
-			initTranslateKey(XK_KP_Down,      KeyboardState::Key::NumPad2);
-			initTranslateKey(XK_KP_Page_Down, KeyboardState::Key::NumPad3);
-			initTranslateKey(XK_KP_Left,      KeyboardState::Key::NumPad4);
-			initTranslateKey(XK_KP_Begin,     KeyboardState::Key::NumPad5);
-			initTranslateKey(XK_KP_Right,     KeyboardState::Key::NumPad6);
-			initTranslateKey(XK_KP_Home,      KeyboardState::Key::NumPad7);
-			initTranslateKey(XK_KP_Up,        KeyboardState::Key::NumPad8);
-			initTranslateKey(XK_KP_Page_Up,   KeyboardState::Key::NumPad9);
-			initTranslateKey('0',             KeyboardState::Key::Key0);
-			initTranslateKey('1',             KeyboardState::Key::Key1);
-			initTranslateKey('2',             KeyboardState::Key::Key2);
-			initTranslateKey('3',             KeyboardState::Key::Key3);
-			initTranslateKey('4',             KeyboardState::Key::Key4);
-			initTranslateKey('5',             KeyboardState::Key::Key5);
-			initTranslateKey('6',             KeyboardState::Key::Key6);
-			initTranslateKey('7',             KeyboardState::Key::Key7);
-			initTranslateKey('8',             KeyboardState::Key::Key8);
-			initTranslateKey('9',             KeyboardState::Key::Key9);
-			initTranslateKey('a',             KeyboardState::Key::KeyA);
-			initTranslateKey('b',             KeyboardState::Key::KeyB);
-			initTranslateKey('c',             KeyboardState::Key::KeyC);
-			initTranslateKey('d',             KeyboardState::Key::KeyD);
-			initTranslateKey('e',             KeyboardState::Key::KeyE);
-			initTranslateKey('f',             KeyboardState::Key::KeyF);
-			initTranslateKey('g',             KeyboardState::Key::KeyG);
-			initTranslateKey('h',             KeyboardState::Key::KeyH);
-			initTranslateKey('i',             KeyboardState::Key::KeyI);
-			initTranslateKey('j',             KeyboardState::Key::KeyJ);
-			initTranslateKey('k',             KeyboardState::Key::KeyK);
-			initTranslateKey('l',             KeyboardState::Key::KeyL);
-			initTranslateKey('m',             KeyboardState::Key::KeyM);
-			initTranslateKey('n',             KeyboardState::Key::KeyN);
-			initTranslateKey('o',             KeyboardState::Key::KeyO);
-			initTranslateKey('p',             KeyboardState::Key::KeyP);
-			initTranslateKey('q',             KeyboardState::Key::KeyQ);
-			initTranslateKey('r',             KeyboardState::Key::KeyR);
-			initTranslateKey('s',             KeyboardState::Key::KeyS);
-			initTranslateKey('t',             KeyboardState::Key::KeyT);
-			initTranslateKey('u',             KeyboardState::Key::KeyU);
-			initTranslateKey('v',             KeyboardState::Key::KeyV);
-			initTranslateKey('w',             KeyboardState::Key::KeyW);
-			initTranslateKey('x',             KeyboardState::Key::KeyX);
-			initTranslateKey('y',             KeyboardState::Key::KeyY);
-			initTranslateKey('z',             KeyboardState::Key::KeyZ);
+			initTranslateKey(XK_Escape,       KeyboardKey::Esc);
+			initTranslateKey(XK_Return,       KeyboardKey::Return);
+			initTranslateKey(XK_Tab,          KeyboardKey::Tab);
+			initTranslateKey(XK_BackSpace,    KeyboardKey::Backspace);
+			initTranslateKey(XK_space,        KeyboardKey::Space);
+			initTranslateKey(XK_Up,           KeyboardKey::Up);
+			initTranslateKey(XK_Down,         KeyboardKey::Down);
+			initTranslateKey(XK_Left,         KeyboardKey::Left);
+			initTranslateKey(XK_Right,        KeyboardKey::Right);
+			initTranslateKey(XK_Insert,       KeyboardKey::Insert);
+			initTranslateKey(XK_Delete,       KeyboardKey::Delete);
+			initTranslateKey(XK_Home,         KeyboardKey::Home);
+			initTranslateKey(XK_KP_End,       KeyboardKey::End);
+			initTranslateKey(XK_Page_Up,      KeyboardKey::PageUp);
+			initTranslateKey(XK_Page_Down,    KeyboardKey::PageDown);
+			initTranslateKey(XK_Print,        KeyboardKey::Print);
+			initTranslateKey(XK_equal,        KeyboardKey::Plus);
+			initTranslateKey(XK_minus,        KeyboardKey::Minus);
+			initTranslateKey(XK_bracketleft,  KeyboardKey::LeftBracket);
+			initTranslateKey(XK_bracketright, KeyboardKey::RightBracket);
+			initTranslateKey(XK_semicolon,    KeyboardKey::Semicolon);
+			initTranslateKey(XK_apostrophe,   KeyboardKey::Quote);
+			initTranslateKey(XK_comma,        KeyboardKey::Comma);
+			initTranslateKey(XK_period,       KeyboardKey::Period);
+			initTranslateKey(XK_slash,        KeyboardKey::Slash);
+			initTranslateKey(XK_backslash,    KeyboardKey::Backslash);
+			initTranslateKey(XK_grave,        KeyboardKey::Tilde);
+			initTranslateKey(XK_F1,           KeyboardKey::F1);
+			initTranslateKey(XK_F2,           KeyboardKey::F2);
+			initTranslateKey(XK_F3,           KeyboardKey::F3);
+			initTranslateKey(XK_F4,           KeyboardKey::F4);
+			initTranslateKey(XK_F5,           KeyboardKey::F5);
+			initTranslateKey(XK_F6,           KeyboardKey::F6);
+			initTranslateKey(XK_F7,           KeyboardKey::F7);
+			initTranslateKey(XK_F8,           KeyboardKey::F8);
+			initTranslateKey(XK_F9,           KeyboardKey::F9);
+			initTranslateKey(XK_F10,          KeyboardKey::F10);
+			initTranslateKey(XK_F11,          KeyboardKey::F11);
+			initTranslateKey(XK_F12,          KeyboardKey::F12);
+			initTranslateKey(XK_KP_Insert,    KeyboardKey::NumPad0);
+			initTranslateKey(XK_KP_End,       KeyboardKey::NumPad1);
+			initTranslateKey(XK_KP_Down,      KeyboardKey::NumPad2);
+			initTranslateKey(XK_KP_Page_Down, KeyboardKey::NumPad3);
+			initTranslateKey(XK_KP_Left,      KeyboardKey::NumPad4);
+			initTranslateKey(XK_KP_Begin,     KeyboardKey::NumPad5);
+			initTranslateKey(XK_KP_Right,     KeyboardKey::NumPad6);
+			initTranslateKey(XK_KP_Home,      KeyboardKey::NumPad7);
+			initTranslateKey(XK_KP_Up,        KeyboardKey::NumPad8);
+			initTranslateKey(XK_KP_Page_Up,   KeyboardKey::NumPad9);
+			initTranslateKey('0',             KeyboardKey::Key0);
+			initTranslateKey('1',             KeyboardKey::Key1);
+			initTranslateKey('2',             KeyboardKey::Key2);
+			initTranslateKey('3',             KeyboardKey::Key3);
+			initTranslateKey('4',             KeyboardKey::Key4);
+			initTranslateKey('5',             KeyboardKey::Key5);
+			initTranslateKey('6',             KeyboardKey::Key6);
+			initTranslateKey('7',             KeyboardKey::Key7);
+			initTranslateKey('8',             KeyboardKey::Key8);
+			initTranslateKey('9',             KeyboardKey::Key9);
+			initTranslateKey('a',             KeyboardKey::KeyA);
+			initTranslateKey('b',             KeyboardKey::KeyB);
+			initTranslateKey('c',             KeyboardKey::KeyC);
+			initTranslateKey('d',             KeyboardKey::KeyD);
+			initTranslateKey('e',             KeyboardKey::KeyE);
+			initTranslateKey('f',             KeyboardKey::KeyF);
+			initTranslateKey('g',             KeyboardKey::KeyG);
+			initTranslateKey('h',             KeyboardKey::KeyH);
+			initTranslateKey('i',             KeyboardKey::KeyI);
+			initTranslateKey('j',             KeyboardKey::KeyJ);
+			initTranslateKey('k',             KeyboardKey::KeyK);
+			initTranslateKey('l',             KeyboardKey::KeyL);
+			initTranslateKey('m',             KeyboardKey::KeyM);
+			initTranslateKey('n',             KeyboardKey::KeyN);
+			initTranslateKey('o',             KeyboardKey::KeyO);
+			initTranslateKey('p',             KeyboardKey::KeyP);
+			initTranslateKey('q',             KeyboardKey::KeyQ);
+			initTranslateKey('r',             KeyboardKey::KeyR);
+			initTranslateKey('s',             KeyboardKey::KeyS);
+			initTranslateKey('t',             KeyboardKey::KeyT);
+			initTranslateKey('u',             KeyboardKey::KeyU);
+			initTranslateKey('v',             KeyboardKey::KeyV);
+			initTranslateKey('w',             KeyboardKey::KeyW);
+			initTranslateKey('x',             KeyboardKey::KeyX);
+			initTranslateKey('y',             KeyboardKey::KeyY);
+			initTranslateKey('z',             KeyboardKey::KeyZ);
 
 			m_mx = 0;
 			m_my = 0;
@@ -501,18 +501,18 @@ namespace rapp
 						case ButtonRelease:
 							{
 								const XButtonEvent& xbutton = event.xbutton;
-								MouseState::Button mb = MouseState::Button::None;
+								MouseButton mb = MouseButton::None;
 								switch (xbutton.button)
 								{
-									case Button1: mb = MouseState::Button::Left;   break;
-									case Button2: mb = MouseState::Button::Middle; break;
-									case Button3: mb = MouseState::Button::Right;  break;
+									case Button1: mb = MouseButton::Left;   break;
+									case Button2: mb = MouseButton::Middle; break;
+									case Button3: mb = MouseButton::RightButton;  break;
 									case Button4: ++m_mz; break;
 									case Button5: --m_mz; break;
 								}
 
 								WindowHandle handle = findHandle(xbutton.window);
-								if (MouseState::Button::None != mb)
+								if (MouseButton::None != mb)
 								{
 									m_eventQueue.postMouseEvent(handle
 										, xbutton.x
@@ -559,14 +559,14 @@ namespace rapp
 								KeySym keysym = XLookupKeysym(&xkey, 0);
 								switch (keysym)
 								{
-								case XK_Meta_L:    setModifier(KeyboardState::Modifier::LMeta,  KeyPress == event.type); break;
-								case XK_Meta_R:    setModifier(KeyboardState::Modifier::RMeta,  KeyPress == event.type); break;
-								case XK_Control_L: setModifier(KeyboardState::Modifier::LCtrl,  KeyPress == event.type); break;
-								case XK_Control_R: setModifier(KeyboardState::Modifier::RCtrl,  KeyPress == event.type); break;
-								case XK_Shift_L:   setModifier(KeyboardState::Modifier::LShift, KeyPress == event.type); break;
-								case XK_Shift_R:   setModifier(KeyboardState::Modifier::RShift, KeyPress == event.type); break;
-								case XK_Alt_L:     setModifier(KeyboardState::Modifier::LAlt,   KeyPress == event.type); break;
-								case XK_Alt_R:     setModifier(KeyboardState::Modifier::RAlt,   KeyPress == event.type); break;
+								case XK_Meta_L:    setModifier(KeyboardModifier::LMeta,  KeyPress == event.type); break;
+								case XK_Meta_R:    setModifier(KeyboardModifier::RMeta,  KeyPress == event.type); break;
+								case XK_Control_L: setModifier(KeyboardModifier::LCtrl,  KeyPress == event.type); break;
+								case XK_Control_R: setModifier(KeyboardModifier::RCtrl,  KeyPress == event.type); break;
+								case XK_Shift_L:   setModifier(KeyboardModifier::LShift, KeyPress == event.type); break;
+								case XK_Shift_R:   setModifier(KeyboardModifier::RShift, KeyPress == event.type); break;
+								case XK_Alt_L:     setModifier(KeyboardModifier::LAlt,   KeyPress == event.type); break;
+								case XK_Alt_R:     setModifier(KeyboardModifier::RAlt,   KeyPress == event.type); break;
 
 								default:
 									{
@@ -591,8 +591,8 @@ namespace rapp
 											}
 										}
 
-										KeyboardState::Key key = fromXk(keysym);
-										if (KeyboardState::Key::None != key)
+										KeyboardKey key = fromXk(keysym);
+										if (KeyboardKey::None != key)
 										{
 											m_eventQueue.postKeyEvent(handle, key, m_modifiers, KeyPress == event.type);
 										}
@@ -628,7 +628,7 @@ namespace rapp
 			return thread.getExitCode();
 		}
 
-		void setModifier(KeyboardState::Modifier _modifier, bool _set)
+		void setModifier(KeyboardModifier _modifier, bool _set)
 		{
 			m_modifiers &= ~_modifier;
 			m_modifiers |= _set ? _modifier : 0;
@@ -848,7 +848,7 @@ namespace rapp
 		RTM_UNUSED_2(_handle, _lock);
 	}
 
-	void inputEmitKeyPress(KeyboardState::Key _key, uint8_t _modifiers)
+	void inputEmitKeyPress(KeyboardKey::Enum _key, uint8_t _modifiers)
 	{
 		s_ctx.m_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, _key, _modifiers, true);
 		s_ctx.m_eventQueue.postKeyEvent(rapp::kDefaultWindowHandle, _key, _modifiers, false);

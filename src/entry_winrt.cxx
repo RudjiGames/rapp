@@ -40,26 +40,26 @@ int32_t MainThreadFunc(void*)
 struct GamepadRemap
 {
 	uint16_t					m_bit;
-	rapp::GamepadState::Buttons	m_button;
+	rapp::GamepadButtons	m_button;
 };
 
 static GamepadRemap s_gamepadRemap[] =
 {
-	{ (uint16_t)GamepadButtons::DPadUp,			rapp::GamepadState::Up        },
-	{ (uint16_t)GamepadButtons::DPadDown,		rapp::GamepadState::Down      },
-	{ (uint16_t)GamepadButtons::DPadLeft,		rapp::GamepadState::Left      },
-	{ (uint16_t)GamepadButtons::DPadRight,		rapp::GamepadState::Right     },
-	{ (uint16_t)GamepadButtons::Menu,			rapp::GamepadState::Start     },
-	{ (uint16_t)GamepadButtons::View,			rapp::GamepadState::Back      },
-	{ (uint16_t)GamepadButtons::LeftThumbstick,	rapp::GamepadState::LThumb    },
-	{ (uint16_t)GamepadButtons::RightThumbstick,rapp::GamepadState::RThumb    },
-	{ (uint16_t)GamepadButtons::LeftShoulder,	rapp::GamepadState::LShoulder },
-	{ (uint16_t)GamepadButtons::RightShoulder,	rapp::GamepadState::RShoulder },
-	{ (uint16_t)GamepadButtons::None,			rapp::GamepadState::Guide     },
-	{ (uint16_t)GamepadButtons::A,				rapp::GamepadState::A         },
-	{ (uint16_t)GamepadButtons::B,				rapp::GamepadState::B         },
-	{ (uint16_t)GamepadButtons::X,				rapp::GamepadState::X         },
-	{ (uint16_t)GamepadButtons::Y,				rapp::GamepadState::Y         },
+	{ (uint16_t)GamepadButtonss::DPadUp,			rapp::GamepadButtons::Up        },
+	{ (uint16_t)GamepadButtonss::DPadDown,		rapp::GamepadButtons::Down      },
+	{ (uint16_t)GamepadButtonss::DPadLeft,		rapp::GamepadButtons::Left      },
+	{ (uint16_t)GamepadButtonss::DPadRight,		rapp::GamepadButtons::Right     },
+	{ (uint16_t)GamepadButtonss::Menu,			rapp::GamepadButtons::Start     },
+	{ (uint16_t)GamepadButtonss::View,			rapp::GamepadButtons::Back      },
+	{ (uint16_t)GamepadButtonss::LeftThumbstick,	rapp::GamepadButtons::LThumb    },
+	{ (uint16_t)GamepadButtonss::RightThumbstick,rapp::GamepadButtons::RThumb    },
+	{ (uint16_t)GamepadButtonss::LeftShoulder,	rapp::GamepadButtons::LShoulder },
+	{ (uint16_t)GamepadButtonss::RightShoulder,	rapp::GamepadButtons::RShoulder },
+	{ (uint16_t)GamepadButtonss::None,			rapp::GamepadButtons::Guide     },
+	{ (uint16_t)GamepadButtonss::A,				rapp::GamepadButtons::A         },
+	{ (uint16_t)GamepadButtonss::B,				rapp::GamepadButtons::B         },
+	{ (uint16_t)GamepadButtonss::X,				rapp::GamepadButtons::X         },
+	{ (uint16_t)GamepadButtonss::Y,				rapp::GamepadButtons::Y         },
 };
 
 static uint8_t translateKeyModifiers(CoreWindow const ^ _sender, Windows::System::VirtualKey _vk, Windows::UI::Core::CorePhysicalKeyStatus & _ks)
@@ -69,21 +69,21 @@ static uint8_t translateKeyModifiers(CoreWindow const ^ _sender, Windows::System
 
 	if (_vk == Windows::System::VirtualKey::Control)
 	{
-		if (_ks.IsExtendedKey)	modifiers |= rapp::KeyboardState::Modifier::RCtrl;
-		else					modifiers |= rapp::KeyboardState::Modifier::LCtrl;
+		if (_ks.IsExtendedKey)	modifiers |= rapp::KeyboardModifier::RCtrl;
+		else					modifiers |= rapp::KeyboardModifier::LCtrl;
 	}
 
 	if (_vk == Windows::System::VirtualKey::Shift)
 	{
-		if (_ks.ScanCode == 0x36)	modifiers |= rapp::KeyboardState::Modifier::RShift;
-		else						modifiers |= rapp::KeyboardState::Modifier::LShift;
+		if (_ks.ScanCode == 0x36)	modifiers |= rapp::KeyboardModifier::RShift;
+		else						modifiers |= rapp::KeyboardModifier::LShift;
 	}
 
 	if (_vk == Windows::System::VirtualKey::LeftWindows)
-		modifiers |= rapp::KeyboardState::Modifier::LMeta;
+		modifiers |= rapp::KeyboardModifier::LMeta;
 
 	if (_vk == Windows::System::VirtualKey::RightWindows)
-		modifiers |= rapp::KeyboardState::Modifier::RMeta;
+		modifiers |= rapp::KeyboardModifier::RMeta;
 
 	return modifiers;
 }
@@ -118,7 +118,7 @@ static rtm::SpScQueue<>		s_channel(1024);
 	#define RAPP_CMD_WRITE(_val)			\
 		while (!s_channel.write(_val));
 
-static rapp::KeyboardState::Key		s_translateKey[512];
+static rapp::KeyboardKey		s_translateKey[512];
 
 ref class ViewProvider sealed : public IFrameworkView
 {
@@ -132,92 +132,92 @@ public:
 		memset(m_gamepadState, 0, sizeof(m_gamepadState));
 
 		memset(s_translateKey, 0, sizeof(s_translateKey) );
-		s_translateKey[(uint16_t)0x000000c0]				= rapp::KeyboardState::Key::Tilde;
-		s_translateKey[(uint16_t)0x000000db]				= rapp::KeyboardState::Key::LeftBracket;
-		s_translateKey[(uint16_t)0x000000dd]				= rapp::KeyboardState::Key::RightBracket;
-		s_translateKey[(uint16_t)0x000000ba]				= rapp::KeyboardState::Key::Semicolon;
-		s_translateKey[(uint16_t)0x000000de]				= rapp::KeyboardState::Key::Quote;
-		s_translateKey[(uint16_t)0x000000bc]				= rapp::KeyboardState::Key::Comma;
-		s_translateKey[(uint16_t)0x000000be]				= rapp::KeyboardState::Key::Period;
-		s_translateKey[(uint16_t)0x000000bf]				= rapp::KeyboardState::Key::Slash;
-		s_translateKey[(uint16_t)0x000000dc]				= rapp::KeyboardState::Key::Backslash;
-		s_translateKey[(uint16_t)VirtualKey::Back]			= rapp::KeyboardState::Key::Backspace;
-		s_translateKey[(uint16_t)VirtualKey::Tab]			= rapp::KeyboardState::Key::Tab;
-		s_translateKey[(uint16_t)VirtualKey::Enter]			= rapp::KeyboardState::Key::Return;
-		s_translateKey[(uint16_t)VirtualKey::Escape]		= rapp::KeyboardState::Key::Esc;
-		s_translateKey[(uint16_t)VirtualKey::Space]			= rapp::KeyboardState::Key::Space;
-		s_translateKey[(uint16_t)VirtualKey::PageUp]		= rapp::KeyboardState::Key::PageUp;
-		s_translateKey[(uint16_t)VirtualKey::PageDown]		= rapp::KeyboardState::Key::PageDown;
-		s_translateKey[(uint16_t)VirtualKey::End]			= rapp::KeyboardState::Key::End;
-		s_translateKey[(uint16_t)VirtualKey::Home]			= rapp::KeyboardState::Key::Home;
-		s_translateKey[(uint16_t)VirtualKey::Left]			= rapp::KeyboardState::Key::Left;
-		s_translateKey[(uint16_t)VirtualKey::Up]			= rapp::KeyboardState::Key::Up;
-		s_translateKey[(uint16_t)VirtualKey::Right]			= rapp::KeyboardState::Key::Right;
-		s_translateKey[(uint16_t)VirtualKey::Down]			= rapp::KeyboardState::Key::Down;
-		s_translateKey[(uint16_t)VirtualKey::Print]			= rapp::KeyboardState::Key::Print;
-		s_translateKey[(uint16_t)VirtualKey::Insert]		= rapp::KeyboardState::Key::Insert;
-		s_translateKey[(uint16_t)VirtualKey::Delete]		= rapp::KeyboardState::Key::Delete;
-		s_translateKey[(uint16_t)VirtualKey::Number0]		= rapp::KeyboardState::Key::Key0;
-		s_translateKey[(uint16_t)VirtualKey::Number1]		= rapp::KeyboardState::Key::Key1;
-		s_translateKey[(uint16_t)VirtualKey::Number2]		= rapp::KeyboardState::Key::Key2;
-		s_translateKey[(uint16_t)VirtualKey::Number3]		= rapp::KeyboardState::Key::Key3;
-		s_translateKey[(uint16_t)VirtualKey::Number4]		= rapp::KeyboardState::Key::Key4;
-		s_translateKey[(uint16_t)VirtualKey::Number5]		= rapp::KeyboardState::Key::Key5;
-		s_translateKey[(uint16_t)VirtualKey::Number6]		= rapp::KeyboardState::Key::Key6;
-		s_translateKey[(uint16_t)VirtualKey::Number7]		= rapp::KeyboardState::Key::Key7;
-		s_translateKey[(uint16_t)VirtualKey::Number8]		= rapp::KeyboardState::Key::Key8;
-		s_translateKey[(uint16_t)VirtualKey::Number9]		= rapp::KeyboardState::Key::Key9;
-		s_translateKey[(uint16_t)VirtualKey::A]				= rapp::KeyboardState::Key::KeyA;
-		s_translateKey[(uint16_t)VirtualKey::B]				= rapp::KeyboardState::Key::KeyB;
-		s_translateKey[(uint16_t)VirtualKey::C]				= rapp::KeyboardState::Key::KeyC;
-		s_translateKey[(uint16_t)VirtualKey::D]				= rapp::KeyboardState::Key::KeyD;
-		s_translateKey[(uint16_t)VirtualKey::E]				= rapp::KeyboardState::Key::KeyE;
-		s_translateKey[(uint16_t)VirtualKey::F]				= rapp::KeyboardState::Key::KeyF;
-		s_translateKey[(uint16_t)VirtualKey::G]				= rapp::KeyboardState::Key::KeyG;
-		s_translateKey[(uint16_t)VirtualKey::H]				= rapp::KeyboardState::Key::KeyH;
-		s_translateKey[(uint16_t)VirtualKey::I]				= rapp::KeyboardState::Key::KeyI;
-		s_translateKey[(uint16_t)VirtualKey::J]				= rapp::KeyboardState::Key::KeyJ;
-		s_translateKey[(uint16_t)VirtualKey::K]				= rapp::KeyboardState::Key::KeyK;
-		s_translateKey[(uint16_t)VirtualKey::L]				= rapp::KeyboardState::Key::KeyL;
-		s_translateKey[(uint16_t)VirtualKey::M]				= rapp::KeyboardState::Key::KeyM;
-		s_translateKey[(uint16_t)VirtualKey::N]				= rapp::KeyboardState::Key::KeyN;
-		s_translateKey[(uint16_t)VirtualKey::O]				= rapp::KeyboardState::Key::KeyO;
-		s_translateKey[(uint16_t)VirtualKey::P]				= rapp::KeyboardState::Key::KeyP;
-		s_translateKey[(uint16_t)VirtualKey::Q]				= rapp::KeyboardState::Key::KeyQ;
-		s_translateKey[(uint16_t)VirtualKey::R]				= rapp::KeyboardState::Key::KeyR;
-		s_translateKey[(uint16_t)VirtualKey::S]				= rapp::KeyboardState::Key::KeyS;
-		s_translateKey[(uint16_t)VirtualKey::T]				= rapp::KeyboardState::Key::KeyT;
-		s_translateKey[(uint16_t)VirtualKey::U]				= rapp::KeyboardState::Key::KeyU;
-		s_translateKey[(uint16_t)VirtualKey::V]				= rapp::KeyboardState::Key::KeyV;
-		s_translateKey[(uint16_t)VirtualKey::W]				= rapp::KeyboardState::Key::KeyW;
-		s_translateKey[(uint16_t)VirtualKey::X]				= rapp::KeyboardState::Key::KeyX;
-		s_translateKey[(uint16_t)VirtualKey::Y]				= rapp::KeyboardState::Key::KeyY;
-		s_translateKey[(uint16_t)VirtualKey::Z]				= rapp::KeyboardState::Key::KeyZ;
-		s_translateKey[(uint16_t)VirtualKey::NumberPad0]	= rapp::KeyboardState::Key::NumPad0;
-		s_translateKey[(uint16_t)VirtualKey::NumberPad1]	= rapp::KeyboardState::Key::NumPad1;
-		s_translateKey[(uint16_t)VirtualKey::NumberPad2]	= rapp::KeyboardState::Key::NumPad2;
-		s_translateKey[(uint16_t)VirtualKey::NumberPad3]	= rapp::KeyboardState::Key::NumPad3;
-		s_translateKey[(uint16_t)VirtualKey::NumberPad4]	= rapp::KeyboardState::Key::NumPad4;
-		s_translateKey[(uint16_t)VirtualKey::NumberPad5]	= rapp::KeyboardState::Key::NumPad5;
-		s_translateKey[(uint16_t)VirtualKey::NumberPad6]	= rapp::KeyboardState::Key::NumPad6;
-		s_translateKey[(uint16_t)VirtualKey::NumberPad7]	= rapp::KeyboardState::Key::NumPad7;
-		s_translateKey[(uint16_t)VirtualKey::NumberPad8]	= rapp::KeyboardState::Key::NumPad8;
-		s_translateKey[(uint16_t)VirtualKey::NumberPad9]	= rapp::KeyboardState::Key::NumPad9;
-		s_translateKey[(uint16_t)VirtualKey::Add]			= rapp::KeyboardState::Key::Plus;
-		s_translateKey[(uint16_t)VirtualKey::Subtract]		= rapp::KeyboardState::Key::Minus;
-		s_translateKey[(uint16_t)VirtualKey::Divide]		= rapp::KeyboardState::Key::Slash;
-		s_translateKey[(uint16_t)VirtualKey::F1 ]			= rapp::KeyboardState::Key::F1;
-		s_translateKey[(uint16_t)VirtualKey::F2 ]			= rapp::KeyboardState::Key::F2;
-		s_translateKey[(uint16_t)VirtualKey::F3 ]			= rapp::KeyboardState::Key::F3;
-		s_translateKey[(uint16_t)VirtualKey::F4 ]			= rapp::KeyboardState::Key::F4;
-		s_translateKey[(uint16_t)VirtualKey::F5 ]			= rapp::KeyboardState::Key::F5;
-		s_translateKey[(uint16_t)VirtualKey::F6 ]			= rapp::KeyboardState::Key::F6;
-		s_translateKey[(uint16_t)VirtualKey::F7 ]			= rapp::KeyboardState::Key::F7;
-		s_translateKey[(uint16_t)VirtualKey::F8 ]			= rapp::KeyboardState::Key::F8;
-		s_translateKey[(uint16_t)VirtualKey::F9 ]			= rapp::KeyboardState::Key::F9;
-		s_translateKey[(uint16_t)VirtualKey::F10]			= rapp::KeyboardState::Key::F10;
-		s_translateKey[(uint16_t)VirtualKey::F11]			= rapp::KeyboardState::Key::F11;
-		s_translateKey[(uint16_t)VirtualKey::F12]			= rapp::KeyboardState::Key::F12;
+		s_translateKey[(uint16_t)0x000000c0]				= rapp::KeyboardKey::Tilde;
+		s_translateKey[(uint16_t)0x000000db]				= rapp::KeyboardKey::LeftBracket;
+		s_translateKey[(uint16_t)0x000000dd]				= rapp::KeyboardKey::RightBracket;
+		s_translateKey[(uint16_t)0x000000ba]				= rapp::KeyboardKey::Semicolon;
+		s_translateKey[(uint16_t)0x000000de]				= rapp::KeyboardKey::Quote;
+		s_translateKey[(uint16_t)0x000000bc]				= rapp::KeyboardKey::Comma;
+		s_translateKey[(uint16_t)0x000000be]				= rapp::KeyboardKey::Period;
+		s_translateKey[(uint16_t)0x000000bf]				= rapp::KeyboardKey::Slash;
+		s_translateKey[(uint16_t)0x000000dc]				= rapp::KeyboardKey::Backslash;
+		s_translateKey[(uint16_t)VirtualKey::Back]			= rapp::KeyboardKey::Backspace;
+		s_translateKey[(uint16_t)VirtualKey::Tab]			= rapp::KeyboardKey::Tab;
+		s_translateKey[(uint16_t)VirtualKey::Enter]			= rapp::KeyboardKey::Return;
+		s_translateKey[(uint16_t)VirtualKey::Escape]		= rapp::KeyboardKey::Esc;
+		s_translateKey[(uint16_t)VirtualKey::Space]			= rapp::KeyboardKey::Space;
+		s_translateKey[(uint16_t)VirtualKey::PageUp]		= rapp::KeyboardKey::PageUp;
+		s_translateKey[(uint16_t)VirtualKey::PageDown]		= rapp::KeyboardKey::PageDown;
+		s_translateKey[(uint16_t)VirtualKey::End]			= rapp::KeyboardKey::End;
+		s_translateKey[(uint16_t)VirtualKey::Home]			= rapp::KeyboardKey::Home;
+		s_translateKey[(uint16_t)VirtualKey::Left]			= rapp::KeyboardKey::Left;
+		s_translateKey[(uint16_t)VirtualKey::Up]			= rapp::KeyboardKey::Up;
+		s_translateKey[(uint16_t)VirtualKey::Right]			= rapp::KeyboardKey::Right;
+		s_translateKey[(uint16_t)VirtualKey::Down]			= rapp::KeyboardKey::Down;
+		s_translateKey[(uint16_t)VirtualKey::Print]			= rapp::KeyboardKey::Print;
+		s_translateKey[(uint16_t)VirtualKey::Insert]		= rapp::KeyboardKey::Insert;
+		s_translateKey[(uint16_t)VirtualKey::Delete]		= rapp::KeyboardKey::Delete;
+		s_translateKey[(uint16_t)VirtualKey::Number0]		= rapp::KeyboardKey::Key0;
+		s_translateKey[(uint16_t)VirtualKey::Number1]		= rapp::KeyboardKey::Key1;
+		s_translateKey[(uint16_t)VirtualKey::Number2]		= rapp::KeyboardKey::Key2;
+		s_translateKey[(uint16_t)VirtualKey::Number3]		= rapp::KeyboardKey::Key3;
+		s_translateKey[(uint16_t)VirtualKey::Number4]		= rapp::KeyboardKey::Key4;
+		s_translateKey[(uint16_t)VirtualKey::Number5]		= rapp::KeyboardKey::Key5;
+		s_translateKey[(uint16_t)VirtualKey::Number6]		= rapp::KeyboardKey::Key6;
+		s_translateKey[(uint16_t)VirtualKey::Number7]		= rapp::KeyboardKey::Key7;
+		s_translateKey[(uint16_t)VirtualKey::Number8]		= rapp::KeyboardKey::Key8;
+		s_translateKey[(uint16_t)VirtualKey::Number9]		= rapp::KeyboardKey::Key9;
+		s_translateKey[(uint16_t)VirtualKey::A]				= rapp::KeyboardKey::KeyA;
+		s_translateKey[(uint16_t)VirtualKey::B]				= rapp::KeyboardKey::KeyB;
+		s_translateKey[(uint16_t)VirtualKey::C]				= rapp::KeyboardKey::KeyC;
+		s_translateKey[(uint16_t)VirtualKey::D]				= rapp::KeyboardKey::KeyD;
+		s_translateKey[(uint16_t)VirtualKey::E]				= rapp::KeyboardKey::KeyE;
+		s_translateKey[(uint16_t)VirtualKey::F]				= rapp::KeyboardKey::KeyF;
+		s_translateKey[(uint16_t)VirtualKey::G]				= rapp::KeyboardKey::KeyG;
+		s_translateKey[(uint16_t)VirtualKey::H]				= rapp::KeyboardKey::KeyH;
+		s_translateKey[(uint16_t)VirtualKey::I]				= rapp::KeyboardKey::KeyI;
+		s_translateKey[(uint16_t)VirtualKey::J]				= rapp::KeyboardKey::KeyJ;
+		s_translateKey[(uint16_t)VirtualKey::K]				= rapp::KeyboardKey::KeyK;
+		s_translateKey[(uint16_t)VirtualKey::L]				= rapp::KeyboardKey::KeyL;
+		s_translateKey[(uint16_t)VirtualKey::M]				= rapp::KeyboardKey::KeyM;
+		s_translateKey[(uint16_t)VirtualKey::N]				= rapp::KeyboardKey::KeyN;
+		s_translateKey[(uint16_t)VirtualKey::O]				= rapp::KeyboardKey::KeyO;
+		s_translateKey[(uint16_t)VirtualKey::P]				= rapp::KeyboardKey::KeyP;
+		s_translateKey[(uint16_t)VirtualKey::Q]				= rapp::KeyboardKey::KeyQ;
+		s_translateKey[(uint16_t)VirtualKey::R]				= rapp::KeyboardKey::KeyR;
+		s_translateKey[(uint16_t)VirtualKey::S]				= rapp::KeyboardKey::KeyS;
+		s_translateKey[(uint16_t)VirtualKey::T]				= rapp::KeyboardKey::KeyT;
+		s_translateKey[(uint16_t)VirtualKey::U]				= rapp::KeyboardKey::KeyU;
+		s_translateKey[(uint16_t)VirtualKey::V]				= rapp::KeyboardKey::KeyV;
+		s_translateKey[(uint16_t)VirtualKey::W]				= rapp::KeyboardKey::KeyW;
+		s_translateKey[(uint16_t)VirtualKey::X]				= rapp::KeyboardKey::KeyX;
+		s_translateKey[(uint16_t)VirtualKey::Y]				= rapp::KeyboardKey::KeyY;
+		s_translateKey[(uint16_t)VirtualKey::Z]				= rapp::KeyboardKey::KeyZ;
+		s_translateKey[(uint16_t)VirtualKey::NumberPad0]	= rapp::KeyboardKey::NumPad0;
+		s_translateKey[(uint16_t)VirtualKey::NumberPad1]	= rapp::KeyboardKey::NumPad1;
+		s_translateKey[(uint16_t)VirtualKey::NumberPad2]	= rapp::KeyboardKey::NumPad2;
+		s_translateKey[(uint16_t)VirtualKey::NumberPad3]	= rapp::KeyboardKey::NumPad3;
+		s_translateKey[(uint16_t)VirtualKey::NumberPad4]	= rapp::KeyboardKey::NumPad4;
+		s_translateKey[(uint16_t)VirtualKey::NumberPad5]	= rapp::KeyboardKey::NumPad5;
+		s_translateKey[(uint16_t)VirtualKey::NumberPad6]	= rapp::KeyboardKey::NumPad6;
+		s_translateKey[(uint16_t)VirtualKey::NumberPad7]	= rapp::KeyboardKey::NumPad7;
+		s_translateKey[(uint16_t)VirtualKey::NumberPad8]	= rapp::KeyboardKey::NumPad8;
+		s_translateKey[(uint16_t)VirtualKey::NumberPad9]	= rapp::KeyboardKey::NumPad9;
+		s_translateKey[(uint16_t)VirtualKey::Add]			= rapp::KeyboardKey::Plus;
+		s_translateKey[(uint16_t)VirtualKey::Subtract]		= rapp::KeyboardKey::Minus;
+		s_translateKey[(uint16_t)VirtualKey::Divide]		= rapp::KeyboardKey::Slash;
+		s_translateKey[(uint16_t)VirtualKey::F1 ]			= rapp::KeyboardKey::F1;
+		s_translateKey[(uint16_t)VirtualKey::F2 ]			= rapp::KeyboardKey::F2;
+		s_translateKey[(uint16_t)VirtualKey::F3 ]			= rapp::KeyboardKey::F3;
+		s_translateKey[(uint16_t)VirtualKey::F4 ]			= rapp::KeyboardKey::F4;
+		s_translateKey[(uint16_t)VirtualKey::F5 ]			= rapp::KeyboardKey::F5;
+		s_translateKey[(uint16_t)VirtualKey::F6 ]			= rapp::KeyboardKey::F6;
+		s_translateKey[(uint16_t)VirtualKey::F7 ]			= rapp::KeyboardKey::F7;
+		s_translateKey[(uint16_t)VirtualKey::F8 ]			= rapp::KeyboardKey::F8;
+		s_translateKey[(uint16_t)VirtualKey::F9 ]			= rapp::KeyboardKey::F9;
+		s_translateKey[(uint16_t)VirtualKey::F10]			= rapp::KeyboardKey::F10;
+		s_translateKey[(uint16_t)VirtualKey::F11]			= rapp::KeyboardKey::F11;
+		s_translateKey[(uint16_t)VirtualKey::F12]			= rapp::KeyboardKey::F12;
     }
 
     virtual void Initialize(CoreApplicationView ^ _applicationView)
@@ -328,19 +328,19 @@ public:
 				if (m_gamepadIDs[i] == nullptr)
 					continue;
 
-				GamepadButtons buttons = reading.Buttons;
+				GamepadButtonss buttons = reading.Buttons;
 
-				const GamepadButtons changed = m_gamepadState[i].Buttons ^ buttons;
-				const GamepadButtons current = m_gamepadState[i].Buttons;
+				const GamepadButtonss changed = m_gamepadState[i].Buttons ^ buttons;
+				const GamepadButtonss current = m_gamepadState[i].Buttons;
 
-				if (GamepadButtons::None != changed)
+				if (GamepadButtonss::None != changed)
 				{
 					for (uint32_t jj=0; jj<RTM_NUM_ELEMENTS(s_gamepadRemap); ++jj)
 					{
 						uint16_t bit = s_gamepadRemap[jj].m_bit;
 						if (bit & (uint16_t)changed)
 						{
-							g_eventQueue.postGamepadButtonEvent(rapp::kDefaultWindowHandle, {(uint16_t)i}, s_gamepadRemap[jj].m_button, !!(0 == (bit & (uint16_t)current)));
+							g_eventQueue.postGamepadButtonsEvent(rapp::kDefaultWindowHandle, {(uint16_t)i}, s_gamepadRemap[jj].m_button, !!(0 == (bit & (uint16_t)current)));
 						}
 					}
 				}
@@ -446,8 +446,8 @@ protected:
 		uint8_t modifiers = translateKeyModifiers(_sender, _vk, _ks);
 		m_modifiers |= modifiers;
 
-		rapp::KeyboardState::Key key = s_translateKey[(uint16_t)_vk];
-		if (key == rapp::KeyboardState::Key::None)
+		rapp::KeyboardKey key = s_translateKey[(uint16_t)_vk];
+		if (key == rapp::KeyboardKey::None)
 			return;
 
 		rapp::WindowHandle rapp::kDefaultWindowHandle = { 0 };
@@ -462,8 +462,8 @@ protected:
 		uint8_t modifiers = translateKeyModifiers(_sender, _vk, _ks);
 		m_modifiers &= ~modifiers;
 
-		rapp::KeyboardState::Key key = s_translateKey[(uint16_t)_vk];
-		if (key == rapp::KeyboardState::Key::None)
+		rapp::KeyboardKey key = s_translateKey[(uint16_t)_vk];
+		if (key == rapp::KeyboardKey::None)
 			return;
 
 		rapp::WindowHandle rapp::kDefaultWindowHandle = { 0 };

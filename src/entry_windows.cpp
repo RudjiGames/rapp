@@ -45,27 +45,27 @@ namespace rapp
 
 	struct XInputRemap
 	{
-		uint16_t				m_bit;
-		GamepadState::Buttons	m_button;
+		uint16_t			m_bit;
+		GamepadButton::Enum	m_button;
 	};
 
 	static XInputRemap s_xinputRemap[] =
 	{
-		{ XINPUT_GAMEPAD_DPAD_UP,        GamepadState::Up        },
-		{ XINPUT_GAMEPAD_DPAD_DOWN,      GamepadState::Down      },
-		{ XINPUT_GAMEPAD_DPAD_LEFT,      GamepadState::Left      },
-		{ XINPUT_GAMEPAD_DPAD_RIGHT,     GamepadState::Right     },
-		{ XINPUT_GAMEPAD_START,          GamepadState::Start     },
-		{ XINPUT_GAMEPAD_BACK,           GamepadState::Back      },
-		{ XINPUT_GAMEPAD_LEFT_THUMB,     GamepadState::LThumb    },
-		{ XINPUT_GAMEPAD_RIGHT_THUMB,    GamepadState::RThumb    },
-		{ XINPUT_GAMEPAD_LEFT_SHOULDER,  GamepadState::LShoulder },
-		{ XINPUT_GAMEPAD_RIGHT_SHOULDER, GamepadState::RShoulder },
-		{ XINPUT_GAMEPAD_GUIDE,          GamepadState::Guide     },
-		{ XINPUT_GAMEPAD_A,              GamepadState::A         },
-		{ XINPUT_GAMEPAD_B,              GamepadState::B         },
-		{ XINPUT_GAMEPAD_X,              GamepadState::X         },
-		{ XINPUT_GAMEPAD_Y,              GamepadState::Y         },
+		{ XINPUT_GAMEPAD_DPAD_UP,        GamepadButton::MoveUp    },
+		{ XINPUT_GAMEPAD_DPAD_DOWN,      GamepadButton::MoveDown  },
+		{ XINPUT_GAMEPAD_DPAD_LEFT,      GamepadButton::MoveLeft  },
+		{ XINPUT_GAMEPAD_DPAD_RIGHT,     GamepadButton::MoveRight },
+		{ XINPUT_GAMEPAD_START,          GamepadButton::Start     },
+		{ XINPUT_GAMEPAD_BACK,           GamepadButton::Back      },
+		{ XINPUT_GAMEPAD_LEFT_THUMB,     GamepadButton::LThumb    },
+		{ XINPUT_GAMEPAD_RIGHT_THUMB,    GamepadButton::RThumb    },
+		{ XINPUT_GAMEPAD_LEFT_SHOULDER,  GamepadButton::LShoulder },
+		{ XINPUT_GAMEPAD_RIGHT_SHOULDER, GamepadButton::RShoulder },
+		{ XINPUT_GAMEPAD_GUIDE,          GamepadButton::Guide     },
+		{ XINPUT_GAMEPAD_A,              GamepadButton::A         },
+		{ XINPUT_GAMEPAD_B,              GamepadButton::B         },
+		{ XINPUT_GAMEPAD_X,              GamepadButton::X         },
+		{ XINPUT_GAMEPAD_Y,              GamepadButton::Y         },
 	};
 
 	struct XInput
@@ -156,7 +156,7 @@ namespace rapp
 							uint16_t bit = s_xinputRemap[jj].m_bit;
 							if (bit & changed)
 							{
-								_eventQueue.postGamepadButtonEvent(rapp::kDefaultWindowHandle, handle, s_xinputRemap[jj].m_button, !!(0 == (current & bit)));
+								_eventQueue.postGamepadButtonsEvent(rapp::kDefaultWindowHandle, handle, s_xinputRemap[jj].m_button, !!(0 == (current & bit)));
 							}
 						}
 
@@ -258,20 +258,20 @@ namespace rapp
 
 	struct TranslateKeyModifiers
 	{
-		int m_vk;
-		KeyboardState::Modifier m_modifier;
+		int						m_vk;
+		KeyboardModifier::Enum	m_modifier;
 	};
 
 	static const TranslateKeyModifiers s_translateKeyModifiers[8] =
 	{
-		{ VK_LMENU,    KeyboardState::Modifier::LAlt   },
-		{ VK_RMENU,    KeyboardState::Modifier::RAlt   },
-		{ VK_LCONTROL, KeyboardState::Modifier::LCtrl  },
-		{ VK_RCONTROL, KeyboardState::Modifier::RCtrl  },
-		{ VK_LSHIFT,   KeyboardState::Modifier::LShift },
-		{ VK_RSHIFT,   KeyboardState::Modifier::RShift },
-		{ VK_LWIN,     KeyboardState::Modifier::LMeta  },
-		{ VK_RWIN,     KeyboardState::Modifier::RMeta  },
+		{ VK_LMENU,    KeyboardModifier::LAlt   },
+		{ VK_RMENU,    KeyboardModifier::RAlt   },
+		{ VK_LCONTROL, KeyboardModifier::LCtrl  },
+		{ VK_RCONTROL, KeyboardModifier::RCtrl  },
+		{ VK_LSHIFT,   KeyboardModifier::LShift },
+		{ VK_RSHIFT,   KeyboardModifier::RShift },
+		{ VK_LWIN,     KeyboardModifier::LMeta  },
+		{ VK_RWIN,     KeyboardModifier::RMeta  },
 	};
 
 	static uint8_t translateKeyModifiers()
@@ -280,21 +280,21 @@ namespace rapp
 		for (uint32_t ii = 0; ii < RTM_NUM_ELEMENTS(s_translateKeyModifiers); ++ii)
 		{
 			const TranslateKeyModifiers& tkm = s_translateKeyModifiers[ii];
-			modifiers |= 0 > GetKeyState(tkm.m_vk) ? tkm.m_modifier : KeyboardState::Modifier::NoMods;
+			modifiers |= 0 > GetKeyState(tkm.m_vk) ? tkm.m_modifier : KeyboardModifier::None;
 		}
 		return modifiers;
 	}
 
 	static const TranslateKeyModifiers s_translateKeyModifiersConsole[5] =
 	{
-		{ RIGHT_ALT_PRESSED,   KeyboardState::Modifier::RAlt   },
-		{ LEFT_ALT_PRESSED,    KeyboardState::Modifier::LAlt   },
-		{ LEFT_CTRL_PRESSED,   KeyboardState::Modifier::LCtrl  },
-		{ RIGHT_CTRL_PRESSED,  KeyboardState::Modifier::RCtrl  },
-		{ SHIFT_PRESSED,       KeyboardState::Modifier::LShift },
-//		{ SHIFT_PRESSED,       KeyboardState::Modifier::RShift },
-//		{ ,                    KeyboardState::Modifier::LMeta  },
-//		{ ,                    KeyboardState::Modifier::RMeta  },
+		{ RIGHT_ALT_PRESSED,   KeyboardModifier::RAlt   },
+		{ LEFT_ALT_PRESSED,    KeyboardModifier::LAlt   },
+		{ LEFT_CTRL_PRESSED,   KeyboardModifier::LCtrl  },
+		{ RIGHT_CTRL_PRESSED,  KeyboardModifier::RCtrl  },
+		{ SHIFT_PRESSED,       KeyboardModifier::LShift },
+//		{ SHIFT_PRESSED,       KeyboardModifier::RShift },
+//		{ ,                    KeyboardModifier::LMeta  },
+//		{ ,                    KeyboardModifier::RMeta  },
 	};
 
 	static uint8_t translateKeyModifiersConsole(uint32_t _modifiers)
@@ -303,16 +303,16 @@ namespace rapp
 		for (uint32_t ii=0; ii<RTM_NUM_ELEMENTS(s_translateKeyModifiersConsole); ++ii)
 		{
 			const TranslateKeyModifiers& tkm = s_translateKeyModifiersConsole[ii];
-			modifiers |= _modifiers & tkm.m_vk ? tkm.m_modifier : KeyboardState::Modifier::NoMods;
+			modifiers |= _modifiers & tkm.m_vk ? tkm.m_modifier : KeyboardModifier::None;
 		}
 		return modifiers;
 	}
 
 	static uint8_t s_translateKey[256];
 
-	static KeyboardState::Key translateKey(WPARAM _wparam)
+	static KeyboardKey::Enum translateKey(WPARAM _wparam)
 	{
-		return (KeyboardState::Key)s_translateKey[_wparam&0xff];
+		return (KeyboardKey::Enum)s_translateKey[_wparam&0xff];
 	}
 
 	struct MainThreadEntry
@@ -368,92 +368,92 @@ namespace rapp
 			, m_exit(false)
 		{
 			memset(s_translateKey, 0, sizeof(s_translateKey) );
-			s_translateKey[VK_ESCAPE]			= KeyboardState::Key::Esc;
-			s_translateKey[VK_RETURN]			= KeyboardState::Key::Return;
-			s_translateKey[VK_TAB]				= KeyboardState::Key::Tab;
-			s_translateKey[VK_BACK]				= KeyboardState::Key::Backspace;
-			s_translateKey[VK_SPACE]			= KeyboardState::Key::Space;
-			s_translateKey[VK_UP]				= KeyboardState::Key::Up;
-			s_translateKey[VK_DOWN]				= KeyboardState::Key::Down;
-			s_translateKey[VK_LEFT]				= KeyboardState::Key::Left;
-			s_translateKey[VK_RIGHT]			= KeyboardState::Key::Right;
-			s_translateKey[VK_INSERT]			= KeyboardState::Key::Insert;
-			s_translateKey[VK_DELETE]			= KeyboardState::Key::Delete;
-			s_translateKey[VK_HOME]				= KeyboardState::Key::Home;
-			s_translateKey[VK_END]				= KeyboardState::Key::End;
-			s_translateKey[VK_PRIOR]			= KeyboardState::Key::PageUp;
-			s_translateKey[VK_NEXT]				= KeyboardState::Key::PageDown;
-			s_translateKey[VK_SNAPSHOT]			= KeyboardState::Key::Print;
-			s_translateKey[VK_OEM_PLUS]			= KeyboardState::Key::Plus;
-			s_translateKey[VK_OEM_MINUS]		= KeyboardState::Key::Minus;
-			s_translateKey[VK_OEM_NEC_EQUAL]	= KeyboardState::Key::Equal;
-			s_translateKey[VK_OEM_4]			= KeyboardState::Key::LeftBracket;
-			s_translateKey[VK_OEM_6]			= KeyboardState::Key::RightBracket;
-			s_translateKey[VK_OEM_1]			= KeyboardState::Key::Semicolon;
-			s_translateKey[VK_OEM_7]			= KeyboardState::Key::Quote;
-			s_translateKey[VK_OEM_COMMA]		= KeyboardState::Key::Comma;
-			s_translateKey[VK_OEM_PERIOD]		= KeyboardState::Key::Period;
-			s_translateKey[VK_OEM_2]			= KeyboardState::Key::Slash;
-			s_translateKey[VK_OEM_5]			= KeyboardState::Key::Backslash;
-			s_translateKey[VK_OEM_3]			= KeyboardState::Key::Tilde;
-			s_translateKey[VK_F1]				= KeyboardState::Key::F1;
-			s_translateKey[VK_F2]				= KeyboardState::Key::F2;
-			s_translateKey[VK_F3]				= KeyboardState::Key::F3;
-			s_translateKey[VK_F4]				= KeyboardState::Key::F4;
-			s_translateKey[VK_F5]				= KeyboardState::Key::F5;
-			s_translateKey[VK_F6]				= KeyboardState::Key::F6;
-			s_translateKey[VK_F7]				= KeyboardState::Key::F7;
-			s_translateKey[VK_F8]				= KeyboardState::Key::F8;
-			s_translateKey[VK_F9]				= KeyboardState::Key::F9;
-			s_translateKey[VK_F10]				= KeyboardState::Key::F10;
-			s_translateKey[VK_F11]				= KeyboardState::Key::F11;
-			s_translateKey[VK_F12]				= KeyboardState::Key::F12;
-			s_translateKey[VK_NUMPAD0]			= KeyboardState::Key::NumPad0;
-			s_translateKey[VK_NUMPAD1]			= KeyboardState::Key::NumPad1;
-			s_translateKey[VK_NUMPAD2]			= KeyboardState::Key::NumPad2;
-			s_translateKey[VK_NUMPAD3]			= KeyboardState::Key::NumPad3;
-			s_translateKey[VK_NUMPAD4]			= KeyboardState::Key::NumPad4;
-			s_translateKey[VK_NUMPAD5]			= KeyboardState::Key::NumPad5;
-			s_translateKey[VK_NUMPAD6]			= KeyboardState::Key::NumPad6;
-			s_translateKey[VK_NUMPAD7]			= KeyboardState::Key::NumPad7;
-			s_translateKey[VK_NUMPAD8]			= KeyboardState::Key::NumPad8;
-			s_translateKey[VK_NUMPAD9]			= KeyboardState::Key::NumPad9;
-			s_translateKey[uint8_t('0')]		= KeyboardState::Key::Key0;
-			s_translateKey[uint8_t('1')]		= KeyboardState::Key::Key1;
-			s_translateKey[uint8_t('2')]		= KeyboardState::Key::Key2;
-			s_translateKey[uint8_t('3')]		= KeyboardState::Key::Key3;
-			s_translateKey[uint8_t('4')]		= KeyboardState::Key::Key4;
-			s_translateKey[uint8_t('5')]		= KeyboardState::Key::Key5;
-			s_translateKey[uint8_t('6')]		= KeyboardState::Key::Key6;
-			s_translateKey[uint8_t('7')]		= KeyboardState::Key::Key7;
-			s_translateKey[uint8_t('8')]		= KeyboardState::Key::Key8;
-			s_translateKey[uint8_t('9')]		= KeyboardState::Key::Key9;
-			s_translateKey[uint8_t('A')]		= KeyboardState::Key::KeyA;
-			s_translateKey[uint8_t('B')]		= KeyboardState::Key::KeyB;
-			s_translateKey[uint8_t('C')]		= KeyboardState::Key::KeyC;
-			s_translateKey[uint8_t('D')]		= KeyboardState::Key::KeyD;
-			s_translateKey[uint8_t('E')]		= KeyboardState::Key::KeyE;
-			s_translateKey[uint8_t('F')]		= KeyboardState::Key::KeyF;
-			s_translateKey[uint8_t('G')]		= KeyboardState::Key::KeyG;
-			s_translateKey[uint8_t('H')]		= KeyboardState::Key::KeyH;
-			s_translateKey[uint8_t('I')]		= KeyboardState::Key::KeyI;
-			s_translateKey[uint8_t('J')]		= KeyboardState::Key::KeyJ;
-			s_translateKey[uint8_t('K')]		= KeyboardState::Key::KeyK;
-			s_translateKey[uint8_t('L')]		= KeyboardState::Key::KeyL;
-			s_translateKey[uint8_t('M')]		= KeyboardState::Key::KeyM;
-			s_translateKey[uint8_t('N')]		= KeyboardState::Key::KeyN;
-			s_translateKey[uint8_t('O')]		= KeyboardState::Key::KeyO;
-			s_translateKey[uint8_t('P')]		= KeyboardState::Key::KeyP;
-			s_translateKey[uint8_t('Q')]		= KeyboardState::Key::KeyQ;
-			s_translateKey[uint8_t('R')]		= KeyboardState::Key::KeyR;
-			s_translateKey[uint8_t('S')]		= KeyboardState::Key::KeyS;
-			s_translateKey[uint8_t('T')]		= KeyboardState::Key::KeyT;
-			s_translateKey[uint8_t('U')]		= KeyboardState::Key::KeyU;
-			s_translateKey[uint8_t('V')]		= KeyboardState::Key::KeyV;
-			s_translateKey[uint8_t('W')]		= KeyboardState::Key::KeyW;
-			s_translateKey[uint8_t('X')]		= KeyboardState::Key::KeyX;
-			s_translateKey[uint8_t('Y')]		= KeyboardState::Key::KeyY;
-			s_translateKey[uint8_t('Z')]		= KeyboardState::Key::KeyZ;
+			s_translateKey[VK_ESCAPE]			= KeyboardKey::Esc;
+			s_translateKey[VK_RETURN]			= KeyboardKey::Return;
+			s_translateKey[VK_TAB]				= KeyboardKey::Tab;
+			s_translateKey[VK_BACK]				= KeyboardKey::Backspace;
+			s_translateKey[VK_SPACE]			= KeyboardKey::Space;
+			s_translateKey[VK_UP]				= KeyboardKey::Up;
+			s_translateKey[VK_DOWN]				= KeyboardKey::Down;
+			s_translateKey[VK_LEFT]				= KeyboardKey::Left;
+			s_translateKey[VK_RIGHT]			= KeyboardKey::Right;
+			s_translateKey[VK_INSERT]			= KeyboardKey::Insert;
+			s_translateKey[VK_DELETE]			= KeyboardKey::Delete;
+			s_translateKey[VK_HOME]				= KeyboardKey::Home;
+			s_translateKey[VK_END]				= KeyboardKey::End;
+			s_translateKey[VK_PRIOR]			= KeyboardKey::PageUp;
+			s_translateKey[VK_NEXT]				= KeyboardKey::PageDown;
+			s_translateKey[VK_SNAPSHOT]			= KeyboardKey::Print;
+			s_translateKey[VK_OEM_PLUS]			= KeyboardKey::Plus;
+			s_translateKey[VK_OEM_MINUS]		= KeyboardKey::Minus;
+			s_translateKey[VK_OEM_NEC_EQUAL]	= KeyboardKey::Equal;
+			s_translateKey[VK_OEM_4]			= KeyboardKey::LeftBracket;
+			s_translateKey[VK_OEM_6]			= KeyboardKey::RightBracket;
+			s_translateKey[VK_OEM_1]			= KeyboardKey::Semicolon;
+			s_translateKey[VK_OEM_7]			= KeyboardKey::Quote;
+			s_translateKey[VK_OEM_COMMA]		= KeyboardKey::Comma;
+			s_translateKey[VK_OEM_PERIOD]		= KeyboardKey::Period;
+			s_translateKey[VK_OEM_2]			= KeyboardKey::Slash;
+			s_translateKey[VK_OEM_5]			= KeyboardKey::Backslash;
+			s_translateKey[VK_OEM_3]			= KeyboardKey::Tilde;
+			s_translateKey[VK_F1]				= KeyboardKey::F1;
+			s_translateKey[VK_F2]				= KeyboardKey::F2;
+			s_translateKey[VK_F3]				= KeyboardKey::F3;
+			s_translateKey[VK_F4]				= KeyboardKey::F4;
+			s_translateKey[VK_F5]				= KeyboardKey::F5;
+			s_translateKey[VK_F6]				= KeyboardKey::F6;
+			s_translateKey[VK_F7]				= KeyboardKey::F7;
+			s_translateKey[VK_F8]				= KeyboardKey::F8;
+			s_translateKey[VK_F9]				= KeyboardKey::F9;
+			s_translateKey[VK_F10]				= KeyboardKey::F10;
+			s_translateKey[VK_F11]				= KeyboardKey::F11;
+			s_translateKey[VK_F12]				= KeyboardKey::F12;
+			s_translateKey[VK_NUMPAD0]			= KeyboardKey::NumPad0;
+			s_translateKey[VK_NUMPAD1]			= KeyboardKey::NumPad1;
+			s_translateKey[VK_NUMPAD2]			= KeyboardKey::NumPad2;
+			s_translateKey[VK_NUMPAD3]			= KeyboardKey::NumPad3;
+			s_translateKey[VK_NUMPAD4]			= KeyboardKey::NumPad4;
+			s_translateKey[VK_NUMPAD5]			= KeyboardKey::NumPad5;
+			s_translateKey[VK_NUMPAD6]			= KeyboardKey::NumPad6;
+			s_translateKey[VK_NUMPAD7]			= KeyboardKey::NumPad7;
+			s_translateKey[VK_NUMPAD8]			= KeyboardKey::NumPad8;
+			s_translateKey[VK_NUMPAD9]			= KeyboardKey::NumPad9;
+			s_translateKey[uint8_t('0')]		= KeyboardKey::Key0;
+			s_translateKey[uint8_t('1')]		= KeyboardKey::Key1;
+			s_translateKey[uint8_t('2')]		= KeyboardKey::Key2;
+			s_translateKey[uint8_t('3')]		= KeyboardKey::Key3;
+			s_translateKey[uint8_t('4')]		= KeyboardKey::Key4;
+			s_translateKey[uint8_t('5')]		= KeyboardKey::Key5;
+			s_translateKey[uint8_t('6')]		= KeyboardKey::Key6;
+			s_translateKey[uint8_t('7')]		= KeyboardKey::Key7;
+			s_translateKey[uint8_t('8')]		= KeyboardKey::Key8;
+			s_translateKey[uint8_t('9')]		= KeyboardKey::Key9;
+			s_translateKey[uint8_t('A')]		= KeyboardKey::KeyA;
+			s_translateKey[uint8_t('B')]		= KeyboardKey::KeyB;
+			s_translateKey[uint8_t('C')]		= KeyboardKey::KeyC;
+			s_translateKey[uint8_t('D')]		= KeyboardKey::KeyD;
+			s_translateKey[uint8_t('E')]		= KeyboardKey::KeyE;
+			s_translateKey[uint8_t('F')]		= KeyboardKey::KeyF;
+			s_translateKey[uint8_t('G')]		= KeyboardKey::KeyG;
+			s_translateKey[uint8_t('H')]		= KeyboardKey::KeyH;
+			s_translateKey[uint8_t('I')]		= KeyboardKey::KeyI;
+			s_translateKey[uint8_t('J')]		= KeyboardKey::KeyJ;
+			s_translateKey[uint8_t('K')]		= KeyboardKey::KeyK;
+			s_translateKey[uint8_t('L')]		= KeyboardKey::KeyL;
+			s_translateKey[uint8_t('M')]		= KeyboardKey::KeyM;
+			s_translateKey[uint8_t('N')]		= KeyboardKey::KeyN;
+			s_translateKey[uint8_t('O')]		= KeyboardKey::KeyO;
+			s_translateKey[uint8_t('P')]		= KeyboardKey::KeyP;
+			s_translateKey[uint8_t('Q')]		= KeyboardKey::KeyQ;
+			s_translateKey[uint8_t('R')]		= KeyboardKey::KeyR;
+			s_translateKey[uint8_t('S')]		= KeyboardKey::KeyS;
+			s_translateKey[uint8_t('T')]		= KeyboardKey::KeyT;
+			s_translateKey[uint8_t('U')]		= KeyboardKey::KeyU;
+			s_translateKey[uint8_t('V')]		= KeyboardKey::KeyV;
+			s_translateKey[uint8_t('W')]		= KeyboardKey::KeyW;
+			s_translateKey[uint8_t('X')]		= KeyboardKey::KeyX;
+			s_translateKey[uint8_t('Y')]		= KeyboardKey::KeyY;
+			s_translateKey[uint8_t('Z')]		= KeyboardKey::KeyZ;
 		}
 
 		void winSetHwnd(::HWND _window)
@@ -559,7 +559,7 @@ namespace rapp
 						{
 							KEY_EVENT_RECORD& ker = eventBuffer[i].Event.KeyEvent;
 							uint8_t modifiers = translateKeyModifiersConsole(ker.dwControlKeyState);
-							KeyboardState::Key key = translateKey(ker.wVirtualKeyCode);
+							KeyboardKey::Enum key = translateKey(ker.wVirtualKeyCode);
 							WindowHandle handle = handleFromHwnd(m_hwndRapp);
 							m_eventQueue.postKeyEvent(handle, key, modifiers, ker.bKeyDown);
 						}
@@ -584,11 +584,11 @@ namespace rapp
 
 							case DOUBLE_CLICK:
 								if (FROM_LEFT_1ST_BUTTON_PRESSED & m_consoleMouseButtonState)
-									m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseState::Button::Left, modifiers, FROM_LEFT_1ST_BUTTON_PRESSED & m_consoleMouseButtonState, true);
+									m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseButton::Left, modifiers, FROM_LEFT_1ST_BUTTON_PRESSED & m_consoleMouseButtonState, true);
 								if (FROM_LEFT_2ND_BUTTON_PRESSED & m_consoleMouseButtonState)
-									m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseState::Button::Middle, modifiers, FROM_LEFT_2ND_BUTTON_PRESSED & m_consoleMouseButtonState, true);
+									m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseButton::Middle, modifiers, FROM_LEFT_2ND_BUTTON_PRESSED & m_consoleMouseButtonState, true);
 								if (RIGHTMOST_BUTTON_PRESSED & m_consoleMouseButtonState)
-									m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseState::Button::Right, modifiers, RIGHTMOST_BUTTON_PRESSED & m_consoleMouseButtonState, true);
+									m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseButton::Right, modifiers, RIGHTMOST_BUTTON_PRESSED & m_consoleMouseButtonState, true);
 								break;
 
 							case MOUSE_WHEELED:
@@ -602,13 +602,13 @@ namespace rapp
 							};
 
 							if (FROM_LEFT_1ST_BUTTON_PRESSED & oldMouseButtons)
-								m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseState::Button::Left, modifiers, FROM_LEFT_1ST_BUTTON_PRESSED & m_consoleMouseButtonState, false);
+								m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseButton::Left, modifiers, FROM_LEFT_1ST_BUTTON_PRESSED & m_consoleMouseButtonState, false);
 
 							if (FROM_LEFT_2ND_BUTTON_PRESSED & oldMouseButtons)
-								m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseState::Button::Middle, modifiers, FROM_LEFT_2ND_BUTTON_PRESSED & m_consoleMouseButtonState, false);
+								m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseButton::Middle, modifiers, FROM_LEFT_2ND_BUTTON_PRESSED & m_consoleMouseButtonState, false);
 
 							if (RIGHTMOST_BUTTON_PRESSED & oldMouseButtons)
-								m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseState::Button::Right, modifiers, RIGHTMOST_BUTTON_PRESSED & m_consoleMouseButtonState, false);
+								m_eventQueue.postMouseEvent(handleFromHwnd(m_hwndRapp), mx, my, m_mz, MouseButton::Right, modifiers, RIGHTMOST_BUTTON_PRESSED & m_consoleMouseButtonState, false);
 
 						}
 					}
@@ -802,7 +802,7 @@ namespace rapp
 					{
 						WindowHandle handle = handleFromHwnd(_hwnd);
 						uint8_t modifiers = (uint8_t)_wparam;
-						KeyboardState::Key key = (KeyboardState::Key)_lparam;
+						KeyboardKey::Enum key = (KeyboardKey::Enum)_lparam;
 
 						m_eventQueue.postKeyEvent(handle, key, modifiers, true);
 					}
@@ -812,7 +812,7 @@ namespace rapp
 					{
 						WindowHandle handle = handleFromHwnd(_hwnd);
 						uint8_t modifiers = (uint8_t)_wparam;
-						KeyboardState::Key key = (KeyboardState::Key)_lparam;
+						KeyboardKey::Enum key = (KeyboardKey::Enum)_lparam;
 
 						m_eventQueue.postKeyEvent(handle, key, modifiers, false);
 					}
@@ -967,7 +967,7 @@ namespace rapp
 						mouseCapture(_hwnd, _id == WM_LBUTTONDOWN);
 						int32_t mx = GET_X_LPARAM(_lparam);
 						int32_t my = GET_Y_LPARAM(_lparam);
-						m_eventQueue.postMouseEvent(handleFromHwnd(_hwnd), mx, my, m_mz, MouseState::Button::Left, translateKeyModifiers(), _id == WM_LBUTTONDOWN, _id == WM_LBUTTONDBLCLK);
+						m_eventQueue.postMouseEvent(handleFromHwnd(_hwnd), mx, my, m_mz, MouseButton::Left, translateKeyModifiers(), _id == WM_LBUTTONDOWN, _id == WM_LBUTTONDBLCLK);
 					}
 					break;
 
@@ -978,7 +978,7 @@ namespace rapp
 						mouseCapture(_hwnd, _id == WM_MBUTTONDOWN);
 						int32_t mx = GET_X_LPARAM(_lparam);
 						int32_t my = GET_Y_LPARAM(_lparam);
-						m_eventQueue.postMouseEvent(handleFromHwnd(_hwnd), mx, my, m_mz, MouseState::Button::Middle, translateKeyModifiers(), _id == WM_MBUTTONDOWN, _id == WM_MBUTTONDBLCLK);
+						m_eventQueue.postMouseEvent(handleFromHwnd(_hwnd), mx, my, m_mz, MouseButton::Middle, translateKeyModifiers(), _id == WM_MBUTTONDOWN, _id == WM_MBUTTONDBLCLK);
 					}
 					break;
 
@@ -989,7 +989,7 @@ namespace rapp
 						mouseCapture(_hwnd, _id == WM_RBUTTONDOWN);
 						int32_t mx = GET_X_LPARAM(_lparam);
 						int32_t my = GET_Y_LPARAM(_lparam);
-						m_eventQueue.postMouseEvent(handleFromHwnd(_hwnd), mx, my, m_mz, MouseState::Button::Right, translateKeyModifiers(),_id == WM_RBUTTONDOWN, _id == WM_RBUTTONDBLCLK);
+						m_eventQueue.postMouseEvent(handleFromHwnd(_hwnd), mx, my, m_mz, MouseButton::Right, translateKeyModifiers(),_id == WM_RBUTTONDOWN, _id == WM_RBUTTONDBLCLK);
 					}
 					break;
 
@@ -999,11 +999,11 @@ namespace rapp
 				case WM_SYSKEYUP:
 					{
 						uint8_t modifiers = translateKeyModifiers();
-						KeyboardState::Key key = translateKey(_wparam);
+						KeyboardKey::Enum key = translateKey(_wparam);
 
 						WindowHandle handle = handleFromHwnd(_hwnd);
 
-						if (KeyboardState::Key::Print == key
+						if (KeyboardKey::Print == key
 						&&  0x3 == ( (uint32_t)(_lparam)>>30) )
 						{
 							// VK_SNAPSHOT doesn't generate keydown event. Fire on down event when previous
@@ -1017,9 +1017,9 @@ namespace rapp
 #ifdef RAPP_WITH_BGFX
 						if (ImGui::GetCurrentContext())
 						{
-							ImGui::GetIO().KeyCtrl	= modifiers & (KeyboardState::Modifier::RCtrl  | KeyboardState::Modifier::LCtrl);
-							ImGui::GetIO().KeyShift	= modifiers & (KeyboardState::Modifier::RShift | KeyboardState::Modifier::LShift);
-							ImGui::GetIO().KeyAlt	= modifiers & (KeyboardState::Modifier::RAlt   | KeyboardState::Modifier::LAlt);
+							ImGui::GetIO().KeyCtrl	= modifiers & (KeyboardModifier::RCtrl  | KeyboardModifier::LCtrl);
+							ImGui::GetIO().KeyShift	= modifiers & (KeyboardModifier::RShift | KeyboardModifier::LShift);
+							ImGui::GetIO().KeyAlt	= modifiers & (KeyboardModifier::RAlt   | KeyboardModifier::LAlt);
 						}
 #endif
 					}
@@ -1369,17 +1369,17 @@ namespace rapp
 		PostMessage(s_ctx.m_hwndRapp, WM_USER_WINDOW_MOUSE_LOCK, _handle.idx, _lock);
 	}
 
-	void inputEmitKeyPress(KeyboardState::Key _key, uint8_t _modifiers)
+	void inputEmitKeyPress(KeyboardKey::Enum _key, uint8_t _modifiers)
 	{
 		PostMessage(s_ctx.m_hwndRapp, WM_USER_CALL_KEY_DOWN, (WPARAM)_modifiers, (LPARAM)_key);
 		PostMessage(s_ctx.m_hwndRapp, WM_USER_CALL_KEY_UP,   (WPARAM)_modifiers, (LPARAM)_key);
 
-		if ((_key >= KeyboardState::KeyA) && (_key <= KeyboardState::KeyZ))
-			PostMessage(s_ctx.m_hwndRapp, WM_CHAR, (WPARAM)('A' + _key - KeyboardState::KeyA), (LPARAM)0);
+		if ((_key >= KeyboardKey::KeyA) && (_key <= KeyboardKey::KeyZ))
+			PostMessage(s_ctx.m_hwndRapp, WM_CHAR, (WPARAM)('A' + _key - KeyboardKey::KeyA), (LPARAM)0);
 
-//		if ((_key >= KeyboardState::Key0) && (_key <= KeyboardState::Key9))
+//		if ((_key >= KeyboardKey::Key0) && (_key <= KeyboardKey::Key9))
 //		 Plus, Minus, Equal, LeftBracket, RightBracket, Semicolon, Quote, Comma, Period, Slash, Backslash, Tilde,
-//			PostMessage(s_ctx.m_hwndRapp, WM_CHAR, (WPARAM)('0' + _key - KeyboardState::Key0), (LPARAM)0);
+//			PostMessage(s_ctx.m_hwndRapp, WM_CHAR, (WPARAM)('0' + _key - KeyboardKey::Key0), (LPARAM)0);
 	}
 
 	int32_t MainThreadEntry::threadFunc(void* _userData)

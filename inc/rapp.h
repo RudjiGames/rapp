@@ -414,72 +414,72 @@ namespace rapp {
 	/// Custom command functions
 	// ------------------------------------------------
 
+	/// Adds/registers a custom command.
 	///
-	///
-	/// @param[in] _name           : 
-	/// @param[in] _fn             : 
-	/// @param[in] _userData       : 
-	/// @param[in] _description    : 
+	/// @param[in] _name           : Command name.
+	/// @param[in] _fn             : Command callback.
+	/// @param[in] _userData       : Callback user data.
+	/// @param[in] _description    : Command description.
 	void cmdAdd(const char* _name, ConsoleFn _fn, void* _userData = 0, const char* _description = "");
 
+	/// Removes/unregisters a custom command.
 	///
-	///
-	/// @param[in] _name           : 
+	/// @param[in] _name           : Name of command to unregister.
 	void cmdRemove(const char* _name);
 
+	/// Runs a custom command in the context of an application.
 	///
-	///
-	/// @param[in] _app            : 
-	/// @param[in] _cmd            : 
-	/// @param[in] _errorCode      : 
+	/// @param[in] _app            : Application context.
+	/// @param[in] _cmd            : Command to run.
+	/// @param[in,out] _errorCode  : Optional pointer to error code result.
 	bool cmdExec(App* _app, const char* _cmd, int* _errorCode);
 
+	/// Outputs formatted text to application console.
 	///
-	///
-	/// @param[in] _app            : 
-	/// @param[in] _fmt            : 
+	/// @param[in] _app            : Application to output text for.
+	/// @param[in] _fmt            : Text format.
 	/// @param[in] va_args         : Variable arguments
 	void cmdConsoleLog(App* _app, const char* _fmt, ...);
 
+	/// Outputs colored formatted text to application console.
 	///
-	///
-	/// @param[in] _r              : 
-	/// @param[in] _g              : 
-	/// @param[in] _b              : 
-	/// @param[in] _app            : 
-	/// @param[in] _fmt            : 
+	/// @param[in] _r              : Red color component.
+	/// @param[in] _g              : Green color component.
+	/// @param[in] _b              : Blue color component.
+	/// @param[in] _app            : Application to output text for.
+	/// @param[in] _fmt            : Text format.
 	/// @param[in] va_args         : Variable arguments
 	void cmdConsoleLogRGB(uint8_t _r, uint8_t _g, uint8_t _b, App* _app, const char* _fmt, ...);
 
+	///	Toggles console visibility status.
 	///
-	///
-	/// @param[in] _app            : 
+	/// @param[in] _app            : Application to toggle console for.
 	void cmdConsoleToggle(App* _app);
 
+	/// Sets time for console toggle transition.
 	///
-	///
-	/// @param[in] _time           : 
+	/// @param[in] _time           : Time, in seconds.
 	void cmdConsoleSetToggleTime(float _time);
 
 	// ------------------------------------------------
 	/// Window functions
 	// ------------------------------------------------
 
-	/// 
+	/// Get default application window size.
 	///
-	/// @param[in] _width          : 
-	/// @param[in] _heught         : 
+	/// @param[in,out] _width      : Pointer to variable to store window width in.
+	/// @param[in,out] _heught     : Pointer to variable to store window height in.
 	void windowGetDefaultSize(uint32_t* _width, uint32_t* _height);
 
-	/// 
+	/// Creates an application window.
 	///
-	/// @param[in] _app            : 
-	/// @param[in] _x              : 
-	/// @param[in] _y              : 
-	/// @param[in] _width          : 
-	/// @param[in] _heught         : 
-	/// @param[in] _flags          : 
-	/// @param[in] _title          : 
+	/// @param[in] _app            : Application to create window for.
+	/// @param[in] _x              : Window position X coordinate.
+	/// @param[in] _y              : Window position Y coordinate.
+	/// @param[in] _width          : Window width.
+	/// @param[in] _heught         : Window height.
+	/// @param[in] _flags          : Creation flags.
+	/// @param[in] _title          : Window title.
 	WindowHandle windowCreate(App* _app, int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags = RAPP_WINDOW_FLAG_ASPECT_NONE, const char* _title = "");
 
 	/// Destroys a window and release related resources.
@@ -487,52 +487,52 @@ namespace rapp {
 	/// @param[in] _handle         : Handle to window to destroy.
 	void windowDestroy(WindowHandle _handle);
 
-	/// 
+	/// Returns native OS window handle.
 	///
 	/// @param[in] _handle         : Handle to window to get a native handle of.
 	///
 	/// @returns Native OS window handle.
 	void* windowGetNativeHandle(WindowHandle _handle);
 
-	/// 
+	/// Returns native OS display handle.
 	///
 	/// @returns Native display handle.
 	void* windowGetNativeDisplayHandle();
 
-	/// 
+	/// Sets window position.
 	///
-	/// @param[in] _handle         : 
+	/// @param[in] _handle         : Handle to window.
 	/// @param[in] _x              : 
 	/// @param[in] _y              : 
 	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y);
 
-	/// 
+	/// Sets window size.
 	///
-	/// @param[in] _handle         : 
+	/// @param[in] _handle         : Handle to window.
 	/// @param[in] _width          : 
 	/// @param[in] _height         : 
 	void windowSetSize(WindowHandle _handle, uint32_t _width, uint32_t _height);
 
-	/// 
+	/// Sets window title.
 	///
-	/// @param[in] _handle         : 
-	/// @param[in] _title          : 
+	/// @param[in] _handle         : Handle to window.
+	/// @param[in] _title          : New window title.
 	void windowSetTitle(WindowHandle _handle, const char* _title);
 
-	/// 
+	/// Toggles window frame.
 	///
-	/// @param[in] _handle         : 
+	/// @param[in] _handle         : Handle to window.
 	void windowToggleFrame(WindowHandle _handle);
 
-	/// 
+	/// Toggles window full screen mode.
 	///
-	/// @param[in] _handle         : 
+	/// @param[in] _handle         : Handle to window.
 	void windowToggleFullscreen(WindowHandle _handle = {0});
 
-	/// 
+	/// Locks mouse cursor to window.
 	///
-	/// @param[in] _handle         : 
-	/// @param[in] _lock           : 
+	/// @param[in] _handle         : Handle to window to lock mouse to.
+	/// @param[in] _lock           : Lock status.
 	void windowSetMouseLock(WindowHandle _handle, bool _lock);
 
 	// ------------------------------------------------
@@ -591,96 +591,74 @@ namespace rapp {
 	/// Input functions
 	// ------------------------------------------------
 
-	struct KeyboardState
+	struct KeyboardKey
 	{
-		enum Key
+		enum Enum
 		{
 			None,
 
-			Esc, Return, Tab, Space, Backspace, Up, Down, Left, Right,
-			Insert, Delete, Home, End, PageUp, PageDown,
+			Esc, Return, Tab, Space, Backspace, Up, Down, Left,
+			Right, Insert, Delete, Home, End, PageUp, PageDown,
 			Print, Plus, Minus, Equal, LeftBracket, RightBracket,
 			Semicolon, Quote, Comma, Period, Slash, Backslash, Tilde,
 
 			F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
 
-			NumPad0, NumPad1, NumPad2, NumPad3, NumPad4, 
+			NumPad0, NumPad1, NumPad2, NumPad3, NumPad4,
 			NumPad5, NumPad6, NumPad7, NumPad8, NumPad9,
 
 			Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8, Key9,
 
-			KeyA = 65,
-			KeyB, KeyC, KeyD, KeyE, KeyF, KeyG, KeyH, KeyI,
-			KeyJ, KeyK, KeyL, KeyM, KeyN, KeyO, KeyP, KeyQ,
-			KeyR, KeyS, KeyT, KeyU, KeyV, KeyW, KeyX, KeyY,
-			KeyZ,
+			KeyA = 65, KeyB, KeyC, KeyD, KeyE, KeyF, KeyG, KeyH, KeyI,
+			KeyJ, KeyK, KeyL, KeyM, KeyN, KeyO, KeyP, KeyQ, KeyR, KeyS,
+			KeyT, KeyU, KeyV, KeyW, KeyX, KeyY, KeyZ,
 
 			Count
 		};
-
-		enum Modifier
-		{
-			NoMods	= 0x00,
-			LAlt	= 0x01,
-			RAlt	= 0x02,
-			LCtrl	= 0x04,
-			RCtrl	= 0x08,
-			LShift	= 0x10,
-			RShift	= 0x20,
-			LMeta	= 0x40,
-			RMeta	= 0x80,
-		};
-		
-		uint8_t				m_keysPressed;
-		uint8_t				m_modifiersSinceLastFrame;
-		uint8_t				m_modifiers[Key::Count];
-		KeyboardState::Key	m_keys[Key::Count];
 	};
 
-	struct MouseState
+	struct KeyboardModifier
 	{
-		enum Button
+		enum Enum
 		{
-			None,
+			None		= 0x00,
+			LAlt		= 0x01,
+			RAlt		= 0x02,
+			LCtrl		= 0x04,
+			RCtrl		= 0x08,
+			LShift		= 0x10,
+			RShift		= 0x20,
+			LMeta		= 0x40,
+			RMeta		= 0x80,
+		};
+	};
+
+	struct MouseButton
+	{
+		enum Enum
+		{
+			None	= 0,
 			Left,
 			Middle,
 			Right,
 
 			Count
 		};
-
-		int32_t		m_absolute[3];
-		float		m_norm[3];
-		uint8_t		m_buttons[MouseState::Button::Count];
 	};
 
-	struct TouchState
+	struct GamepadButton
 	{
-		static const int MAX_MULTITOUCH = 4;
-
-		struct Touch
+		enum Enum
 		{
-			int32_t		m_absolute[3];
-			float		m_norm[3];
-		};
-
-		Touch		m_mice[MAX_MULTITOUCH];
-		int32_t		m_accelerometer[3];
-	};
-
-	struct GamepadState
-	{
-		enum Buttons
-		{
-			None		= 0,
+			NoButtonGP	= 0,
 			X			= 0x0001,
 			Y			= 0x0002,
 			A			= 0x0004,
 			B			= 0x0008,
-			Up			= 0x0010,
-			Down		= 0x0020,
-			Left		= 0x0040,
-			Right		= 0x0080,
+			MoveUp		= 0x0010,
+			MoveDown	= 0x0020,
+			MoveLeft	= 0x0040,
+			MoveRight	= 0x0080,
 			LThumb		= 0x0100,
 			RThumb		= 0x0200,
 			Start		= 0x0400,
@@ -690,44 +668,75 @@ namespace rapp {
 			Guide		= 0x4000,
 			Connected	= 0x8000
 		};
-
-		int32_t		m_LStick[2];
-		int32_t		m_RStick[2];
-		uint8_t		m_LTrigger;
-		uint8_t		m_RTrigger;
-		uint16_t	m_buttons;
 	};
 
-	struct InputBinding;
-
-	typedef void(*InputBindingFn)(const void* _userData, const InputBinding* _binding);
-
-	struct InputBindingKeyboard
+	struct GamepadStick
 	{
-		KeyboardState::Key		m_key;
-		uint8_t					m_modifiers;
-	};
-
-	struct InputBindingMouse
-	{
-		MouseState::Button		m_button;		// MouseState::Button::None for movement binding
-		uint8_t					m_modifiers;
-	};
-
-	struct InputBindingGamepad
-	{
-		enum Stick
+		enum Enum
 		{
-			None,
+			NoStick		= 0,
 			LeftStick,
 			LeftTrigger,
 			RightStick,
 			RightTrigger
 		};
+	};
 
-		GamepadState::Buttons	m_button;		// GamepadState::Button::None for stick/trigger event
-		uint8_t					m_gamepadIndex;
-		Stick					m_stick;
+	struct KeyboardState
+	{
+		uint8_t				m_keysPressed;
+		uint8_t				m_modifiersSinceLastFrame;
+		uint8_t				m_modifiers[KeyboardKey::Count];
+		KeyboardKey::Enum	m_keys[KeyboardKey::Count];
+	};
+
+	struct MouseState
+	{
+		int32_t				m_absolute[3];
+		float				m_norm[3];
+		uint8_t				m_buttons[MouseButton::Count];
+	};
+
+	struct TouchState
+	{
+		static const int MAX_MULTITOUCH = 4;
+
+		struct Touch
+		{
+			int32_t			m_absolute[3];
+			float			m_norm[3];
+		};
+
+		Touch				m_mice[MAX_MULTITOUCH];
+		int32_t				m_accelerometer[3];
+	};
+
+	struct GamepadState
+	{
+		int32_t				m_LStick[2];
+		int32_t				m_RStick[2];
+		uint8_t				m_LTrigger;
+		uint8_t				m_RTrigger;
+		uint16_t			m_buttons;
+	};
+
+	struct InputBindingKeyboard
+	{
+		KeyboardKey::Enum	m_key;
+		uint8_t				m_modifiers;
+	};
+
+	struct InputBindingMouse
+	{
+		MouseButton::Enum	m_button;		// MouseButton::None for movement binding
+		uint8_t				m_modifiers;
+	};
+
+	struct InputBindingGamepad
+	{
+		GamepadButton::Enum	m_button;		// GamepadState::Button::None for stick/trigger event
+		uint8_t				m_gamepadIndex;
+		GamepadStick::Enum	m_stick;
 	};
 
 	struct InputBindingTouch
@@ -736,20 +745,11 @@ namespace rapp {
 
 	struct InputBinding
 	{
-		enum Enum
-		{
-			Gamepad,
-			Mouse,
-			Keyboard,
-			Touch,
+		typedef void(*InputBindingFn)(const void* _userData, const InputBinding* _binding);
 
-			Count
-		};
-
-		InputBinding::Enum		m_type;
-		InputBindingFn			m_fn;
-		const void*				m_userData;
-		uint8_t					m_flags;
+		uint32_t			m_flags;
+		InputBindingFn		m_fn;
+		const void*			m_userData;
 
 		union
 		{
@@ -760,10 +760,10 @@ namespace rapp {
 		};
 
 		InputBinding(int);
-		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingKeyboard& _kb);
-		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingMouse& _mouse);
-		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingGamepad& _gp);
-		InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingTouch& _touch);
+		InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingKeyboard& _kb);
+		InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingMouse& _mouse);
+		InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingGamepad& _gp);
+		InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingTouch& _touch);
 	};
 
 	#define RAPP_INPUT_BINDING_END		{ 0 }
@@ -807,7 +807,7 @@ namespace rapp {
 	///
 	/// @param[in] _key            : Key to get state for.
 	/// @param[in,out] _modifiers  : Optional pointer to store modifiers to.
-	bool inputGetKeyState(KeyboardState::Key _key, uint8_t* _modifiers = 0);
+	bool inputGetKeyState(KeyboardKey::Enum _key, uint8_t* _modifiers = 0);
 
 	/// Returns keyboard modifiers state.
 	///
@@ -818,7 +818,7 @@ namespace rapp {
 	///
 	/// @param[in] _key            : Key press to emit.
 	/// @param[in] _modifiers      : Modifiers for the key.
-	void inputEmitKeyPress(KeyboardState::Key _key, uint8_t _modifiers = 0);
+	void inputEmitKeyPress(KeyboardKey::Enum _key, uint8_t _modifiers = 0);
 
 	/// Draws game pad debugging information
 	///
@@ -841,20 +841,19 @@ namespace rapp {
 #include <imgui/imgui.h>
 #endif
 
-#define RAPP_CLASS(_appClass)												\
-	_appClass(const char* _name, const char* _description = 0)				\
-		: App(_name, _description) {}										\
+#define RAPP_CLASS(_appClass)																	\
+	_appClass(const char* _name, const char* _description = 0)	: App(_name, _description) {}	\
 	virtual ~_appClass() {}
 
-#define RAPP_INSTANCE(_appClass)											\
+#define RAPP_INSTANCE(_appClass)																\
 	s_ ## _appClass ## _app
 
-#define RAPP_REGISTER(_appClass, _name, _description)						\
+#define RAPP_REGISTER(_appClass, _name, _description)											\
 	_appClass RAPP_INSTANCE(_appClass) (_name, _description);
 
-#define RAPP_DBG_STRINGIZE(_x) RAPP_DBG_STRINGIZE_(_x)
-#define RAPP_DBG_STRINGIZE_(_x) #_x
-#define RAPP_DBG_FILE_LINE_LITERAL "" __FILE__ "(" RAPP_DBG_STRINGIZE(__LINE__) "): "
-#define RAPP_DBG(_format, ...) rapp::dbgPrintf(RAPP_DBG_FILE_LINE_LITERAL "" _format "\n", ##__VA_ARGS__)
+#define RAPP_DBG_STRINGIZE(_x)		RAPP_DBG_STRINGIZE_(_x)
+#define RAPP_DBG_STRINGIZE_(_x)		#_x
+#define RAPP_DBG_FILE_LINE_LITERAL	"" __FILE__ "(" RAPP_DBG_STRINGIZE(__LINE__) "): "
+#define RAPP_DBG(_format, ...)		rapp::dbgPrintf(RAPP_DBG_FILE_LINE_LITERAL "" _format "\n", ##__VA_ARGS__)
 
 #endif // RTM_RAPP_H

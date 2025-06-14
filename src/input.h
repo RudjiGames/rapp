@@ -11,7 +11,7 @@
 
 namespace rapp {
 
-	const char* getName(KeyboardState::Key _key);
+	const char* getName(KeyboardKey::Enum _key);
 
 	struct GamepadHandle { uint16_t idx; };
 	inline bool isValid(GamepadHandle _handle) { return UINT16_MAX != _handle.idx; }
@@ -41,7 +41,7 @@ namespace rapp {
 	bool inputProcess(App* _app);
 
 	///
-	void inputSetKeyState(KeyboardState::Key _key, uint8_t _modifiers, bool _down);
+	void inputSetKeyState(KeyboardKey::Enum _key, uint8_t _modifiers, bool _down);
 
 	///
 	uint8_t inputGetModifiersState();
@@ -68,7 +68,7 @@ namespace rapp {
 	void inputResetGamepadAxisMovement();
 
 	///
-	void inputSetMouseButtonState(MouseState::Button _button, uint8_t _state);
+	void inputSetMouseButtonState(MouseButton::Enum _button, uint8_t _state);
 
 	///
 	void inputGetMouse(float _mouse[3]);
@@ -80,7 +80,7 @@ namespace rapp {
 	void inputSetGamepadConnected(GamepadHandle _handle, bool _connected);
 
 	///
-	void inputSetGamepadButtonState(GamepadHandle _handle, GamepadState::Buttons _button, bool _pressed);
+	void inputSetGamepadButtonsState(GamepadHandle _handle, GamepadButton::Enum _button, bool _pressed);
 
 	///
 	void inputSetGamepadAxis(GamepadHandle _handle, GamepadAxis::Enum _axis, int32_t _value);

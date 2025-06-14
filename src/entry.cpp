@@ -65,34 +65,34 @@ namespace rapp
 		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
 		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 	};
-	RTM_STATIC_ASSERT(KeyboardState::Key::Count == RTM_NUM_ELEMENTS(s_keyName) );
+	RTM_STATIC_ASSERT(KeyboardKey::Count == RTM_NUM_ELEMENTS(s_keyName) );
 
 #ifdef RAPP_WITH_BGFX
-	ImGuiKey	s_keyMap[KeyboardState::Key::Count];
+	ImGuiKey	s_keyMap[KeyboardKey::Count];
 #endif // RAPP_WITH_BGFX
 
-	const char* getName(KeyboardState::Key _key)
+	const char* getName(KeyboardKey::Enum _key)
 	{
-		RTM_ASSERT(_key < KeyboardState::Key::Count, "Invalid key %d.", _key);
+		RTM_ASSERT(_key < KeyboardKey::Count, "Invalid key %d.", _key);
 		return s_keyName[_key];
 	}
 
 #ifdef RAPP_WITH_BGFX
 	static const InputBinding s_bindingsGraphics[] =
 	{
-		{ NULL, "graphics fullscreen",               1, { KeyboardState::Key::KeyF,   KeyboardState::Modifier::LCtrl  }},
-		{ NULL, "graphics fullscreen",               1, { KeyboardState::Key::KeyF,   KeyboardState::Modifier::RCtrl  }},
-		{ NULL, "graphics fullscreen",               1, { KeyboardState::Key::F11,    KeyboardState::Modifier::NoMods }},
-		{ NULL, "graphics stats",                    1, { KeyboardState::Key::F1,     KeyboardState::Modifier::NoMods }},
-		{ NULL, "graphics stats 0\ngraphics text 0", 1, { KeyboardState::Key::F1,     KeyboardState::Modifier::LShift }},
-		{ NULL, "graphics wireframe",                1, { KeyboardState::Key::F3,     KeyboardState::Modifier::NoMods }},
-		{ NULL, "graphics hmd",                      1, { KeyboardState::Key::F4,     KeyboardState::Modifier::NoMods }},
-		{ NULL, "graphics hmdrecenter",              1, { KeyboardState::Key::F4,     KeyboardState::Modifier::LShift }},
-		{ NULL, "graphics hmddbg",                   1, { KeyboardState::Key::F4,     KeyboardState::Modifier::LCtrl  }},
-		{ NULL, "graphics vsync",                    1, { KeyboardState::Key::F7,     KeyboardState::Modifier::NoMods }},
-		{ NULL, "graphics msaa16",                   1, { KeyboardState::Key::F8,     KeyboardState::Modifier::NoMods }},
-		{ NULL, "graphics flush",                    1, { KeyboardState::Key::F9,     KeyboardState::Modifier::NoMods }},
-		{ NULL, "graphics screenshot",               1, { KeyboardState::Key::Print,  KeyboardState::Modifier::NoMods }},
+		{ NULL, "graphics fullscreen",               1, { KeyboardKey::KeyF,   KeyboardModifier::LCtrl  }},
+		{ NULL, "graphics fullscreen",               1, { KeyboardKey::KeyF,   KeyboardModifier::RCtrl  }},
+		{ NULL, "graphics fullscreen",               1, { KeyboardKey::F11,    KeyboardModifier::None   }},
+		{ NULL, "graphics stats",                    1, { KeyboardKey::F1,     KeyboardModifier::None   }},
+		{ NULL, "graphics stats 0\ngraphics text 0", 1, { KeyboardKey::F1,     KeyboardModifier::LShift }},
+		{ NULL, "graphics wireframe",                1, { KeyboardKey::F3,     KeyboardModifier::None   }},
+		{ NULL, "graphics hmd",                      1, { KeyboardKey::F4,     KeyboardModifier::None   }},
+		{ NULL, "graphics hmdrecenter",              1, { KeyboardKey::F4,     KeyboardModifier::LShift }},
+		{ NULL, "graphics hmddbg",                   1, { KeyboardKey::F4,     KeyboardModifier::LCtrl  }},
+		{ NULL, "graphics vsync",                    1, { KeyboardKey::F7,     KeyboardModifier::None   }},
+		{ NULL, "graphics msaa16",                   1, { KeyboardKey::F8,     KeyboardModifier::None   }},
+		{ NULL, "graphics flush",                    1, { KeyboardKey::F9,     KeyboardModifier::None   }},
+		{ NULL, "graphics screenshot",               1, { KeyboardKey::Print,  KeyboardModifier::None   }},
 
 		RAPP_INPUT_BINDING_END
 	};
@@ -106,36 +106,36 @@ namespace rapp
 		cmdAdd("graphics",  cmdGraphics,  0, "Graphics related commands, type 'graphics help' for list of options");
 		rapp::inputAddBindings("graphics", s_bindingsGraphics);
 
-		for (int i=0; i<KeyboardState::Key::Count; ++i)
+		for (int i=0; i<KeyboardKey::Count; ++i)
 			s_keyMap[i] = ImGuiKey_None;
 
-		s_keyMap[KeyboardState::Key::Tab]		= ImGuiKey_Tab;
-		s_keyMap[KeyboardState::Key::Left]		= ImGuiKey_LeftArrow;
-		s_keyMap[KeyboardState::Key::Right]		= ImGuiKey_RightArrow;
-		s_keyMap[KeyboardState::Key::Up]		= ImGuiKey_UpArrow;
-		s_keyMap[KeyboardState::Key::Down]		= ImGuiKey_DownArrow;
-		s_keyMap[KeyboardState::Key::Home]		= ImGuiKey_Home;
-		s_keyMap[KeyboardState::Key::End]		= ImGuiKey_End;
-		s_keyMap[KeyboardState::Key::Delete]	= ImGuiKey_Delete;
-		s_keyMap[KeyboardState::Key::Backspace] = ImGuiKey_Backspace;
-		s_keyMap[KeyboardState::Key::Return]	= ImGuiKey_Enter;
-		s_keyMap[KeyboardState::Key::Esc]		= ImGuiKey_Escape;
-		s_keyMap[KeyboardState::Key::Insert]	= ImGuiKey_Insert;
-		s_keyMap[KeyboardState::Key::Delete]	= ImGuiKey_Delete;
-		s_keyMap[KeyboardState::Key::Home]		= ImGuiKey_Home;
-		s_keyMap[KeyboardState::Key::End]		= ImGuiKey_End;
-		s_keyMap[KeyboardState::Key::PageUp]	= ImGuiKey_PageUp;
-		s_keyMap[KeyboardState::Key::PageDown]	= ImGuiKey_PageDown;
-		s_keyMap[KeyboardState::Key::Print]		= ImGuiKey_PrintScreen;
+		s_keyMap[KeyboardKey::Tab]		= ImGuiKey_Tab;
+		s_keyMap[KeyboardKey::Left]		= ImGuiKey_LeftArrow;
+		s_keyMap[KeyboardKey::Right]		= ImGuiKey_RightArrow;
+		s_keyMap[KeyboardKey::Up]		= ImGuiKey_UpArrow;
+		s_keyMap[KeyboardKey::Down]		= ImGuiKey_DownArrow;
+		s_keyMap[KeyboardKey::Home]		= ImGuiKey_Home;
+		s_keyMap[KeyboardKey::End]		= ImGuiKey_End;
+		s_keyMap[KeyboardKey::Delete]	= ImGuiKey_Delete;
+		s_keyMap[KeyboardKey::Backspace] = ImGuiKey_Backspace;
+		s_keyMap[KeyboardKey::Return]	= ImGuiKey_Enter;
+		s_keyMap[KeyboardKey::Esc]		= ImGuiKey_Escape;
+		s_keyMap[KeyboardKey::Insert]	= ImGuiKey_Insert;
+		s_keyMap[KeyboardKey::Delete]	= ImGuiKey_Delete;
+		s_keyMap[KeyboardKey::Home]		= ImGuiKey_Home;
+		s_keyMap[KeyboardKey::End]		= ImGuiKey_End;
+		s_keyMap[KeyboardKey::PageUp]	= ImGuiKey_PageUp;
+		s_keyMap[KeyboardKey::PageDown]	= ImGuiKey_PageDown;
+		s_keyMap[KeyboardKey::Print]		= ImGuiKey_PrintScreen;
 
 		for (int i=0; i<26; ++i)
-			s_keyMap[KeyboardState::Key::KeyA + i]	= ImGuiKey(ImGuiKey_A + i);
+			s_keyMap[KeyboardKey::KeyA + i]	= ImGuiKey(ImGuiKey_A + i);
 
 		for (int i=0; i<10; i++)
-			s_keyMap[KeyboardState::Key::NumPad0+i]	= (ImGuiKey)(ImGuiKey_Keypad0+i);
+			s_keyMap[KeyboardKey::NumPad0+i]	= (ImGuiKey)(ImGuiKey_Keypad0+i);
 		
 		for (int i=0; i<12; i++)
-			s_keyMap[KeyboardState::Key::F1 + i]	= (ImGuiKey)(ImGuiKey_F1 + i);
+			s_keyMap[KeyboardKey::F1 + i]	= (ImGuiKey)(ImGuiKey_F1 + i);
 #endif
 
 		rapp::taskInit();
@@ -210,10 +210,10 @@ namespace rapp
 					}
 					break;
 
-				case Event::GamepadButton:
+				case Event::GamepadButtons:
 					{
-						const GamepadButtonEvent* gev = static_cast<const GamepadButtonEvent*>(ev);
-						inputSetGamepadButtonState(gev->m_gamepad, gev->m_button, gev->m_pressed);
+						const GamepadButtonsEvent* gev = static_cast<const GamepadButtonsEvent*>(ev);
+						inputSetGamepadButtonsState(gev->m_gamepad, gev->m_button, gev->m_pressed);
 					}
 					break;
 

@@ -18,40 +18,56 @@
 
 namespace rapp {
 
-InputBinding::InputBinding(int)	: m_type(InputBinding::Count) {}
+enum InputBindingType
+{
+	BindingTypeGamepad,
+	BindingTypeMouse,
+	BindingTypeKeyboard,
+	BindingTypeTouch,
 
-InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingKeyboard& _kb)
-	: m_type(InputBinding::Keyboard)
+	Count
+};
+
+static inline uint8_t InputBindingTypeToU8(InputBindingType _type)
+{
+	return uint8_t(_type) << 4;
+}
+
+static inline InputBindingType InputBindingTypeFromU8(uint8_t _type)
+{
+	return InputBindingType(_type >> 4);
+}
+
+InputBinding::InputBinding(int)	: m_flags(InputBindingTypeToU8(InputBindingType::Count)) {}
+
+InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingKeyboard& _kb)
+	: m_flags(_flag | InputBindingTypeToU8(InputBindingType::BindingTypeKeyboard))
 	, m_fn(_fn)
 	, m_userData(_userData)
-	, m_flags(_flag)
 {
 	m_bindingKeyboard = _kb;
 }
 
-InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingMouse& _mouse)
-	: m_type(InputBinding::Mouse)
+InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingMouse& _mouse)
+	: m_flags(_flag | InputBindingTypeToU8(InputBindingType::BindingTypeMouse))
 	, m_fn(_fn)
 	, m_userData(_userData)
-	, m_flags(_flag)
 {
 	m_bindingMouse = _mouse;
 }
 
-InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingGamepad& _gp)
-	: m_type(InputBinding::Gamepad)
+InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingGamepad& _gp)
+	: m_flags(_flag | InputBindingTypeToU8(InputBindingType::BindingTypeGamepad))
 	, m_fn(_fn)
 	, m_userData(_userData)
-	, m_flags(_flag)
 {
 	m_bindingGamepad = _gp;
 }
 
-InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint8_t _flag, const InputBindingTouch& _touch)
-	: m_type(InputBinding::Touch)
+InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingTouch& _touch)
+	: m_flags(_flag | InputBindingTypeToU8(InputBindingType::BindingTypeTouch))
 	, m_fn(_fn)
 	, m_userData(_userData)
-	, m_flags(_flag)
 {
 	m_bindingTouch = _touch;
 }
@@ -120,22 +136,22 @@ struct Mouse
 		m_absoluteOld[2] = m_absolute[2];
 	}
 
-	void setButtonState(rapp::MouseState::Button _button, uint8_t _state)
+	void setButtonState(rapp::MouseButton::Enum _button, uint8_t _state)
 	{
 		m_buttons[_button] = _state;
 		m_once[_button] = false;
 	}
 
-	int32_t m_absoluteOld[3];
-	int32_t m_absolute[3];
-	float m_norm[3];
-	int32_t m_wheel;
-	uint8_t m_buttons[MouseState::Button::Count];
-	uint8_t m_once[MouseState::Button::Count];
-	uint16_t m_width;
-	uint16_t m_height;
-	uint16_t m_wheelDelta;
-	bool m_lock;
+	int32_t		m_absoluteOld[3];
+	int32_t		m_absolute[3];
+	float		m_norm[3];
+	int32_t		m_wheel;
+	uint8_t		m_buttons[MouseButton::Count];
+	uint8_t		m_once[MouseButton::Count];
+	uint16_t	m_width;
+	uint16_t	m_height;
+	uint16_t	m_wheelDelta;
+	bool		m_lock;
 };
 
 struct Keyboard
@@ -165,13 +181,13 @@ struct Keyboard
 		return 0 != ( (_state>> 8)&0xff);
 	}
 
-	void setKeyState(KeyboardState::Key _key, uint8_t _modifiers, bool _down)
+	void setKeyState(KeyboardKey::Enum _key, uint8_t _modifiers, bool _down)
 	{
 		m_key[_key] = encodeKeyState(_modifiers, _down);
 		m_once[_key] = false;
 	}
 
-	bool getKeyState(KeyboardState::Key _key, uint8_t* _modifiers)
+	bool getKeyState(KeyboardKey::Enum _key, uint8_t* _modifiers)
 	{
 		uint8_t modifiers;
 		_modifiers = NULL == _modifiers ? &modifiers : _modifiers;
@@ -182,7 +198,7 @@ struct Keyboard
 	uint8_t getModifiersState()
 	{
 		uint8_t modifiers = 0;
-		for (uint32_t ii = 0; ii < KeyboardState::Key::Count; ++ii)
+		for (uint32_t ii = 0; ii < KeyboardKey::Count; ++ii)
 		{
 			modifiers |= (m_key[ii]>>16)&0xff;
 		}
@@ -256,7 +272,7 @@ struct Gamepad
 		return m_axis[_axis];
 	}
 
-	void setButtonState(GamepadState::Buttons _button, bool _down)
+	void setButtonState(GamepadButton::Enum _button, bool _down)
 	{
 		if (_down)
 			m_buttons |= _button;
@@ -328,16 +344,16 @@ struct Input
 	bool process(App* _app, const InputBinding* _bindings)
 	{
 		bool keyBindings = false;
-		for (const InputBinding* binding = _bindings; binding->m_type != InputBinding::Count; ++binding)
+		for (const InputBinding* binding = _bindings; InputBindingTypeFromU8(binding->m_flags) != InputBindingType::Count; ++binding)
 		{
-			switch (binding->m_type)
+			switch (InputBindingTypeFromU8(binding->m_flags))
 			{
-			case InputBinding::Keyboard:
+			case InputBindingType::BindingTypeKeyboard:
 				{
 					uint8_t modifiers;
 					bool down =	Keyboard::decodeKeyState(m_keyboard.m_key[binding->m_bindingKeyboard.m_key], modifiers);
 
-					if (binding->m_flags == 1)
+					if ((binding->m_flags & 0xf) == 1)
 					{
 						if (down)
 						{
@@ -366,13 +382,13 @@ struct Input
 				}
 				break;
 
-			case InputBinding::Mouse:
+			case InputBindingType::BindingTypeMouse:
 				{
 					uint8_t modifiers = inputGetModifiersState();
 					
-					MouseState::Button button = binding->m_bindingMouse.m_button;
+					MouseButton::Enum button = binding->m_bindingMouse.m_button;
 
-					if ((modifiers == binding->m_bindingMouse.m_modifiers) && (button == MouseState::Button::None))
+					if ((modifiers == binding->m_bindingMouse.m_modifiers) && (button == MouseButton::None))
 					{
 						if ((m_mouse.m_absolute[0] != m_mouse.m_absoluteOld[0]) ||
 							(m_mouse.m_absolute[1] != m_mouse.m_absoluteOld[1]) ||
@@ -385,7 +401,7 @@ struct Input
 
 					bool down = m_mouse.m_buttons[button] != 0;
 
-					if (binding->m_flags == 1)
+					if ((binding->m_flags & 0xf) == 1)
 					{
 						if (down)
 						{
@@ -411,36 +427,36 @@ struct Input
 				}
 				break;
 
-			case InputBinding::Gamepad:
+			case InputBindingType::BindingTypeGamepad:
 				{
-					GamepadState::Buttons button = binding->m_bindingGamepad.m_button;
+					rapp::GamepadButton::Enum button = binding->m_bindingGamepad.m_button;
 
 					rapp::Gamepad& gp = m_gamepad[binding->m_bindingGamepad.m_gamepadIndex];
 
-					if (button == GamepadState::Buttons::None)
+					if (button == rapp::GamepadButton::NoButtonGP)
 					{
-						RTM_ASSERT(binding->m_bindingGamepad.m_stick != InputBindingGamepad::Stick::None, "");
+						RTM_ASSERT(binding->m_bindingGamepad.m_stick != rapp::GamepadStick::NoStick, "");
 
 						switch (binding->m_bindingGamepad.m_stick)
 						{
-						case InputBindingGamepad::LeftStick:
+						case rapp::GamepadStick::LeftStick:
 							if ((gp.m_axis[GamepadAxis::LeftX] != gp.m_axisOld[GamepadAxis::LeftX]) ||
 								(gp.m_axis[GamepadAxis::LeftY] != gp.m_axisOld[GamepadAxis::LeftY]))
 								execBinding(_app, binding);
 							break;
 
-						case InputBindingGamepad::LeftTrigger:
+						case GamepadStick::LeftTrigger:
 							if ((gp.m_axis[GamepadAxis::LeftZ] != gp.m_axisOld[GamepadAxis::LeftZ]))
 								execBinding(_app, binding);
 							break;
 
-						case InputBindingGamepad::RightStick:
+						case GamepadStick::RightStick:
 							if ((gp.m_axis[GamepadAxis::RightX] != gp.m_axisOld[GamepadAxis::RightX]) ||
 								(gp.m_axis[GamepadAxis::RightY] != gp.m_axisOld[GamepadAxis::RightY]))
 								execBinding(_app, binding);
 							break;
 
-						case InputBindingGamepad::RightTrigger:
+						case GamepadStick::RightTrigger:
 							if ((gp.m_axis[GamepadAxis::RightZ] != gp.m_axisOld[GamepadAxis::RightZ]))
 								execBinding(_app, binding);
 							break;
@@ -453,7 +469,7 @@ struct Input
 
 					bool down = (gp.m_buttons & button) != 0;
 
-					if (binding->m_flags == 1)
+					if ((binding->m_flags & 0xf) == 1)
 					{
 						if (down)
 						{
@@ -478,7 +494,7 @@ struct Input
 				}
 				break;
 
-			case InputBinding::Touch:
+			case InputBindingType::BindingTypeTouch:
 				break;
 
 			default:
@@ -510,9 +526,9 @@ struct Input
 
 	const InputBinding*							m_inputBindings[RAPP_HASH_SIZE];
 	rtm::FixedArray<const InputBinding*, 256>	m_inputBindingsArray;
-	Mouse										m_mouse;
-	Keyboard									m_keyboard;
-	Gamepad										m_gamepad[ENTRY_CONFIG_MAX_GAMEPADS];
+	rapp::Mouse									m_mouse;
+	rapp::Keyboard								m_keyboard;
+	rapp::Gamepad								m_gamepad[ENTRY_CONFIG_MAX_GAMEPADS];
 };
 
 Input& getInput()
@@ -549,12 +565,12 @@ void inputSetMouseResolution(uint16_t _width, uint16_t _height)
 	getInput().m_mouse.setResolution(_width, _height);
 }
 
-void inputSetKeyState(KeyboardState::Key _key, uint8_t _modifiers, bool _down)
+void inputSetKeyState(KeyboardKey::Enum _key, uint8_t _modifiers, bool _down)
 {
 	getInput().m_keyboard.setKeyState(_key, _modifiers, _down);
 }
 
-bool inputGetKeyState(KeyboardState::Key _key, uint8_t* _modifiers)
+bool inputGetKeyState(KeyboardKey::Enum _key, uint8_t* _modifiers)
 {
 	return getInput().m_keyboard.getKeyState(_key, _modifiers);
 }
@@ -595,7 +611,7 @@ void inputResetGamepadAxisMovement()
 		getInput().m_gamepad[i].resetMovement();
 }
 
-void inputSetMouseButtonState(MouseState::Button _button, uint8_t _state)
+void inputSetMouseButtonState(MouseButton::Enum _button, uint8_t _state)
 {
 	getInput().m_mouse.setButtonState(_button, _state);
 }
@@ -633,7 +649,7 @@ void inputSetGamepadConnected(GamepadHandle _handle, bool _connected)
 	getInput().m_gamepad[_handle.idx].m_connected = _connected;
 }
 
-void inputSetGamepadButtonState(GamepadHandle _handle, GamepadState::Buttons _button, bool _pressed)
+void inputSetGamepadButtonsState(GamepadHandle _handle, GamepadButton::Enum _button, bool _pressed)
 {
 	getInput().m_gamepad[_handle.idx].setButtonState(_button, _pressed);
 }
@@ -653,7 +669,7 @@ void inputGetGamePadState(int _index, GamepadState& _gp)
 	Gamepad& gamepad = getInput().m_gamepad[_index];
 
 	_gp.m_buttons = gamepad.m_buttons;
-	_gp.m_buttons |= gamepad.m_connected ? GamepadState::Connected : 0;
+	_gp.m_buttons |= gamepad.m_connected ? GamepadButton::Connected : 0;
 
 	_gp.m_LStick[0] = gamepad.m_axis[GamepadAxis::LeftX];
 	_gp.m_LStick[1] = gamepad.m_axis[GamepadAxis::LeftY];
@@ -674,9 +690,9 @@ void inputGetMouseState(MouseState& _ms)
 	_ms.m_norm[1] = getInput().m_mouse.m_norm[1];
 	_ms.m_norm[2] = getInput().m_mouse.m_norm[2];
 
-	_ms.m_buttons[MouseState::Button::Left]		= getInput().m_mouse.m_buttons[MouseState::Button::Left];
-	_ms.m_buttons[MouseState::Button::Middle]	= getInput().m_mouse.m_buttons[MouseState::Button::Middle];
-	_ms.m_buttons[MouseState::Button::Right]	= getInput().m_mouse.m_buttons[MouseState::Button::Right];
+	_ms.m_buttons[MouseButton::Left]	= getInput().m_mouse.m_buttons[MouseButton::Left];
+	_ms.m_buttons[MouseButton::Middle]	= getInput().m_mouse.m_buttons[MouseButton::Middle];
+	_ms.m_buttons[MouseButton::Right]	= getInput().m_mouse.m_buttons[MouseButton::Right];
 }
 
 
@@ -685,13 +701,13 @@ void inputGetKeyboardState(KeyboardState& _ks)
 	_ks.m_keysPressed				= 0;
 	_ks.m_modifiersSinceLastFrame	= inputGetModifiersState();
 
-	for (int i=1; i<KeyboardState::Key::Count; ++i)
+	for (int i=1; i<KeyboardKey::Count; ++i)
 	{
 		uint8_t mod;
-		if (inputGetKeyState((KeyboardState::Key)i, &mod))
+		if (inputGetKeyState((KeyboardKey::Enum)i, &mod))
 		{
 			_ks.m_modifiers	[_ks.m_keysPressed] = mod;
-			_ks.m_keys		[_ks.m_keysPressed] = (KeyboardState::Key)i;
+			_ks.m_keys		[_ks.m_keysPressed] = (KeyboardKey::Enum)i;
 			++_ks.m_keysPressed;
 		}
 	}
@@ -740,31 +756,31 @@ void displayGamePadDbg(uint16_t _x, uint16_t _y, const GamepadState& _gp)
 {
 	RTM_UNUSED_3(_x, _y, _gp);
 #ifdef RAPP_WITH_BGFX
-	if (_gp.m_buttons & GamepadState::Connected)
+	if (_gp.m_buttons & GamepadButton::Connected)
 	{
 		bgfx::dbgTextPrintf(_x, _y+0, 0x8b, "Tr[   ] S[ ]  Back Start Tr[   ]  S[ ]");
 		bgfx::dbgTextPrintf(_x, _y+1, 0x8b, "X[      ]   [^]   X[      ]    [Y]    ");
 		bgfx::dbgTextPrintf(_x, _y+2, 0x8b, "Y[      ] [<   >] Y[      ] [X]   [B] ");
 		bgfx::dbgTextPrintf(_x, _y+3, 0x8b, "T[ ]        [v]   T[ ]         [A]    ");
 
-		if (_gp.m_buttons & GamepadState::X)			bgfx::dbgTextPrintf(_x+28, _y+2, 0, "\x1b[7;1m[X]");
-		if (_gp.m_buttons & GamepadState::Y)			bgfx::dbgTextPrintf(_x+31, _y+1, 0, "\x1b[7;6m[Y]");
-		if (_gp.m_buttons & GamepadState::A)			bgfx::dbgTextPrintf(_x+31, _y+3, 0, "\x1b[7;2m[A]");
-		if (_gp.m_buttons & GamepadState::B)			bgfx::dbgTextPrintf(_x+34, _y+2, 0, "\x1b[7;4m[B]");
+		if (_gp.m_buttons & GamepadButton::X)			bgfx::dbgTextPrintf(_x+28, _y+2, 0, "\x1b[7;1m[X]");
+		if (_gp.m_buttons & GamepadButton::Y)			bgfx::dbgTextPrintf(_x+31, _y+1, 0, "\x1b[7;6m[Y]");
+		if (_gp.m_buttons & GamepadButton::A)			bgfx::dbgTextPrintf(_x+31, _y+3, 0, "\x1b[7;2m[A]");
+		if (_gp.m_buttons & GamepadButton::B)			bgfx::dbgTextPrintf(_x+34, _y+2, 0, "\x1b[7;4m[B]");
 
-		if (_gp.m_buttons & GamepadState::Up)			bgfx::dbgTextPrintf(_x+12, _y+1, 0x3b, "[^]");
-		if (_gp.m_buttons & GamepadState::Down)			bgfx::dbgTextPrintf(_x+12, _y+3, 0x3b, "[v]");
-		if (_gp.m_buttons & GamepadState::Left)			bgfx::dbgTextPrintf(_x+10, _y+2, 0x3b, "[<]");;
-		if (_gp.m_buttons & GamepadState::Right)		bgfx::dbgTextPrintf(_x+14, _y+2, 0x3b, "[>]");
+		if (_gp.m_buttons & GamepadButton::MoveUp)		bgfx::dbgTextPrintf(_x+12, _y+1, 0x3b, "[^]");
+		if (_gp.m_buttons & GamepadButton::MoveDown)	bgfx::dbgTextPrintf(_x+12, _y+3, 0x3b, "[v]");
+		if (_gp.m_buttons & GamepadButton::MoveLeft)	bgfx::dbgTextPrintf(_x+10, _y+2, 0x3b, "[<]");;
+		if (_gp.m_buttons & GamepadButton::MoveRight)	bgfx::dbgTextPrintf(_x+14, _y+2, 0x3b, "[>]");
 
-		if (_gp.m_buttons & GamepadState::LThumb)		bgfx::dbgTextPrintf(_x+2,  _y+3, 0x8f, "\xfe");
-		if (_gp.m_buttons & GamepadState::RThumb)		bgfx::dbgTextPrintf(_x+20, _y+3, 0x8f, "\xfe");
+		if (_gp.m_buttons & GamepadButton::LThumb)		bgfx::dbgTextPrintf(_x+2,  _y+3, 0x8f, "\xfe");
+		if (_gp.m_buttons & GamepadButton::RThumb)		bgfx::dbgTextPrintf(_x+20, _y+3, 0x8f, "\xfe");
 
-		if (_gp.m_buttons & GamepadState::LShoulder)	bgfx::dbgTextPrintf(_x+10, _y, 0x8f, "\xfe");
-		if (_gp.m_buttons & GamepadState::RShoulder)	bgfx::dbgTextPrintf(_x+36, _y, 0x8f, "\xfe");
+		if (_gp.m_buttons & GamepadButton::LShoulder)	bgfx::dbgTextPrintf(_x+10, _y, 0x8f, "\xfe");
+		if (_gp.m_buttons & GamepadButton::RShoulder)	bgfx::dbgTextPrintf(_x+36, _y, 0x8f, "\xfe");
 
-		if (_gp.m_buttons & GamepadState::Start)		bgfx::dbgTextPrintf(_x+19, _y, 0x8a, "Start");
-		if (_gp.m_buttons & GamepadState::Back)			bgfx::dbgTextPrintf(_x+14, _y, 0x8a, "Back");
+		if (_gp.m_buttons & GamepadButton::Start)		bgfx::dbgTextPrintf(_x+19, _y, 0x8a, "Start");
+		if (_gp.m_buttons & GamepadButton::Back)		bgfx::dbgTextPrintf(_x+14, _y, 0x8a, "Back");
 
 		char valbuf[8]; // 6 chars + sign + trailing zero
 	
@@ -810,7 +826,7 @@ void inputDgbMouse()
 
 	bgfx::dbgTextPrintf(1, stats->textHeight-6, 0x8b, " Mouse X[    ] Y[    ] Z[     ]  NX[        ] NY[        ] NZ[        ] LB[ ] MB[ ] RB[ ]");
 
-	Mouse& m = getInput().m_mouse;
+	rapp::Mouse& m = getInput().m_mouse;
 
 	char valbuf[8];
 	bgfx::dbgTextPrintf(10,  stats->textHeight-6, 0x8f, itoaWithSign(m.m_absolute[0], valbuf, 4, false));
@@ -821,13 +837,13 @@ void inputDgbMouse()
 	bgfx::dbgTextPrintf(50,  stats->textHeight-6, 0x8f, "%5f", m.m_norm[1]);
 	bgfx::dbgTextPrintf(63,  stats->textHeight-6, 0x8f, "%5f", m.m_norm[2]);
 
-	if (m.m_buttons[MouseState::Button::Left])
+	if (m.m_buttons[MouseButton::Left])
 		bgfx::dbgTextPrintf(76, stats->textHeight-6, 0x8f, "\xfe");
 
-	if (m.m_buttons[MouseState::Button::Middle])
+	if (m.m_buttons[MouseButton::Middle])
 		bgfx::dbgTextPrintf(82, stats->textHeight-6, 0x8f, "\xfe");
 
-	if (m.m_buttons[MouseState::Button::Right])
+	if (m.m_buttons[MouseButton::Right])
 		bgfx::dbgTextPrintf(88, stats->textHeight-6, 0x8f, "\xfe");
 #endif // RAPP_WITH_BGFX
 }
@@ -841,15 +857,15 @@ void inputDgbKeyboard()
 	bgfx::dbgTextPrintf(91, stats->textHeight-6, 0x8b, "Kb LCtrl[ ] LMeta[ ] LAlt[ ]   ________   RAlt[ ] RMeta[ ] RCtrl[ ]");
 
 	uint8_t modifiers = inputGetModifiersState();
-	if (modifiers & KeyboardState::Modifier::LShift)	bgfx::dbgTextPrintf(101, stats->textHeight-7, 0x8f, "\xfe");
-	if (modifiers & KeyboardState::Modifier::LCtrl)		bgfx::dbgTextPrintf(100, stats->textHeight-6, 0x8f, "\xfe");
-	if (modifiers & KeyboardState::Modifier::LMeta)		bgfx::dbgTextPrintf(109, stats->textHeight-6, 0x8f, "\xfe");
-	if (modifiers & KeyboardState::Modifier::LAlt)		bgfx::dbgTextPrintf(117, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::LShift)	bgfx::dbgTextPrintf(101, stats->textHeight-7, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::LCtrl)	bgfx::dbgTextPrintf(100, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::LMeta)	bgfx::dbgTextPrintf(109, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::LAlt)		bgfx::dbgTextPrintf(117, stats->textHeight-6, 0x8f, "\xfe");
 
-	if (modifiers & KeyboardState::Modifier::RShift)	bgfx::dbgTextPrintf(156, stats->textHeight-7, 0x8f, "\xfe");
-	if (modifiers & KeyboardState::Modifier::RAlt)		bgfx::dbgTextPrintf(138, stats->textHeight-6, 0x8f, "\xfe");
-	if (modifiers & KeyboardState::Modifier::RMeta)		bgfx::dbgTextPrintf(147, stats->textHeight-6, 0x8f, "\xfe");
-	if (modifiers & KeyboardState::Modifier::RCtrl)		bgfx::dbgTextPrintf(156, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::RShift)	bgfx::dbgTextPrintf(156, stats->textHeight-7, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::RAlt)		bgfx::dbgTextPrintf(138, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::RMeta)	bgfx::dbgTextPrintf(147, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::RCtrl)	bgfx::dbgTextPrintf(156, stats->textHeight-6, 0x8f, "\xfe");
 
 	KeyboardState ks;
 	inputGetKeyboardState(ks);
@@ -857,7 +873,7 @@ void inputDgbKeyboard()
 	uint16_t startX = 108;
 	for (int i=0; i<ks.m_keysPressed; ++i)
 	{
-		KeyboardState::Key key = ks.m_keys[i];
+		KeyboardKey::Enum key = ks.m_keys[i];
 		const char* name = getName(key);
 		bgfx::dbgTextPrintf(startX, stats->textHeight-7, 0x8f /* ks.m_modifiers[i]*/, "(%s) ", name);
 		startX += static_cast<uint16_t>(strlen(name)) + 3;
