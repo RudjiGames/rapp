@@ -48,26 +48,26 @@ namespace rapp
 	struct GamepadRemap
 	{
 		uint16_t				m_keyCode;
-		GamepadButtons	m_key;
+		GamepadButton::Enum		m_key;
 	};
 
 	static GamepadRemap s_gamepadRemap[] =
 	{
-		{ AKEYCODE_DPAD_UP,       GamepadButtons::Up        },
-		{ AKEYCODE_DPAD_DOWN,     GamepadButtons::Down      },
-		{ AKEYCODE_DPAD_LEFT,     GamepadButtons::Left      },
-		{ AKEYCODE_DPAD_RIGHT,    GamepadButtons::Right     },
-		{ AKEYCODE_BUTTON_START,  GamepadButtons::Start     },
-		{ AKEYCODE_BACK,          GamepadButtons::Back      },
-		{ AKEYCODE_BUTTON_THUMBL, GamepadButtons::LThumb    },
-		{ AKEYCODE_BUTTON_THUMBR, GamepadButtons::RThumb    },
-		{ AKEYCODE_BUTTON_L1,     GamepadButtons::LShoulder },
-		{ AKEYCODE_BUTTON_R1,     GamepadButtons::RShoulder },
-		{ AKEYCODE_GUIDE,         GamepadButtons::Guide     },
-		{ AKEYCODE_BUTTON_A,      GamepadButtons::A         },
-		{ AKEYCODE_BUTTON_B,      GamepadButtons::B         },
-		{ AKEYCODE_BUTTON_X,      GamepadButtons::X         },
-		{ AKEYCODE_BUTTON_Y,      GamepadButtons::Y         },
+		{ AKEYCODE_DPAD_UP,       GamepadButton::Up        },
+		{ AKEYCODE_DPAD_DOWN,     GamepadButton::Down      },
+		{ AKEYCODE_DPAD_LEFT,     GamepadButton::Left      },
+		{ AKEYCODE_DPAD_RIGHT,    GamepadButton::Right     },
+		{ AKEYCODE_BUTTON_START,  GamepadButton::Start     },
+		{ AKEYCODE_BACK,          GamepadButton::Back      },
+		{ AKEYCODE_BUTTON_THUMBL, GamepadButton::LThumb    },
+		{ AKEYCODE_BUTTON_THUMBR, GamepadButton::RThumb    },
+		{ AKEYCODE_BUTTON_L1,     GamepadButton::LShoulder },
+		{ AKEYCODE_BUTTON_R1,     GamepadButton::RShoulder },
+		{ AKEYCODE_GUIDE,         GamepadButton::Guide     },
+		{ AKEYCODE_BUTTON_A,      GamepadButton::A         },
+		{ AKEYCODE_BUTTON_B,      GamepadButton::B         },
+		{ AKEYCODE_BUTTON_X,      GamepadButton::X         },
+		{ AKEYCODE_BUTTON_Y,      GamepadButton::Y         },
 	};
 
 	struct GamepadAxisRemap

@@ -429,24 +429,24 @@ namespace rapp
 		return false;
 	}
 
-	static GamepadButtons s_buttonRemap[] =
+	static GamepadButton::Enum s_buttonRemap[] =
 	{
-		GamepadButtons::A,
-		GamepadButtons::B,
-		GamepadButtons::X,
-		GamepadButtons::Y,
-		GamepadButtons::LShoulder,
-		GamepadButtons::RShoulder,
-		GamepadState::None, //TL
-		GamepadState::None,//TR
-		GamepadButtons::Back,
-		GamepadButtons::Start,
-		GamepadButtons::LThumb,
-		GamepadButtons::RThumb,
-		GamepadButtons::Up,
-		GamepadButtons::Down,
-		GamepadButtons::Left,
-		GamepadButtons::Right
+		GamepadButton::A,
+		GamepadButton::B,
+		GamepadButton::X,
+		GamepadButton::Y,
+		GamepadButton::LShoulder,
+		GamepadButton::RShoulder,
+		GamepadButton::None, //TL
+		GamepadButton::None,//TR
+		GamepadButton::Back,
+		GamepadButton::Start,
+		GamepadButton::LThumb,
+		GamepadButton::RThumb,
+		GamepadButton::Up,
+		GamepadButton::Down,
+		GamepadButton::Left,
+		GamepadButton::Right
 	};
 
 	static GamepadAxis::Enum s_axisRemap[] =

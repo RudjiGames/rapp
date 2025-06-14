@@ -27,28 +27,28 @@ namespace rapp
 
 		struct GamePadRemap
 		{
-			uint32_t				m_bit;
-			GamepadButtons	m_button;
+			uint32_t			m_bit;
+			GamepadButton::Enum	m_button;
 		};
 
 		static GamePadRemap s_gamepadRemap[] =
 		{
-			{ SCE_PAD_BUTTON_L3,			GamepadButtons::LThumb    },
-			{ SCE_PAD_BUTTON_R3,			GamepadButtons::RThumb    },
-			{ SCE_PAD_BUTTON_OPTIONS,		GamepadButtons::Start     },
-			{ SCE_PAD_BUTTON_UP,			GamepadButtons::Up        },
-			{ SCE_PAD_BUTTON_RIGHT,			GamepadButtons::Right     },
-			{ SCE_PAD_BUTTON_DOWN,			GamepadButtons::Down      },
-			{ SCE_PAD_BUTTON_LEFT,			GamepadButtons::Left      },
-			{ SCE_PAD_BUTTON_L2,			GamepadState::None      },
-			{ SCE_PAD_BUTTON_R2,			GamepadState::None      },
-			{ SCE_PAD_BUTTON_L1,			GamepadButtons::LShoulder },
-			{ SCE_PAD_BUTTON_R1,			GamepadButtons::RShoulder },
-			{ SCE_PAD_BUTTON_TRIANGLE,		GamepadButtons::Y         },
-			{ SCE_PAD_BUTTON_CIRCLE,		GamepadButtons::B         },
-			{ SCE_PAD_BUTTON_CROSS,			GamepadButtons::A         },
-			{ SCE_PAD_BUTTON_SQUARE,		GamepadButtons::X         },
-			{ SCE_PAD_BUTTON_TOUCH_PAD,		GamepadButtons::Guide      },
+			{ SCE_PAD_BUTTON_L3,			GamepadButton::LThumb    },
+			{ SCE_PAD_BUTTON_R3,			GamepadButton::RThumb    },
+			{ SCE_PAD_BUTTON_OPTIONS,		GamepadButton::Start     },
+			{ SCE_PAD_BUTTON_UP,			GamepadButton::Up        },
+			{ SCE_PAD_BUTTON_RIGHT,			GamepadButton::Right     },
+			{ SCE_PAD_BUTTON_DOWN,			GamepadButton::Down      },
+			{ SCE_PAD_BUTTON_LEFT,			GamepadButton::Left      },
+			{ SCE_PAD_BUTTON_L2,			GamepadButton::None      },
+			{ SCE_PAD_BUTTON_R2,			GamepadButton::None      },
+			{ SCE_PAD_BUTTON_L1,			GamepadButton::LShoulder },
+			{ SCE_PAD_BUTTON_R1,			GamepadButton::RShoulder },
+			{ SCE_PAD_BUTTON_TRIANGLE,		GamepadButton::Y         },
+			{ SCE_PAD_BUTTON_CIRCLE,		GamepadButton::B         },
+			{ SCE_PAD_BUTTON_CROSS,			GamepadButton::A         },
+			{ SCE_PAD_BUTTON_SQUARE,		GamepadButton::X         },
+			{ SCE_PAD_BUTTON_TOUCH_PAD,		GamepadButton::Guide     },
 		};
 
 	struct MainThreadEntry
@@ -310,7 +310,7 @@ namespace rapp
 
 			case SCE_IME_KEYBOARD_EVENT_KEYCODE_DOWN:
 					{
-						rapp::KeyboardKey key = (rapp::KeyboardKey)s_translateKey[_event->param.keycode.keycode];
+						rapp::KeyboardKey::Enum key = (rapp::KeyboardKey::Enum)s_translateKey[_event->param.keycode.keycode];
 						s_modifiers = getModifiers(_event->param.keycode.status);
 						g_eventQueue.postKeyEvent(handle, key, s_modifiers, true);
 					}
@@ -318,7 +318,7 @@ namespace rapp
 
 			case SCE_IME_KEYBOARD_EVENT_KEYCODE_UP:
 					{
-						rapp::KeyboardKey key = (rapp::KeyboardKey)s_translateKey[_event->param.keycode.keycode];
+						rapp::KeyboardKey::Enum key = (rapp::KeyboardKey::Enum)s_translateKey[_event->param.keycode.keycode];
 						s_modifiers = getModifiers(_event->param.keycode.status);
 						g_eventQueue.postKeyEvent(handle, key, s_modifiers, false);
 					}
@@ -326,7 +326,7 @@ namespace rapp
 
 			case SCE_IME_KEYBOARD_EVENT_KEYCODE_REPEAT:
 					{
-						rapp::KeyboardKey key = (rapp::KeyboardKey)s_translateKey[_event->param.keycode.keycode];
+						rapp::KeyboardKey::Enum key = (rapp::KeyboardKey::Enum)s_translateKey[_event->param.keycode.keycode];
 						s_modifiers = getModifiers(_event->param.keycode.status);
 						g_eventQueue.postKeyEvent(handle, key, s_modifiers, true);
 					}
@@ -469,7 +469,7 @@ namespace rapp
 						g_eventQueue.postMouseEvent(handle, m_mouseX, m_mouseY, m_mouseZ, MouseButton::Left, s_modifiers, m_mouseData[i].buttons & SCE_MOUSE_BUTTON_PRIMARY, false);
 
 					if (oldMouseButtons & SCE_MOUSE_BUTTON_SECONDARY)
-						g_eventQueue.postMouseEvent(handle, m_mouseX, m_mouseY, m_mouseZ, MouseButton::RightButton, s_modifiers, m_mouseData[i].buttons & SCE_MOUSE_BUTTON_SECONDARY, false);
+						g_eventQueue.postMouseEvent(handle, m_mouseX, m_mouseY, m_mouseZ, MouseButton::Right, s_modifiers, m_mouseData[i].buttons & SCE_MOUSE_BUTTON_SECONDARY, false);
 
 					if (oldMouseButtons & SCE_MOUSE_BUTTON_OPTIONAL)
 						g_eventQueue.postMouseEvent(handle, m_mouseX, m_mouseY, m_mouseZ, MouseButton::Middle, s_modifiers, m_mouseData[i].buttons & SCE_MOUSE_BUTTON_OPTIONAL, false);

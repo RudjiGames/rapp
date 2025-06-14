@@ -39,26 +39,26 @@ static rapp::EventQueue g_eventQueue;
 struct GamepadRemap
 {
 	uint16_t					m_bit;
-	rapp::GamepadButtons	m_button;
+	rapp::GamepadButton::Enum	m_button;
 };
 
 static GamepadRemap s_gamepadRemap[] =
 {
-	{ (uint16_t)GamepadButtonss::DPadUp,			rapp::GamepadButtons::Up        },
-	{ (uint16_t)GamepadButtonss::DPadDown,		rapp::GamepadButtons::Down      },
-	{ (uint16_t)GamepadButtonss::DPadLeft,		rapp::GamepadButtons::Left      },
-	{ (uint16_t)GamepadButtonss::DPadRight,		rapp::GamepadButtons::Right     },
-	{ (uint16_t)GamepadButtonss::Menu,			rapp::GamepadButtons::Start     },
-	{ (uint16_t)GamepadButtonss::View,			rapp::GamepadButtons::Back      },
-	{ (uint16_t)GamepadButtonss::LeftThumbstick,	rapp::GamepadButtons::LThumb    },
-	{ (uint16_t)GamepadButtonss::RightThumbstick,rapp::GamepadButtons::RThumb    },
-	{ (uint16_t)GamepadButtonss::LeftShoulder,	rapp::GamepadButtons::LShoulder },
-	{ (uint16_t)GamepadButtonss::RightShoulder,	rapp::GamepadButtons::RShoulder },
-	{ (uint16_t)GamepadButtonss::None,			rapp::GamepadButtons::Guide     },
-	{ (uint16_t)GamepadButtonss::A,				rapp::GamepadButtons::A         },
-	{ (uint16_t)GamepadButtonss::B,				rapp::GamepadButtons::B         },
-	{ (uint16_t)GamepadButtonss::X,				rapp::GamepadButtons::X         },
-	{ (uint16_t)GamepadButtonss::Y,				rapp::GamepadButtons::Y         },
+	{ (uint16_t)GamepadButtonss::DPadUp,			rapp::GamepadButton::Up        },
+	{ (uint16_t)GamepadButtonss::DPadDown,			rapp::GamepadButton::Down      },
+	{ (uint16_t)GamepadButtonss::DPadLeft,			rapp::GamepadButton::Left      },
+	{ (uint16_t)GamepadButtonss::DPadRight,			rapp::GamepadButton::Right     },
+	{ (uint16_t)GamepadButtonss::Menu,				rapp::GamepadButton::Start     },
+	{ (uint16_t)GamepadButtonss::View,				rapp::GamepadButton::Back      },
+	{ (uint16_t)GamepadButtonss::LeftThumbstick,	rapp::GamepadButton::LThumb    },
+	{ (uint16_t)GamepadButtonss::RightThumbstick,	rapp::GamepadButton::RThumb    },
+	{ (uint16_t)GamepadButtonss::LeftShoulder,		rapp::GamepadButton::LShoulder },
+	{ (uint16_t)GamepadButtonss::RightShoulder,		rapp::GamepadButton::RShoulder },
+	{ (uint16_t)GamepadButtonss::None,				rapp::GamepadButton::Guide     },
+	{ (uint16_t)GamepadButtonss::A,					rapp::GamepadButton::A         },
+	{ (uint16_t)GamepadButtonss::B,					rapp::GamepadButton::B         },
+	{ (uint16_t)GamepadButtonss::X,					rapp::GamepadButton::X         },
+	{ (uint16_t)GamepadButtonss::Y,					rapp::GamepadButton::Y         },
 };
 
 static uint8_t translateKeyModifiers(CoreWindow const & _sender, winrt::Windows::System::VirtualKey _vk, winrt::Windows::UI::Core::CorePhysicalKeyStatus& _ks)
@@ -491,19 +491,16 @@ protected:
 	void PointerEntered(CoreWindow const & _sender, PointerEventArgs const & _args)
 	{
 		RTM_UNUSED_2(_sender, _args);
-		__debugbreak();
 	}
 
 	void PointerExited(CoreWindow const & _sender, PointerEventArgs const & _args)
 	{
 		RTM_UNUSED_2(_sender, _args);
-		__debugbreak();
 	}
 
 	void PointerMoved(CoreWindow const & _sender, PointerEventArgs const & _args)
 	{
 		RTM_UNUSED_2(_sender, _args);
-		__debugbreak();
 	}
 
 	static int32_t MainThreadFunc(void* _arg)
