@@ -3,11 +3,11 @@
 /// License: http://www.opensource.org/licenses/BSD-2-Clause               ///
 //--------------------------------------------------------------------------//
 
-#include <job_system_pch.h>
+#include <task_system_pch.h>
 
-struct JobSystemApp : public rapp::App
+struct TaskSystemApp : public rapp::App
 {
-	RAPP_CLASS(JobSystemApp)
+	RAPP_CLASS(TaskSystemApp)
 
 	enum Mode
 	{
@@ -74,10 +74,10 @@ struct JobSystemApp : public rapp::App
 
 			case Parallel:
 				{
-					rapp::JobHandle group = rapp::jobCreateGroup(tileMandelbrot, s_tiles, sizeof(Tile), s_tileX * s_tileY, false);
-					rapp::jobRun(group);
-					rapp::jobWait(group);
-					rapp::jobDestroy(group);
+					rapp::TaskHandle group = rapp::taskCreateGroup(tileMandelbrot, s_tiles, sizeof(Tile), s_tileX * s_tileY, false);
+					rapp::taskRun(group);
+					rapp::taskWait(group);
+					rapp::taskDestroy(group);
 				};
 				break;
 		};
@@ -135,10 +135,10 @@ struct JobSystemApp : public rapp::App
 	static int cmdSwitchMode(App* _app, void* _userData, int _argc, char const* const* _argv)
 	{
 		RTM_UNUSED_3(_userData, _argv, _argc);
-		JobSystemApp* app = (JobSystemApp*)_app;
+		TaskSystemApp* app = (TaskSystemApp*)_app;
 		app->m_runMode = (app->m_runMode == Mode::Parallel) ? Mode::Serial : Mode::Parallel;
 		return 0;
 	}
 };
 
-RAPP_REGISTER(JobSystemApp, "Job system", "Example of using the job system");
+RAPP_REGISTER(TaskSystemApp, "Task scheduling system", "Example of using the task system");
