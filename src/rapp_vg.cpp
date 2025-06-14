@@ -131,7 +131,7 @@ namespace rapp {
 	void vgPathWinding(int _winding)
 	{
 		RTM_UNUSED(_winding);
-		VG_CALL(g_fillFlags = _winding == VG_CCW ? vg::FillFlags::ConvexAA : vg::FillFlags::ConcaveNonZeroAA);
+		VG_CALL(g_fillFlags = _winding == VG_WINDING_CCW ? vg::FillFlags::ConvexAA : vg::FillFlags::ConcaveNonZeroAA);
 	}
 
 	void vgClosePath()

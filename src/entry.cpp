@@ -10,7 +10,7 @@
 #include <rapp/src/entry_p.h>
 #include <rapp/src/cmd.h>
 #include <rapp/src/input.h>
-#include <rapp/src/job.h>
+#include <rapp/src/task_private.h>
 
 namespace rapp
 {
@@ -138,14 +138,14 @@ namespace rapp
 			s_keyMap[KeyboardState::Key::F1 + i]	= (ImGuiKey)(ImGuiKey_F1 + i);
 #endif
 
-		rapp::jobInit();
+		rapp::taskInit();
 
 		const char* executable = rtm::pathGetFileName(_argv[0]);
 		windowSetTitle(rapp::kDefaultWindowHandle, executable ? executable : "rapp");
 
 		int32_t result = rapp::rapp_main(_argc, _argv);
 
-		rapp::jobShutdown();
+		rapp::taskShutdown();
 
 #ifdef RAPP_WITH_BGFX
 		rapp::inputRemoveBindings("graphics");

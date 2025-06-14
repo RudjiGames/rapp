@@ -3,8 +3,8 @@
 /// License: http://www.opensource.org/licenses/BSD-2-Clause               ///
 //--------------------------------------------------------------------------//
 
-#ifndef RTM_RAPP_JOB_H
-#define RTM_RAPP_JOB_H
+#ifndef RTM_RAPP_TASK_H
+#define RTM_RAPP_TASK_H
 
 #include <rapp/inc/rapp.h>
 #include <rapp/src/rapp_config.h>
@@ -12,11 +12,11 @@
 namespace rapp {
 
 	///
-	void jobInit();
+	void taskInit();
 
 	///
-	void jobShutdown();
+	void taskShutdown();
 
 } // namespace rapp
 
-#endif // RTM_RAPP_JOB_H
+#endif // RTM_RAPP_TASK_H

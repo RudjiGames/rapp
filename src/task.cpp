@@ -5,7 +5,7 @@
 
 #include <rapp_pch.h>
 #include <rapp/src/rapp_config.h>
-#include <rapp/src/job.h>
+#include <rapp/src/task_private.h>
 
 #if RTM_COMPILER_MSVC
 __pragma(warning(push))
@@ -45,19 +45,18 @@ namespace rapp {
 		}
 	};
 
-	class Job : public enki::ITaskSet
+	class Task : public enki::ITaskSet
 	{
 	public:
-		JobFn					m_function;
+		TaskFn					m_function;
 		void*					m_userData;
 		uint32_t				m_stride;
 		uint32_t				m_start;
 		uint32_t				m_end;
 		CompletionActionDelete	m_taskDeleter;
 
-
-		Job(uint32_t _numJobs, bool _delete)
-			: enki::ITaskSet(_numJobs)
+		Task(uint32_t _numTasks, bool _delete)
+			: enki::ITaskSet(_numTasks)
 			, m_function(0)
 			, m_userData(0)
 			, m_stride(0)
@@ -78,56 +77,64 @@ namespace rapp {
 		}
 	};
 
-	void jobInit()
+	/// 
+	void taskInit()
 	{
 		g_TS.Initialize();
 	}
 
-	void jobShutdown()
+	/// 
+	void taskShutdown()
 	{
 		g_TS.WaitforAllAndShutdown();
 	}
 
-	JobHandle jobCreate(JobFn _func, void* _userData, bool _deleteOnFinish)
+	/// 
+	TaskHandle taskCreate(TaskFn _func, void* _userData, bool _deleteOnFinish)
 	{
-		return jobCreateGroup(_func, _userData, 0, 1, _deleteOnFinish);
+		return taskCreateGroup(_func, _userData, 0, 1, _deleteOnFinish);
 	}
 
-	JobHandle jobCreateGroup(JobFn _func, void* _userData, uint32_t _dataStride, uint32_t _numJobs, bool _deleteOnFinish)
+	/// 
+	TaskHandle taskCreateGroup(TaskFn _func, void* _userData, uint32_t _dataStride, uint32_t _numTasks, bool _deleteOnFinish)
 	{
-		Job* j = new Job(_numJobs, _deleteOnFinish);
+		Task* j = new Task(_numTasks, _deleteOnFinish);
 		j->m_function	= _func;
 		j->m_userData	= _userData;
 		j->m_stride		= _dataStride;
 		j->m_start		= 0;
-		j->m_end		= _numJobs;
+		j->m_end		= _numTasks;
 		return { (uintptr_t)j };
 	}
 
-	void jobDestroy(JobHandle _job)
+	/// 
+	void taskDestroy(TaskHandle _task)
 	{
-		Job* j = (Job*)_job.idx;
+		Task* j = (Task*)_task.idx;
 		if (!j->GetIsComplete())
 			g_TS.WaitforTask(j);
 		delete j;
 	}
 
-	void jobRun(JobHandle _job)
+	/// 
+	void taskRun(TaskHandle _task)
 	{
-		Job* j = (Job*)_job.idx;
+		Task* j = (Task*)_task.idx;
 		g_TS.AddTaskSetToPipe(j);
 	}
 
-	void jobWait(JobHandle _job)
+	/// 
+	void taskWait(TaskHandle _task)
 	{
-		Job* j = (Job*)_job.idx;
+		Task* j = (Task*)_task.idx;
 		g_TS.WaitforTask(j);
 	}
 
-	uint32_t jobStatus(JobHandle _job)
+	/// 
+	uint32_t taskStatus(TaskHandle _task)
 	{
-		Job* j = (Job*)_job.idx;
-		return j->GetIsComplete() ? 1 : 0;
+		Task* j = (Task*)_task.idx;
+		return j->GetIsComplete() ? RAPP_TASK_STATUS_COMPLETE : RAPP_TASK_STATUS_RUNNING;
 	}
 
 } // namespace rapp
