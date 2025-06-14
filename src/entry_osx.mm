@@ -286,39 +286,39 @@ namespace rapp
 						// TODO: remove!
 						// Command + Left Mouse Button acts as middle! This just a temporary solution!
 						// This is becase the average OSX user doesn't have middle mouse click.
-						MouseState::Button mb = ([event modifierFlags] & NSEventModifierFlagCommand) ? MouseState::Button::Middle : MouseState::Button::Left;
+						MouseButton::Enum mb = ([event modifierFlags] & NSEventModifierFlagCommand) ? MouseButton::Middle : MouseButton::Left;
 						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, mb, specialKeys, true, false);
 						break;
 					}
 
 					case NSEventTypeLeftMouseUp:
 					{
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Left, specialKeys, false, false);
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Middle, specialKeys, false, false); // TODO: remove!
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Left, specialKeys, false, false);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Middle, specialKeys, false, false); // TODO: remove!
 						break;
 					}
 
 					case NSEventTypeRightMouseDown:
 					{
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Right, specialKeys, true, false);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Right, specialKeys, true, false);
 						break;
 					}
 
 					case NSEventTypeRightMouseUp:
 					{
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Right, specialKeys, false, false);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Right, specialKeys, false, false);
 						break;
 					}
 
 					case NSEventTypeOtherMouseDown:
 					{
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Middle, specialKeys, true, false);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Middle, specialKeys, true, false);
 						break;
 					}
 
 					case NSEventTypeOtherMouseUp:
 					{
-						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Middle, specialKeys, false, false);
+						m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Middle, specialKeys, false, false);
 						break;
 					}
 
@@ -395,8 +395,8 @@ namespace rapp
 			m_eventQueue.postSizeEvent({0}, width, height);
 
 			// Make sure mouse button state is 'up' after resize.
-			m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Left, 0, false, false);
-			m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseState::Button::Right,0, false,  false);
+			m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Left, 0, false, false);
+			m_eventQueue.postMouseEvent(s_defaultWindow, m_mx, m_my, m_scroll, MouseButton::Right,0, false,  false);
 		}
 
 		int32_t run(int _argc, char** _argv)
