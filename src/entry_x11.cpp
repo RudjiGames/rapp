@@ -70,7 +70,7 @@ namespace rapp
 		GamepadButton::Start,
 		GamepadButton::Guide,
 		GamepadButton::LThumb,
-		GamepadButton::RThumb,
+		GamepadButton::RThumb
 	};
 
 	static GamepadAxis::Enum s_translateAxis[] =
@@ -80,13 +80,13 @@ namespace rapp
 		GamepadAxis::LeftZ,
 		GamepadAxis::RightX,
 		GamepadAxis::RightY,
-		GamepadAxis::RightZ,
+		GamepadAxis::RightZ
 	};
 
 	struct AxisDpadRemap
 	{
-		GamepadButton first;
-		GamepadButton second;
+		GamepadButton::Enum first;
+		GamepadButton::Enum second;
 	};
 
 	static AxisDpadRemap s_axisDpad[] =
