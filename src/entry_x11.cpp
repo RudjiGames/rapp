@@ -58,19 +58,19 @@ namespace rapp
 		uint8_t  number; /* axis/button number */
 	};
 
-	static GamepadButtons s_translateButton[] =
+	static GamepadButton::Enum s_translateButton[] =
 	{
-		GamepadButtons::A,
-		GamepadButtons::B,
-		GamepadButtons::X,
-		GamepadButtons::Y,
-		GamepadButtons::LShoulder,
-		GamepadButtons::RShoulder,
-		GamepadButtons::Back,
-		GamepadButtons::Start,
-		GamepadButtons::Guide,
-		GamepadButtons::LThumb,
-		GamepadButtons::RThumb,
+		GamepadButton::A,
+		GamepadButton::B,
+		GamepadButton::X,
+		GamepadButton::Y,
+		GamepadButton::LShoulder,
+		GamepadButton::RShoulder,
+		GamepadButton::Back,
+		GamepadButton::Start,
+		GamepadButton::Guide,
+		GamepadButton::LThumb,
+		GamepadButton::RThumb,
 	};
 
 	static GamepadAxis::Enum s_translateAxis[] =
@@ -209,7 +209,7 @@ namespace rapp
 
 	static uint8_t s_translateKey[512];
 
-	static void initTranslateKey(uint16_t _xk, KeyboardKey _key)
+	static void initTranslateKey(uint16_t _xk, KeyboardKey::Enum _key)
 	{
 		_xk += 256;
 		RTM_ASSERT(_xk < RTM_NUM_ELEMENTS(s_translateKey), "Out of bounds %d.", _xk);
@@ -268,7 +268,7 @@ namespace rapp
 	struct Context
 	{
 		Context()
-			: m_modifiers(KeyboardModifier::NoMods)
+			: m_modifiers(KeyboardModifier::None)
 			, m_exit(false)
 		{
 			memset(s_translateKey, 0, sizeof(s_translateKey) );

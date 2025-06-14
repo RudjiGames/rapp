@@ -26,8 +26,8 @@ struct TaskSystemApp : public rapp::App
 	{
 		static const rapp::InputBinding bindings[] =
 		{
-			{ NULL, "switch", 1, { rapp::KeyboardState::Key::KeyS,   rapp::KeyboardState::Modifier::LCtrl  }},
-			{ NULL, "exit",   1, { rapp::KeyboardState::Key::KeyQ,   rapp::KeyboardState::Modifier::LCtrl  }},
+			{ 0, "switch", 1, { rapp::KeyboardKey::KeyS, rapp::KeyboardModifier::LCtrl }},
+			{ 0, "exit",   1, { rapp::KeyboardKey::KeyQ, rapp::KeyboardModifier::LCtrl }},
 			RAPP_INPUT_BINDING_END
 		};
 

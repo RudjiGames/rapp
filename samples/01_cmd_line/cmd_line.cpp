@@ -13,8 +13,8 @@ struct CmdLineApp : public rapp::App
 	{
 		static const rapp::InputBinding bindings[] =
 		{
-			{ NULL, "exit", 1, { rapp::KeyboardState::Key::KeyQ,   rapp::KeyboardState::Modifier::LCtrl  }},
-			{ NULL, "exit", 1, { rapp::KeyboardState::Key::KeyQ,   rapp::KeyboardState::Modifier::RCtrl  }},
+			{ 0, "exit", 1, { rapp::KeyboardKey::KeyQ, rapp::KeyboardModifier::LCtrl }},
+			{ 0, "exit", 1, { rapp::KeyboardKey::KeyQ, rapp::KeyboardModifier::RCtrl }},
 			RAPP_INPUT_BINDING_END
 		};
 
