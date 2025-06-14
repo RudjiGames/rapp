@@ -593,7 +593,7 @@ namespace rapp {
 
 	struct KeyboardKey
 	{
-		enum Enum
+		enum Enum : uint8_t
 		{
 			None,
 
@@ -619,7 +619,7 @@ namespace rapp {
 
 	struct KeyboardModifier
 	{
-		enum Enum
+		enum Enum : uint8_t
 		{
 			None		= 0x00,
 			LAlt		= 0x01,
@@ -635,7 +635,7 @@ namespace rapp {
 
 	struct MouseButton
 	{
-		enum Enum
+		enum Enum : uint8_t
 		{
 			None	= 0,
 			Left,
@@ -648,7 +648,7 @@ namespace rapp {
 
 	struct GamepadButton
 	{
-		enum Enum
+		enum Enum : uint16_t
 		{
 			None		= 0x0000,
 			X			= 0x0001,
@@ -672,7 +672,7 @@ namespace rapp {
 
 	struct GamepadStick
 	{
-		enum Enum
+		enum Enum : uint8_t
 		{
 			NoStick		= 0,
 			LeftStick,
