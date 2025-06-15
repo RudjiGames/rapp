@@ -403,6 +403,10 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 	RTM_UNUSED_2(_app, _mainWindow);
 
 #ifdef RAPP_WITH_BGFX
+#if !RTM_RETAIL
+	// Disable debug text.
+	bgfx::setDebug(0);
+#endif
 	bgfx::frame();
 
 	vg::destroyContext(_app->m_data->m_vg);
@@ -416,10 +420,7 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 
 	imguiDestroy();
 
-	for (int i=0; i<3; ++i)
-	{
-		bgfx::frame();
-	}
+	bgfx::frame();
 	
 	bgfx::shutdown();
 	rapp::windowDestroy(_mainWindow);
