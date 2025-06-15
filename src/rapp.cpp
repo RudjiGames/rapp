@@ -157,7 +157,6 @@ int32_t rappThreadFunc(void* _userData)
 						if (app->m_resetView)
 						{
 							bgfx::reset(app->m_width, app->m_height, g_reset);
-
 							app->m_resetView = false;
 						}
 
@@ -208,6 +207,9 @@ int32_t rappThreadFunc(void* _userData)
 			case Command::Shutdown:
 				{
 					RAPP_CMD_READ(App*, app);
+#ifdef RAPP_WITH_BGFX
+					bgfx::setDebug(0);
+#endif // RAPP_WITH_BGFX
 					app->shutDown();
 #ifdef RAPP_WITH_BGFX
 					g_currentContext = 0;
@@ -380,9 +382,6 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint3
 	bgfx::setDebug(BGFX_DEBUG_TEXT);
 #endif
 
-	// Set view 0 clear state.
-	bgfx::setViewClear(0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH|BGFX_CLEAR_STENCIL, 0x17132Eff, 1.0f, 0);
-
 	imguiCreate();
 
 	_app->m_data			= new AppData;
@@ -391,6 +390,9 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint3
 	_app->m_data->m_vg		= vg::createContext(&allocator);
 
 	bgfx::setViewMode(0, bgfx::ViewMode::Sequential);
+
+	// Set view 0 clear state.
+	bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH | BGFX_CLEAR_STENCIL, 0x252537ff, 1.0f, 0);
 
 	return win;
 #else
@@ -421,8 +423,8 @@ void appGraphicsShutdown(App* _app, WindowHandle _mainWindow)
 	imguiDestroy();
 
 	bgfx::frame();
-	
 	bgfx::shutdown();
+
 	rapp::windowDestroy(_mainWindow);
 #endif
 }
