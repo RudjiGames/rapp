@@ -30,7 +30,7 @@ struct app1 : public rapp::App
 		m_width		= width;
 		m_height	= height;
 
-		m_window = rapp::appGraphicsInit(this, m_width, m_height);
+		m_window = rapp::appGraphicsInit(this, m_width, m_height, RAPP_WINDOW_FLAG_DPI_AWARE);
 		return 0;
 	}
 
