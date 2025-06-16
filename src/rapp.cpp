@@ -207,9 +207,6 @@ int32_t rappThreadFunc(void* _userData)
 			case Command::Shutdown:
 				{
 					RAPP_CMD_READ(App*, app);
-#ifdef RAPP_WITH_BGFX
-					bgfx::setDebug(0);
-#endif // RAPP_WITH_BGFX
 					app->shutDown();
 #ifdef RAPP_WITH_BGFX
 					g_currentContext = 0;
@@ -379,7 +376,7 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint3
 
 #if !RTM_RETAIL
 	// Enable debug text.
-	bgfx::setDebug(BGFX_DEBUG_TEXT);
+	bgfx::setDebug(g_debug);
 #endif
 
 	imguiCreate();

@@ -814,7 +814,7 @@ void inputDgbGamePads(int _maxGamepads)
 	for (uint16_t i=0; i<_maxGamepads; ++i)
 	{
 		inputGetGamePadState(i, gp);
-		displayGamePadDbg(1+40*i, stats->textHeight-4, gp);
+		displayGamePadDbg(1+39*i, stats->textHeight-5, gp);
 	}
 #endif // RAPP_WITH_BGFX
 }
@@ -824,7 +824,7 @@ void inputDgbMouse()
 #ifdef RAPP_WITH_BGFX
 	const bgfx::Stats* stats = bgfx::getStats();
 
-	bgfx::dbgTextPrintf(1, stats->textHeight-6, 0x8b, " Mouse X[    ] Y[    ] Z[     ]  NX[        ] NY[        ] NZ[        ] LB[ ] MB[ ] RB[ ]");
+	bgfx::dbgTextPrintf(1, stats->textHeight-6, 0x8b, " Mouse X[    ] Y[    ] Z[     ]  NX[       ] NY[       ] NZ[       ] LB[ ] MB[ ] RB[ ]");
 
 	rapp::Mouse& m = getInput().m_mouse;
 
@@ -833,8 +833,8 @@ void inputDgbMouse()
 	bgfx::dbgTextPrintf(18,  stats->textHeight-6, 0x8f, itoaWithSign(m.m_absolute[1], valbuf, 4, false));
 	bgfx::dbgTextPrintf(26,  stats->textHeight-6, 0x8f, itoaWithSign(m.m_absolute[2], valbuf, 5, true));
 
-	bgfx::dbgTextPrintf(37,  stats->textHeight-6, 0x8f, "%5f", m.m_norm[0]);
-	bgfx::dbgTextPrintf(50,  stats->textHeight-6, 0x8f, "%5f", m.m_norm[1]);
+	bgfx::dbgTextPrintf(39,  stats->textHeight-6, 0x8f, "%5f", m.m_norm[0]);
+	bgfx::dbgTextPrintf(51,  stats->textHeight-6, 0x8f, "%5f", m.m_norm[1]);
 	bgfx::dbgTextPrintf(63,  stats->textHeight-6, 0x8f, "%5f", m.m_norm[2]);
 
 	if (m.m_buttons[MouseButton::Left])
@@ -853,19 +853,19 @@ void inputDgbKeyboard()
 #ifdef RAPP_WITH_BGFX
 	const bgfx::Stats* stats = bgfx::getStats();
 
-	bgfx::dbgTextPrintf(91, stats->textHeight-7, 0x8b, "Kb LShift[ ]                                              RShift[ ]");
-	bgfx::dbgTextPrintf(91, stats->textHeight-6, 0x8b, "Kb LCtrl[ ] LMeta[ ] LAlt[ ]   ________   RAlt[ ] RMeta[ ] RCtrl[ ]");
+	bgfx::dbgTextPrintf(89, stats->textHeight-7, 0x8b, "Kb LShift[ ]                                             RShift[ ]");
+	bgfx::dbgTextPrintf(89, stats->textHeight-6, 0x8b, "Kb LCtrl[ ] LMeta[ ] LAlt[ ]  _________  RAlt[ ] RMeta[ ] RCtrl[ ]");
 
 	uint8_t modifiers = inputGetModifiersState();
-	if (modifiers & KeyboardModifier::LShift)	bgfx::dbgTextPrintf(101, stats->textHeight-7, 0x8f, "\xfe");
-	if (modifiers & KeyboardModifier::LCtrl)	bgfx::dbgTextPrintf(100, stats->textHeight-6, 0x8f, "\xfe");
-	if (modifiers & KeyboardModifier::LMeta)	bgfx::dbgTextPrintf(109, stats->textHeight-6, 0x8f, "\xfe");
-	if (modifiers & KeyboardModifier::LAlt)		bgfx::dbgTextPrintf(117, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::LShift)	bgfx::dbgTextPrintf( 99, stats->textHeight-7, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::LCtrl)	bgfx::dbgTextPrintf( 98, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::LMeta)	bgfx::dbgTextPrintf(107, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::LAlt)		bgfx::dbgTextPrintf(115, stats->textHeight-6, 0x8f, "\xfe");
 
-	if (modifiers & KeyboardModifier::RShift)	bgfx::dbgTextPrintf(156, stats->textHeight-7, 0x8f, "\xfe");
-	if (modifiers & KeyboardModifier::RAlt)		bgfx::dbgTextPrintf(138, stats->textHeight-6, 0x8f, "\xfe");
-	if (modifiers & KeyboardModifier::RMeta)	bgfx::dbgTextPrintf(147, stats->textHeight-6, 0x8f, "\xfe");
-	if (modifiers & KeyboardModifier::RCtrl)	bgfx::dbgTextPrintf(156, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::RShift)	bgfx::dbgTextPrintf(153, stats->textHeight-7, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::RAlt)		bgfx::dbgTextPrintf(135, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::RMeta)	bgfx::dbgTextPrintf(144, stats->textHeight-6, 0x8f, "\xfe");
+	if (modifiers & KeyboardModifier::RCtrl)	bgfx::dbgTextPrintf(153, stats->textHeight-6, 0x8f, "\xfe");
 
 	KeyboardState ks;
 	inputGetKeyboardState(ks);
@@ -875,8 +875,15 @@ void inputDgbKeyboard()
 	{
 		KeyboardKey::Enum key = ks.m_keys[i];
 		const char* name = getName(key);
-		bgfx::dbgTextPrintf(startX, stats->textHeight-7, 0x8f /* ks.m_modifiers[i]*/, "(%s) ", name);
-		startX += static_cast<uint16_t>(strlen(name)) + 3;
+		if (rtm::striCmp(name, "Space") == 0)
+		{
+			bgfx::dbgTextPrintf(120, stats->textHeight-6, 0x8f, "(space)");
+		}
+		else
+		{
+			bgfx::dbgTextPrintf(startX, stats->textHeight - 7, 0x8f /* ks.m_modifiers[i]*/, "(%s) ", name);
+			startX += static_cast<uint16_t>(strlen(name)) + 3;
+		}
 	}
 #endif // RAPP_WITH_BGFX
 }
