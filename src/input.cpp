@@ -28,20 +28,20 @@ enum InputBindingType
 	Count
 };
 
-static inline uint8_t InputBindingTypeToU8(InputBindingType _type)
+static inline uint32_t InputBindingTypeToU32(InputBindingType _type)
 {
-	return uint8_t(_type) << 4;
+	return uint32_t(_type) << 4;
 }
 
-static inline InputBindingType InputBindingTypeFromU8(uint8_t _type)
+static inline InputBindingType InputBindingTypeFromU32(uint32_t _type)
 {
 	return InputBindingType(_type >> 4);
 }
 
-InputBinding::InputBinding(int)	: m_flags(InputBindingTypeToU8(InputBindingType::Count)) {}
+InputBinding::InputBinding(int)	: m_flags(InputBindingTypeToU32(InputBindingType::Count)) {}
 
 InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingKeyboard& _kb)
-	: m_flags(_flag | InputBindingTypeToU8(InputBindingType::BindingTypeKeyboard))
+	: m_flags(_flag | InputBindingTypeToU32(InputBindingType::BindingTypeKeyboard))
 	, m_fn(_fn)
 	, m_userData(_userData)
 {
@@ -49,7 +49,7 @@ InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _
 }
 
 InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingMouse& _mouse)
-	: m_flags(_flag | InputBindingTypeToU8(InputBindingType::BindingTypeMouse))
+	: m_flags(_flag | InputBindingTypeToU32(InputBindingType::BindingTypeMouse))
 	, m_fn(_fn)
 	, m_userData(_userData)
 {
@@ -57,7 +57,7 @@ InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _
 }
 
 InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingGamepad& _gp)
-	: m_flags(_flag | InputBindingTypeToU8(InputBindingType::BindingTypeGamepad))
+	: m_flags(_flag | InputBindingTypeToU32(InputBindingType::BindingTypeGamepad))
 	, m_fn(_fn)
 	, m_userData(_userData)
 {
@@ -65,7 +65,7 @@ InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _
 }
 
 InputBinding::InputBinding(InputBindingFn _fn, const void* _userData, uint32_t _flag, const InputBindingTouch& _touch)
-	: m_flags(_flag | InputBindingTypeToU8(InputBindingType::BindingTypeTouch))
+	: m_flags(_flag | InputBindingTypeToU32(InputBindingType::BindingTypeTouch))
 	, m_fn(_fn)
 	, m_userData(_userData)
 {
@@ -344,9 +344,9 @@ struct Input
 	bool process(App* _app, const InputBinding* _bindings)
 	{
 		bool keyBindings = false;
-		for (const InputBinding* binding = _bindings; InputBindingTypeFromU8(binding->m_flags) != InputBindingType::Count; ++binding)
+		for (const InputBinding* binding = _bindings; InputBindingTypeFromU32(binding->m_flags) != InputBindingType::Count; ++binding)
 		{
-			switch (InputBindingTypeFromU8(binding->m_flags))
+			switch (InputBindingTypeFromU32(binding->m_flags))
 			{
 			case InputBindingType::BindingTypeKeyboard:
 				{
