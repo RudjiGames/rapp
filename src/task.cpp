@@ -116,13 +116,21 @@ namespace rapp {
 	static void* rprofAllocFunc(size_t _alignment, size_t _size, void* _userData, const char* _file, int _line)
 	{
 		RTM_UNUSED_3(_userData, _file, _line);
+		RTM_ASSERT(_alignment <= 64, "");
+		if (_size >= 2048)
+			_alignment = 64;
+		else
+			_alignment =  8;
 		return rtm_alloc(_size, _alignment);
 	}
 
 	static void  rprofFreeFunc(void* _ptr, size_t _size, void* _userData, const char* _file, int _line)
 	{
 		RTM_UNUSED_4(_size, _userData, _file, _line);
-		rtm_free(_ptr);
+		size_t alignment = 8;
+		if (_size >= 2048)
+			alignment = 64;
+		rtm_free(_ptr, alignment);
 	}
 
 	/// 
