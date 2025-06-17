@@ -13,6 +13,7 @@
 #include <rapp/src/console.h>
 #include <rapp/src/entry_p.h>
 #include <rapp/src/app_data.h>
+#include <rapp/src/task_private.h>
 
 #ifdef RAPP_WITH_BGFX
 #include <bx/allocator.h>
@@ -227,6 +228,8 @@ void init(rtmLibInterface* _libInterface)
 	g_allocator		= _libInterface ? _libInterface->m_memory : 0;
 	g_errorHandler	= _libInterface ? _libInterface->m_error : 0;
 
+	rapp::taskInit();
+
 	inputInit();
 
 	if (appGetRegistered().size() > 1)
@@ -244,6 +247,8 @@ void shutDown()
 #if !RTM_PLATFORM_EMSCRIPTEN
 	s_commChannel.shutDown();
 #endif // !RTM_PLATFORM_EMSCRIPTEN
+
+	rapp::taskShutdown();
 }
 
 void appRegister(App* _app);

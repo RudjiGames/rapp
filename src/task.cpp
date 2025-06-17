@@ -48,12 +48,12 @@ namespace rapp {
 	class Task : public enki::ITaskSet
 	{
 	public:
+		CompletionActionDelete	m_taskDeleter;
 		TaskFn					m_function;
 		void*					m_userData;
 		uint32_t				m_stride;
 		uint32_t				m_start;
 		uint32_t				m_end;
-		CompletionActionDelete	m_taskDeleter;
 
 		Task(uint32_t _numTasks, bool _delete)
 			: enki::ITaskSet(_numTasks)
@@ -67,9 +67,10 @@ namespace rapp {
 				m_taskDeleter.SetDependency(m_taskDeleter.m_Dependency, this);
 		}
 
-		void ExecuteRange(enki::TaskSetPartition _range, uint32_t /*_threadnum*/) override
+		void ExecuteRange(enki::TaskSetPartition _range, uint32_t _threadnum) override
 		{
-#ifdef RAPP_WITH_RPROF
+			RTM_UNUSED(_threadnum);
+#if RAPP_WITH_RPROF
 			RPROF_SCOPE("test");
 #endif // RAPP_WITH_RPROF
 
@@ -77,10 +78,73 @@ namespace rapp {
 		}
 	};
 
+#if RAPP_WITH_RPROF
+	static void rprofCallbackThreadStart(uint32_t _threadNum)
+	{
+		RTM_UNUSED(_threadNum);
+	}
+	static void rprofCallbackThreadEnd(uint32_t _threadNum)
+	{
+		RTM_UNUSED(_threadNum);
+	}
+	static void rprofCallbackWaitNewTaskSuspendStart(uint32_t _threadNum)
+	{
+		RTM_UNUSED(_threadNum);
+	}
+	static void rprofCallbackWaitNewTaskSuspendStop(uint32_t _threadNum)
+	{
+		RTM_UNUSED(_threadNum);
+	}
+	static void rprofCallbackWaitTaskCompleteStart(uint32_t _threadNum)
+	{
+		RTM_UNUSED(_threadNum);
+	}
+	static void rprofCallbackWaitTaskCompleteStop(uint32_t _threadNum)
+	{
+		RTM_UNUSED(_threadNum);
+	}
+	static void rprofCallbackWaitTaskCompleteSuspendStart(uint32_t _threadNum)
+	{
+		RTM_UNUSED(_threadNum);
+	}
+	static void rprofCallbackWaitTaskCompleteSuspendStop(uint32_t _threadNum)
+	{
+		RTM_UNUSED(_threadNum);
+	}
+#endif // RAPP_WITH_RPROF
+
+	static void* rprofAllocFunc(size_t _alignment, size_t _size, void* _userData, const char* _file, int _line)
+	{
+		RTM_UNUSED_3(_userData, _file, _line);
+		return rtm_alloc(_size, _alignment);
+	}
+
+	static void  rprofFreeFunc(void* _ptr, size_t _size, void* _userData, const char* _file, int _line)
+	{
+		RTM_UNUSED_4(_size, _userData, _file, _line);
+		rtm_free(_ptr);
+	}
+
 	/// 
 	void taskInit()
 	{
-		g_TS.Initialize();
+		TaskSchedulerConfig config;
+#if RAPP_WITH_RPROF
+		config.profilerCallbacks.threadStart						= rprofCallbackThreadStart;
+		config.profilerCallbacks.threadStop							= rprofCallbackThreadEnd;
+		config.profilerCallbacks.waitForNewTaskSuspendStart			= rprofCallbackWaitNewTaskSuspendStart;
+		config.profilerCallbacks.waitForNewTaskSuspendStop			= rprofCallbackWaitNewTaskSuspendStop;
+		config.profilerCallbacks.waitForTaskCompleteStart			= rprofCallbackWaitTaskCompleteStart;
+		config.profilerCallbacks.waitForTaskCompleteStop			= rprofCallbackWaitTaskCompleteStop;
+		config.profilerCallbacks.waitForTaskCompleteSuspendStart	= rprofCallbackWaitTaskCompleteSuspendStart;
+		config.profilerCallbacks.waitForTaskCompleteSuspendStop		= rprofCallbackWaitTaskCompleteSuspendStop;
+#endif // RAPP_WITH_RPROF
+
+		config.customAllocator.alloc	= rprofAllocFunc;
+		config.customAllocator.free		= rprofFreeFunc;
+		config.customAllocator.userData = 0;
+
+		g_TS.Initialize(config);
 	}
 
 	/// 

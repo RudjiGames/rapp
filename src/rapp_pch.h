@@ -25,7 +25,6 @@
 #include <rbase/inc/queue.h>
 #include <rbase/inc/stringfn.h>
 
-#ifdef RAPP_WITH_RPROF
+#if RAPP_WITH_RPROF
 #include <rprof/inc/rprof.h>
 #endif // RAPP_WITH_RPROF
-
