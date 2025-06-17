@@ -72,11 +72,11 @@ function projectExtraConfig_rapp_bgfx()
 	}
 	defines { "RAPP_WITH_BGFX" }
 
-	configuration { "debug" }
-		defines { "BX_CONFIG_DEBUG=1" }
-	configuration { "not debug" }
-		defines { "BX_CONFIG_DEBUG=0" }
-	configuration {}
+	--configuration { "debug" }
+	--	defines { "BX_CONFIG_DEBUG=1" }
+	--configuration { "not debug" }
+	--	defines { "BX_CONFIG_DEBUG=0" }
+	--configuration {}
 
  	configuration { "vs*", "windows" }
 		-- 4324 - structure was padded due to alignment specifier
@@ -84,9 +84,10 @@ function projectExtraConfig_rapp_bgfx()
 		-- 4244 - vg_renderer: 'argument': conversion from 'float' to 'uint16_t', possible loss of data
 		-- 4334 - vg_renderer: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
 		-- 4505 - unreferenced function with internal linkage has been removed
-		buildoptions { "/wd4133 /wd4389 /wd4244 /wd4334 /wd4505" }
+		-- 4100 - '': unreferenced parameter
+		buildoptions { "/wd4133 /wd4389 /wd4244 /wd4334 /wd4505 /wd4100" }
  	configuration { "*clang*" }
-		buildoptions { "-Wunused-but-set-variable -Wunused-function" }
+		buildoptions { "-Wno-unused-but-set-variable -Wno-unused-function" }
 	configuration {}
 end
 
