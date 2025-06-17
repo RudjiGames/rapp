@@ -130,9 +130,9 @@ struct OcornutImguiContext
 					bgfx::TextureHandle th = m_texture;
 					bgfx::ProgramHandle program = m_program;
 
-					if (0 != cmd->TextureId)
+					if (0 != cmd->GetTexID())
 					{
-						union { ImTextureID ptr; struct { bgfx::TextureHandle handle; uint8_t flags; uint8_t mip; } s; } texture = { cmd->TextureId };
+						union { ImTextureID ptr; struct { bgfx::TextureHandle handle; uint8_t flags; uint8_t mip; } s; } texture = { cmd->GetTexID() };
 						state |= 0 != (IMGUI_FLAGS_ALPHA_BLEND & texture.s.flags)
 							? BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA)
 							: BGFX_STATE_NONE
