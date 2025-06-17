@@ -58,9 +58,6 @@ function projectExtraConfig_rapp_bgfx()
 		rappPath .. "/3rd/imgui/**.inl",
 		rappPath .. "/3rd/imgui_bgfx/imgui_bgfx.h",
 		rappPath .. "/3rd/imgui_bgfx/imgui_bgfx.cpp",
---		rappPath .. "/3rd/nanovg_bgfx/**.h",
---		rappPath .. "/3rd/nanovg_bgfx/**.cpp",
---		rappPath .. "/3rd/nanovg_bgfx/**.c",
 		rappPath .. "/3rd/vg_renderer/include/**.h",
 		rappPath .. "/3rd/vg_renderer/include/**.inl",
 		rappPath .. "/3rd/vg_renderer/src/**.c",
@@ -71,12 +68,6 @@ function projectExtraConfig_rapp_bgfx()
 		rappPath .. "/3rd/vg_renderer/include"
 	}
 	defines { "RAPP_WITH_BGFX" }
-
-	--configuration { "debug" }
-	--	defines { "BX_CONFIG_DEBUG=1" }
-	--configuration { "not debug" }
-	--	defines { "BX_CONFIG_DEBUG=0" }
-	--configuration {}
 
  	configuration { "vs*", "windows" }
 		-- 4324 - structure was padded due to alignment specifier
