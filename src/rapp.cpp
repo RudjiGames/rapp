@@ -19,7 +19,7 @@
 #include <bx/allocator.h>
 #include <bgfx/bgfx.h>
 #include <imgui_bgfx/imgui_bgfx.h>
-#include <dear-imgui/imgui_internal.h>
+#include <imgui/imgui_internal.h>
 
 extern vg::Context* g_currentContext;
 #endif // RAPP_WITH_BGFX

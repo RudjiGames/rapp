@@ -9,7 +9,7 @@
 #include <bx/math.h>
 #include <bx/timer.h>
 #include <imgui/imgui.h>
-#include <dear-imgui/imgui_internal.h>
+#include <imgui/imgui_internal.h>
 
 #include "../../inc/rapp.h"
 
@@ -350,7 +350,7 @@ struct OcornutImguiContext
 			for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
 			{
 				const FontRangeMerge& frm = s_fontRangeMerge[ii];
-
+				
 				io.Fonts->AddFontFromMemoryTTF( (void*)frm.data
 						, (int)frm.size
 						, _fontSize-3.0f

@@ -3,8 +3,8 @@
  * License: https://github.com/bkaradzic/bgfx/blob/master/LICENSE
  */
 
-#ifndef IMGUI_H_HEADER_GUARD
-#define IMGUI_H_HEADER_GUARD
+#ifndef IMGUI_BGFX_H_HEADER_GUARD
+#define IMGUI_BGFX_H_HEADER_GUARD
 
 #include <bgfx/bgfx.h>
 #include <imgui/imgui.h>
@@ -14,20 +14,6 @@
 #define IMGUI_MBUT_LEFT   0x01
 #define IMGUI_MBUT_RIGHT  0x02
 #define IMGUI_MBUT_MIDDLE 0x04
-
-namespace ImGui
-{
-	struct Font
-	{
-		enum Enum
-		{
-			Regular,
-			Mono,
-
-			Count
-		};
-	};
-}
 
 inline uint32_t imguiRGBA(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255)
 {
@@ -47,13 +33,21 @@ void imguiDestroy();
 void imguiBeginFrame(int32_t _mx, int32_t _my, uint8_t _button, int32_t _scroll, uint16_t _width, uint16_t _height, int _inputChar = -1, bgfx::ViewId _view = 255);
 void imguiEndFrame();
 
-namespace entry { class AppI; }
-void showExampleDialog(entry::AppI* _app, const char* _errorText = NULL);
-
 namespace ImGui
 {
-#define IMGUI_FLAGS_NONE        UINT8_C(0x00)
-#define IMGUI_FLAGS_ALPHA_BLEND UINT8_C(0x01)
+	struct Font
+	{
+		enum Enum
+		{
+			Regular,
+			Mono,
+
+			Count
+		};
+	};
+
+	#define IMGUI_FLAGS_NONE        UINT8_C(0x00)
+	#define IMGUI_FLAGS_ALPHA_BLEND UINT8_C(0x01)
 
 	///
 	inline ImTextureID toId(bgfx::TextureHandle _handle, uint8_t _flags, uint8_t _mip)
@@ -140,8 +134,9 @@ namespace ImGui
 	///
 	void PopEnabled();
 
+	/// 
 	void PushFont(Font::Enum);
 
 } // namespace ImGui
 
-#endif // IMGUI_H_HEADER_GUARD
+#endif // IMGUI_BGFX_H_HEADER_GUARD
