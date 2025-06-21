@@ -23,7 +23,13 @@ namespace rapp {
 	#define RAPP_WINDOW_FLAG_MAIN_WINDOW	0x08
 	#define RAPP_WINDOW_FLAG_DPI_AWARE		0x10
 
+	struct App;
 	struct AppData;
+
+	typedef int(*ConsoleFn)(App* _app, void* _userData, int _argc, char const* const* _argv);
+	typedef void(*ThreadFn)(void* _userData);
+	typedef bool(*DialogFn)(void* _userData);
+	typedef void(*TaskFn)(void* _userData, uint32_t _start, uint32_t _end);
 
 	struct App
 	{
@@ -49,11 +55,9 @@ namespace rapp {
 		virtual void	drawGUI() {}
 		virtual void	shutDown()			= 0;
 		virtual bool	isGUImode() { return true; }
+		virtual void 	dialogOpen(DialogFn _func, void* _userData);
+		virtual void 	dialogShow(); // optionally called by user from App::drawGUI()
 	};
-
-	typedef int(*ConsoleFn)(App* _app, void* _userData, int _argc, char const* const* _argv);
-	typedef void(*ThreadFn)(void* _userData);
-	typedef void(*TaskFn)(void* _userData, uint32_t _start, uint32_t _end);
 
 	// ------------------------------------------------
 	/// Initialization functions
