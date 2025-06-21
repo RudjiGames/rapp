@@ -271,6 +271,32 @@ void appRegister(App* _app)
 	appGetRegistered().push_back(_app);
 }
 
+void App::dialogOpen(DialogFn _func, void* _userData)
+{
+#if RAPP_WITH_BGFX
+	if (m_data)
+	{
+		m_data->m_dialog		= _func;
+		m_data->m_dialogData	= _userData;
+	}
+#endif // RAPP_WITH_BGFX
+}
+
+void App::dialogShow()
+{
+#if RAPP_WITH_BGFX
+	if (m_data && m_data->m_dialog)
+	{
+		if (!m_data->m_dialog(m_data->m_dialogData))
+		{
+			// close dialog
+			m_data->m_dialog		= nullptr;
+			m_data->m_dialogData	= nullptr;
+		}
+	}
+#endif // RAPP_WITH_BGFX
+}
+
 ///
 App* appGet(uint32_t _index)
 {

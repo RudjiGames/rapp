@@ -19,9 +19,14 @@ namespace rapp {
 	{
 		Console*		m_console;
 		vg::Context*	m_vg;
+		DialogFn		m_dialog;
+		void*			m_dialogData;
+
 		AppData()
 			: m_console(0)
 			, m_vg(0)
+			, m_dialog(nullptr)
+			, m_dialogData(0)
 		{}
 	};
 
