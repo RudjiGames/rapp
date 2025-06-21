@@ -50,7 +50,7 @@ struct bgfxApp : public rapp::App
 	{
 		appRunOnMainThread(mainThreadFunc, this);
 
-		rtm::Console::rgb(255, 255, 0, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
+		rtm::Console::rgb(255, 255, 0, "Printing from app thread (ID: %u)\n", (uint32_t)rtm::threadGetID());
 
 		// Use debug font to print information about this example.
 		bgfx::dbgTextClear();
@@ -137,7 +137,7 @@ struct bgfxApp : public rapp::App
 
 	static void mainThreadFunc(void* /*_appClass*/)
 	{
-		rtm::Console::rgb(0, 255, 0, "Printing from main thread (ID: %u)\n", (uint32_t)rtm::Thread::getThreadID());
+		rtm::Console::rgb(0, 255, 0, "Printing from main thread (ID: %u)\n", (uint32_t)rtm::threadGetID());
 	}
 
 	static int cmdExit(rapp::App* _app, void* _userData, int _argc, char const* const* _argv)

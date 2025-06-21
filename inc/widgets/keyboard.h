@@ -19,14 +19,14 @@ namespace rapp {
 	constexpr float RAPP_VK_BUTTON_SIZE_Y	= 30.0f;
 	constexpr float RAPP_VK_BUTTON_SPACING	= 3.0f;
 
-	static void rappVirtualKeyboardClick(KeyboardKey _key)
+	static void rappVirtualKeyboardClick(KeyboardKey::Enum _key)
 	{
 		ImGui::SetWindowFocus("Console");
 		inputEmitKeyPress(_key);
 //		ImGui::SetKeyboardFocusHere(-1); // TODO: kbd should have no focus
 	}
 
-	static void rappVirtualKeyboardLine(const char* key, KeyboardKey* _keyMap, float _scale)
+	static void rappVirtualKeyboardLine(const char* key, KeyboardKey::Enum* _keyMap, float _scale)
     {
         size_t num = rtm::strLen(key);
         for (size_t i=0; i<num; i++)
@@ -45,37 +45,37 @@ namespace rapp {
 	{
 		ImGui::Begin("Virtual Keyboard", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
 
-		KeyboardKey keys1[] = {
-			KeyboardState::Tilde, KeyboardKey::Key1, KeyboardKey::Key2, KeyboardKey::Key3, KeyboardKey::Key4, KeyboardKey::Key5, KeyboardKey::Key6,
-			KeyboardKey::Key7, KeyboardKey::Key8, KeyboardKey::Key9, KeyboardKey::Key0, KeyboardState::Minus, KeyboardState::Plus };
+		KeyboardKey::Enum keys1[] = {
+			KeyboardKey::Tilde, KeyboardKey::Key1, KeyboardKey::Key2, KeyboardKey::Key3, KeyboardKey::Key4, KeyboardKey::Key5, KeyboardKey::Key6,
+			KeyboardKey::Key7, KeyboardKey::Key8, KeyboardKey::Key9, KeyboardKey::Key0, KeyboardKey::Minus, KeyboardKey::Plus };
 
 		rappVirtualKeyboardLine("~1234567890-+", keys1, _scale);
 		ImGui::SameLine(0.0f, RAPP_VK_BUTTON_SPACING * _scale);
 		if (ImGui::ArrowButton("<-", ImGuiDir_Left))
-			rappVirtualKeyboardClick(KeyboardState::Backspace);
+			rappVirtualKeyboardClick(KeyboardKey::Backspace);
 
-		KeyboardKey keys2[] = {
+		KeyboardKey::Enum keys2[] = {
 			KeyboardKey::KeyQ, KeyboardKey::KeyW, KeyboardKey::KeyE, KeyboardKey::KeyR, KeyboardKey::KeyT, KeyboardKey::KeyY, KeyboardKey::KeyU,
-			KeyboardKey::KeyI, KeyboardKey::KeyO, KeyboardKey::KeyP, KeyboardState::LeftBracket, KeyboardState::RightBracket, KeyboardState::Backslash };
+			KeyboardKey::KeyI, KeyboardKey::KeyO, KeyboardKey::KeyP, KeyboardKey::LeftBracket, KeyboardKey::RightBracket, KeyboardKey::Backslash };
 
 		ImGui::Text("   ");
 		ImGui::SameLine();
 		rappVirtualKeyboardLine("QWERTYUIOP[]\\", keys2, _scale);
 
-		KeyboardKey keys3[] = {
+		KeyboardKey::Enum keys3[] = {
 			KeyboardKey::KeyA, KeyboardKey::KeyS, KeyboardKey::KeyD, KeyboardKey::KeyF, KeyboardKey::KeyG, KeyboardKey::KeyH,
-			KeyboardKey::KeyJ, KeyboardKey::KeyK, KeyboardKey::KeyL, KeyboardState::Semicolon, KeyboardState::Quote };
+			KeyboardKey::KeyJ, KeyboardKey::KeyK, KeyboardKey::KeyL, KeyboardKey::Semicolon, KeyboardKey::Quote };
 
 		ImGui::Text("      ");
 		ImGui::SameLine();
 		rappVirtualKeyboardLine("ASDFGHJKL;'", keys3, _scale);
 		ImGui::SameLine(0.0f, RAPP_VK_BUTTON_SPACING * _scale);
 		if (ImGui::Button("Return", ImVec2(RAPP_VK_BUTTON_SIZE_X * 1.85f * _scale, RAPP_VK_BUTTON_SIZE_Y * _scale)))
-			rappVirtualKeyboardClick(KeyboardState::Return);
+			rappVirtualKeyboardClick(KeyboardKey::Return);
 
-		KeyboardKey keys4[] = {
+		KeyboardKey::Enum keys4[] = {
 			KeyboardKey::KeyZ, KeyboardKey::KeyX, KeyboardKey::KeyC, KeyboardKey::KeyV, KeyboardKey::KeyB, KeyboardKey::KeyN, KeyboardKey::KeyM,
-			KeyboardState::Period, KeyboardState::Comma, KeyboardState::Slash };
+			KeyboardKey::Period, KeyboardKey::Comma, KeyboardKey::Slash };
 
 		ImGui::Text("         ");
 		ImGui::SameLine();
@@ -83,7 +83,7 @@ namespace rapp {
 		ImGui::Text("                                          ");
 		ImGui::SameLine(0.0f, RAPP_VK_BUTTON_SPACING * _scale);
 		if (ImGui::Button("---------", ImVec2(RAPP_VK_BUTTON_SIZE_X * 6.0f * _scale, RAPP_VK_BUTTON_SIZE_Y * _scale)))
-			rappVirtualKeyboardClick(KeyboardState::Space);
+			rappVirtualKeyboardClick(KeyboardKey::Space);
 
 		ImGui::End();
 	}

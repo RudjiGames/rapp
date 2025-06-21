@@ -62,7 +62,7 @@ struct TaskSystemApp : public rapp::App
 			s_tiles[(y*s_tileX) + x].th = s_height;
 		}
 
-		float startTime = rtm::CPU::time();
+		float startTime = rtm::cpuTime();
 
 		switch (m_runMode)
 		{
@@ -82,7 +82,7 @@ struct TaskSystemApp : public rapp::App
 				break;
 		};
 
-		float endTime = rtm::CPU::time();
+		float endTime = rtm::cpuTime();
 
 		rtm::Console::rgb(	0, 255, 0,
 								"%s Mandelbrot set (%d x %d) took: %f ms in %d tiles   - (Ctrl+S to switch execution mode)\n",

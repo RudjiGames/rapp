@@ -37,7 +37,7 @@ struct rprofApp : public rapp::App
 		m_width		= width;
 		m_height	= height;
 
-		rapp::appGraphicsInit(this, m_width, m_height);
+		rapp::appGraphicsInit(this, m_width, m_height, RAPP_WINDOW_FLAG_DPI_AWARE);
 
 #ifdef RAPP_WITH_RPROF
 		rprofInit();
