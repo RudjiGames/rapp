@@ -8,7 +8,7 @@
 
 #ifdef RAPP_WITH_BGFX
 
-#include <imgui/imgui.h>
+#include <rapp/3rd/imgui/imgui.h>
 #include <rapp/src/cmd.h>
 
 namespace rapp {

@@ -10,7 +10,7 @@
 
 #ifdef RAPP_WITH_BGFX
 
-#include <imgui/imgui.h>
+#include <rapp/3rd/imgui/imgui.h>
 #include <rapp/inc/widgets/widget_theme.h>
 
 #define RAPP_DEBUG_WITH_STD_STRING	1

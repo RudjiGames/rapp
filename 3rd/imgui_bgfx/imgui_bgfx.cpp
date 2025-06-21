@@ -8,8 +8,8 @@
 #include <bx/allocator.h>
 #include <bx/math.h>
 #include <bx/timer.h>
-#include <imgui/imgui.h>
-#include <imgui/imgui_internal.h>
+#include <rapp/3rd/imgui/imgui.h>
+#include <rapp/3rd/imgui/imgui_internal.h>
 
 #include "../../inc/rapp.h"
 
