@@ -273,7 +273,7 @@ void appRegister(App* _app)
 
 void App::dialogOpen(DialogFn _func, void* _userData)
 {
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	if (m_data)
 	{
 		m_data->m_dialog		= _func;
@@ -284,7 +284,7 @@ void App::dialogOpen(DialogFn _func, void* _userData)
 
 void App::dialogShow()
 {
-#if RAPP_WITH_BGFX
+#ifdef RAPP_WITH_BGFX
 	if (m_data && m_data->m_dialog)
 	{
 		if (!m_data->m_dialog(m_data->m_dialogData))
