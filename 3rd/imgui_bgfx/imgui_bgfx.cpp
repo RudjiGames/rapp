@@ -54,13 +54,33 @@ static FontRangeMerge s_fontRangeMerge[] =
 	{ s_iconsFontAwesomeTtf, sizeof(s_iconsFontAwesomeTtf), { ICON_MIN_FA, ICON_MAX_FA, 0 } },
 };
 
+static ImWchar s_fontRangeMergeExcludeAll[] = { ICON_MIN_KI, ICON_MAX_KI, ICON_MIN_FA, ICON_MAX_FA, 0 };
+
 static void* memAlloc(size_t _size, void* _userData);
 static void memFree(void* _ptr, void* _userData);
+
+void bgfxUpdateTexture(ImTextureData* tex)
+{
+	switch (tex->Status)
+	{
+	};
+		ImTextureStatus_WantCreate 
+		ImTextureStatus_WantUpdates
+		ImTextureStatus_WantDestroy
+
+	if (tex->Status == 
+	__debugbreak();
+}
 
 struct OcornutImguiContext
 {
 	void render(ImDrawData* _drawData)
 	{
+		if (_drawData->Textures != nullptr)
+			for (ImTextureData* tex : *_drawData->Textures)
+				if (tex->Status != ImTextureStatus_OK)
+					bgfxUpdateTexture(tex);
+
 		// Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
 		int fb_width = (int)(_drawData->DisplaySize.x * _drawData->FramebufferScale.x);
 		int fb_height = (int)(_drawData->DisplaySize.y * _drawData->FramebufferScale.y);
@@ -211,6 +231,8 @@ struct OcornutImguiContext
 		setupStyle(true);
 
 		io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
+		io.BackendFlags |= ImGuiBackendFlags_RendererHasTextures;
+		//io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;
 
 		for (int32_t ii=0; ii<(int32_t)rapp::KeyboardKey::Count; ++ii)
 		{
@@ -335,29 +357,29 @@ struct OcornutImguiContext
 		int32_t width;
 		int32_t height;
 		{
+			// Load a first font
+			io.Fonts->AddFontDefault();
 			ImFontConfig config;
-			config.FontDataOwnedByAtlas = false;
-			config.MergeMode = false;
-//			config.MergeGlyphCenterV = true;
-
-			const ImWchar* ranges = io.Fonts->GetGlyphRangesCyrillic();
-			m_font[ImGui::Font::Regular] = io.Fonts->AddFontFromMemoryTTF( (void*)s_robotoRegularTtf,     sizeof(s_robotoRegularTtf),     _fontSize,      &config, ranges);
-			m_font[ImGui::Font::Mono   ] = io.Fonts->AddFontFromMemoryTTF( (void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), _fontSize-3.0f, &config, ranges);
-
-			config.MergeMode = true;
-			config.DstFont   = m_font[ImGui::Font::Regular];
+			config.FontDataOwnedByAtlas	= false;
+			config.MergeMode			= true;
+			m_font[ImGui::Font::Regular]	= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoRegularTtf, sizeof(s_robotoRegularTtf), 0.0f, &config);
+			m_font[ImGui::Font::Mono]		= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 0.0, &config);
 
 			for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
 			{
 				const FontRangeMerge& frm = s_fontRangeMerge[ii];
-				
-				io.Fonts->AddFontFromMemoryTTF( (void*)frm.data
-						, (int)frm.size
-						, _fontSize-3.0f
-						, &config
-						, frm.ranges
-						);
+
+				config.GlyphMinAdvanceX = 18.0f;
+
+				io.Fonts->AddFontFromMemoryTTF((void*)frm.data
+					, (int)frm.size
+					, 18.0f
+					, &config
+					, frm.ranges
+				);
 			}
+
+			io.Fonts->Build();
 		}
 
 		io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
