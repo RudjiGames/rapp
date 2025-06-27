@@ -10,7 +10,8 @@
 #include <bx/timer.h>
 #include <rapp/3rd/imgui/imgui.h>
 #include <rapp/3rd/imgui/imgui_internal.h>
-
+//#define STB_IMAGE_WRITE_IMPLEMENTATION
+//#include <stb_image_write.h>
 #include "../../inc/rapp.h"
 
 #include "imgui_bgfx.h"
@@ -54,26 +55,67 @@ static FontRangeMerge s_fontRangeMerge[] =
 	{ s_iconsFontAwesomeTtf, sizeof(s_iconsFontAwesomeTtf), { ICON_MIN_FA, ICON_MAX_FA, 0 } },
 };
 
-static ImWchar s_fontRangeMergeExcludeAll[] = { ICON_MIN_KI, ICON_MAX_KI, ICON_MIN_FA, ICON_MAX_FA, 0 };
-
 static void* memAlloc(size_t _size, void* _userData);
 static void memFree(void* _ptr, void* _userData);
 
-void bgfxUpdateTexture(ImTextureData* tex)
-{
-	switch (tex->Status)
-	{
-	};
-		ImTextureStatus_WantCreate 
-		ImTextureStatus_WantUpdates
-		ImTextureStatus_WantDestroy
-
-	if (tex->Status == 
-	__debugbreak();
-}
-
 struct OcornutImguiContext
 {
+	void bgfxUpdateTexture(ImTextureData* tex)
+	{
+		if (tex->Status == ImTextureStatus_WantCreate)
+		{
+			bgfx::TextureHandle th = bgfx::createTexture2D((uint16_t)tex->Width
+				, (uint16_t)tex->Height
+				, false
+				, 1
+				, bgfx::TextureFormat::RGBA8
+				, 0
+				, 0
+			);
+
+			bgfx::updateTexture2D(th, 0, 0, 0, 0, tex->Width, tex->Height, bgfx::copy(tex->Pixels, tex->Width * tex->Height * 4));
+
+			tex->SetTexID((ImTextureID)th.idx);
+			tex->SetStatus(ImTextureStatus_OK);
+			tex->BackendUserData = (void*)(uintptr_t)th.idx;
+		}
+		else
+		if (tex->Status == ImTextureStatus_WantUpdates)
+		{
+			//stbi_write_tga("D:\\test.tga", tex->Width, tex->Height, 4, tex->Pixels);
+																										 
+			bgfx::TextureHandle th = { (uint16_t)(tex->TexID) };
+			for (ImTextureRect& rect : tex->Updates)
+			{
+				const bgfx::Memory* sourceData = bgfx::alloc(rect.w * rect.h * 4);
+
+				uint8_t* Pixels = (uint8_t*)tex->Pixels;
+				Pixels += rect.y * 4 * tex->Width + (rect.x * 4);
+
+				for (int32_t y=0; y<rect.h; ++y)
+				{
+					bx::memCopy(sourceData->data + y * rect.w * 4,
+								Pixels + y * 4 * tex->Width,
+								rect.w * 4);
+				}
+
+				bgfx::updateTexture2D(	th, 0, 0,
+										rect.x, rect.y,
+										rect.w,	rect.h,
+										sourceData );
+			}
+			tex->SetStatus(ImTextureStatus_OK);
+		}
+		else
+		if (tex->Status == ImTextureStatus_WantDestroy && tex->UnusedFrames > 0)
+		{
+			bgfx::TextureHandle th = { (uint16_t)(tex->TexID) };
+			bgfx::destroy(th);
+
+			tex->SetStatus(ImTextureStatus_Destroyed);
+		}
+	}
+
 	void render(ImDrawData* _drawData)
 	{
 		if (_drawData->Textures != nullptr)
@@ -146,8 +188,8 @@ struct OcornutImguiContext
 						| BGFX_STATE_WRITE_A
 						| BGFX_STATE_MSAA
 						;
-
-					bgfx::TextureHandle th = m_texture;
+					ImGuiIO& io = ImGui::GetIO();
+					bgfx::TextureHandle th = { (uint16_t)(io.Fonts->TexData->TexID) };
 					bgfx::ProgramHandle program = m_program;
 
 					if (0 != cmd->GetTexID())
@@ -353,46 +395,35 @@ struct OcornutImguiContext
 
 		s_tex = bgfx::createUniform("s_tex", bgfx::UniformType::Sampler);
 
-		uint8_t* data;
-		int32_t width;
-		int32_t height;
+		// Load fonts and icons
+
+		ImFontConfig config;
+		config.FontDataOwnedByAtlas	= false;
+		config.MergeMode			= false;
+		m_font[ImGui::Font::Regular]= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoRegularTtf, sizeof(s_robotoRegularTtf), 18.0f, &config, io.Fonts->GetGlyphRangesCyrillic());
+
+		config.MergeMode			= true;
+		config.DstFont				= m_font[ImGui::Font::Regular];
+		config.GlyphExcludeRanges	= nullptr;
+
+		for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
 		{
-			// Load a first font
-			io.Fonts->AddFontDefault();
-			ImFontConfig config;
-			config.FontDataOwnedByAtlas	= false;
-			config.MergeMode			= true;
-			m_font[ImGui::Font::Regular]	= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoRegularTtf, sizeof(s_robotoRegularTtf), 0.0f, &config);
-			m_font[ImGui::Font::Mono]		= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 0.0, &config);
+			const FontRangeMerge& frm = s_fontRangeMerge[ii];
 
-			for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
-			{
-				const FontRangeMerge& frm = s_fontRangeMerge[ii];
-
-				config.GlyphMinAdvanceX = 18.0f;
-
-				io.Fonts->AddFontFromMemoryTTF((void*)frm.data
-					, (int)frm.size
-					, 18.0f
-					, &config
-					, frm.ranges
-				);
-			}
-
-			io.Fonts->Build();
+			io.Fonts->AddFontFromMemoryTTF((void*)frm.data
+				, (int)frm.size
+				, 15.0f
+				, &config
+				, frm.ranges
+			);
 		}
 
-		io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
+		config.MergeMode			= false;
+		config.DstFont				= nullptr;
+		config.GlyphRanges			= io.Fonts->GetGlyphRangesCyrillic();
+		m_font[ImGui::Font::Mono]	= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 15.0f, &config);
 
-		m_texture = bgfx::createTexture2D(
-			  (uint16_t)width
-			, (uint16_t)height
-			, false
-			, 1
-			, bgfx::TextureFormat::BGRA8
-			, 0
-			, bgfx::copy(data, width*height*4)
-			);
+		io.Fonts->Build();
 	}
 
 	void destroy()
@@ -400,8 +431,6 @@ struct OcornutImguiContext
 		ImGui::DestroyContext(m_imgui);
 
 		bgfx::destroy(s_tex);
-		bgfx::destroy(m_texture);
-
 		bgfx::destroy(u_imageLodEnabled);
 		bgfx::destroy(m_imageProgram);
 		bgfx::destroy(m_program);
@@ -473,12 +502,14 @@ struct OcornutImguiContext
 		}
 
 		ImGui::NewFrame();
+		ImGui::PushFont(ImGui::Font::Regular);
 	}
 
 	void endFrame()
 	{
+		ImGui::PopFont();
 		ImGui::Render();
-		render(ImGui::GetDrawData() );
+		render(ImGui::GetDrawData());
 	}
 
 	ImGuiContext*       m_imgui;
@@ -486,7 +517,6 @@ struct OcornutImguiContext
 	bgfx::VertexLayout  m_layout;
 	bgfx::ProgramHandle m_program;
 	bgfx::ProgramHandle m_imageProgram;
-	bgfx::TextureHandle m_texture;
 	bgfx::UniformHandle s_tex;
 	bgfx::UniformHandle u_imageLodEnabled;
 	ImFont* m_font[ImGui::Font::Count];
@@ -534,7 +564,7 @@ namespace ImGui
 {
 	void PushFont(Font::Enum _font)
 	{
-		PushFont(s_ctx.m_font[_font]);
+		PushFont(s_ctx.m_font[_font], 0.0f);
 	}
 
 	void PushEnabled(bool _enabled)
