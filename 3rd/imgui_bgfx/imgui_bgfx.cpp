@@ -60,6 +60,17 @@ static FontRangeMerge s_fontRangeMerge[] =
 static void* memAlloc(size_t _size, void* _userData);
 static void memFree(void* _ptr, void* _userData);
 
+union BGFXTexID
+{
+	ImTextureID ptr;
+	struct
+	{
+		bgfx::TextureHandle	handle;
+		uint8_t				flags;
+		uint8_t				mip;
+	} s;
+};
+
 struct OcornutImguiContext
 {
 	void bgfxUpdateTexture(ImTextureData* tex)
@@ -71,8 +82,7 @@ struct OcornutImguiContext
 			int32_t height;
 			ImGui::GetIO().Fonts->GetTexDataAsRGBA32(&data, &width, &height);
 
-			bgfx::TextureHandle th = bgfx::createTexture2D((uint16_t)tex->Width
-				, (uint16_t)tex->Height
+			bgfx::TextureHandle th = bgfx::createTexture2D((uint16_t)tex->Width, (uint16_t)tex->Height
 				, false
 				, 1
 				, bgfx::TextureFormat::RGBA8
@@ -84,57 +94,42 @@ struct OcornutImguiContext
 
 			bgfx::updateTexture2D(th, 0, 0, 0, 0, tex->Width, tex->Height, bgfx::copy(tex->Pixels, tex->Width * tex->Height * 4));
 
-			tex->SetTexID((ImTextureID)th.idx);
+			BGFXTexID texture;
+			texture.s.handle	= th;
+			texture.s.flags		= IMGUI_FLAGS_ALPHA_BLEND;
+			texture.s.mip		= 0;
+
+			tex->SetTexID(texture.ptr);
 			tex->SetStatus(ImTextureStatus_OK);
 		}
 		else
 		if (tex->Status == ImTextureStatus_WantUpdates)
 		{
-			bgfx::TextureHandle th = { (uint16_t)(tex->TexID) };
+			BGFXTexID texture;
+			texture.ptr = tex->GetTexID();
 
-#ifdef IMGUI_BGFX_SINGLE_UPDATE
-			const bgfx::Memory* sourceData = bgfx::alloc(tex->UpdateRect.w * tex->UpdateRect.h * 4);
-			uint8_t* Pixels = (uint8_t*)tex->Pixels;
-			Pixels += tex->UpdateRect.y * 4 * tex->Width + (tex->UpdateRect.x * 4);
-
-			for (int32_t y = 0; y < tex->UpdateRect.h; ++y)
-			{
-				bx::memCopy(sourceData->data + y * tex->UpdateRect.w * 4,
-					Pixels + y * 4 * tex->Width,
-					tex->UpdateRect.w * 4);
-			}
-
-			bgfx::updateTexture2D(	th, 0, 0,
-									tex->UpdateRect.x, tex->UpdateRect.y,
-									tex->UpdateRect.w, tex->UpdateRect.h,
-									sourceData);
-
-			stbi_write_tga("D:\\test.tga", tex->Width, tex->Height, 4, tex->Pixels);
-#else
 			for (ImTextureRect& rect : tex->Updates)
 			{
 				const bgfx::Memory* sourceData = bgfx::alloc(rect.w * rect.h * 4);
 			
 				uint8_t* Pixels = (uint8_t*)tex->Pixels;
 				Pixels += rect.y * 4 * tex->Width + (rect.x * 4);
-			
-				for (int32_t y=0; y<rect.h; ++y)
+
+				for (int32_t y=0; y < rect.h; ++y)
 				{
 					bx::memCopy(sourceData->data + y * rect.w * 4,
-								Pixels + y * 4 * tex->Width,
-								rect.w * 4);
+						Pixels + y * 4 * tex->Width,
+						rect.w * 4);
 				}
 
-				RTM_ASSERT(bgfx::isValid(th), "");
-			
-				bgfx::updateTexture2D(	th, 0, 0,
+				RTM_ASSERT(bgfx::isValid(texture.s.handle), "");
+
+				bgfx::updateTexture2D(	texture.s.handle, 0, 0,
 										rect.x, rect.y,
 										rect.w,	rect.h,
 										sourceData );
 			}
 
-			//stbi_write_tga("D:\\test.tga", tex->Width, tex->Height, 4, tex->Pixels);
-#endif
 			tex->SetStatus(ImTextureStatus_OK);
 		}
 		else
@@ -221,7 +216,8 @@ struct OcornutImguiContext
 						| BGFX_STATE_MSAA
 						;
 
-					bgfx::TextureHandle th = { (uint16_t)(cmd->GetTexID()) };
+					BGFXTexID textureHandle;
+					textureHandle.ptr = cmd->GetTexID();
 					bgfx::ProgramHandle program = m_program;
 
 					if (0 != cmd->GetTexID())
@@ -231,7 +227,9 @@ struct OcornutImguiContext
 							? BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA)
 							: BGFX_STATE_NONE
 							;
-						th = texture.s.handle;
+						textureHandle.s.handle	= texture.s.handle;
+						textureHandle.s.flags	= texture.s.flags;
+						textureHandle.s.mip		= texture.s.mip;
 						if (0 != texture.s.mip)
 						{
 							const float lodEnabled[4] = { float(texture.s.mip), 1.0f, 0.0f, 0.0f };
@@ -264,7 +262,7 @@ struct OcornutImguiContext
 								);
 
 						encoder->setState(state);
-						encoder->setTexture(0, s_tex, th);
+						encoder->setTexture(0, s_tex, textureHandle.s.handle);
 						encoder->setVertexBuffer(0, &tvb, cmd->VtxOffset, numVertices);
 						encoder->setIndexBuffer(&tib, cmd->IdxOffset, cmd->ElemCount);
 						encoder->submit(m_viewId, program);
