@@ -10,9 +10,8 @@
 #include <bx/timer.h>
 #include <rapp/3rd/imgui/imgui.h>
 #include <rapp/3rd/imgui/imgui_internal.h>
-//#define STB_IMAGE_WRITE_IMPLEMENTATION
-//#include <stb_image_write.h>
 #include "../../inc/rapp.h"
+#include <rbase/inc/console.h>
 
 #include "imgui_bgfx.h"
 
@@ -25,6 +24,9 @@
 #include "robotomono_regular.ttf.h"
 #include "icons_kenney.ttf.h"
 #include "icons_font_awesome.ttf.h"
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
 
 inline bool checkAvailTransientBuffers(uint32_t _numVertices, const bgfx::VertexLayout& _layout, uint32_t _numIndices)
 {
@@ -64,6 +66,11 @@ struct OcornutImguiContext
 	{
 		if (tex->Status == ImTextureStatus_WantCreate)
 		{
+			uint8_t* data;
+			int32_t width;
+			int32_t height;
+			ImGui::GetIO().Fonts->GetTexDataAsRGBA32(&data, &width, &height);
+
 			bgfx::TextureHandle th = bgfx::createTexture2D((uint16_t)tex->Width
 				, (uint16_t)tex->Height
 				, false
@@ -73,25 +80,44 @@ struct OcornutImguiContext
 				, 0
 			);
 
+			RTM_ASSERT(bgfx::isValid(th), "");
+
 			bgfx::updateTexture2D(th, 0, 0, 0, 0, tex->Width, tex->Height, bgfx::copy(tex->Pixels, tex->Width * tex->Height * 4));
 
 			tex->SetTexID((ImTextureID)th.idx);
 			tex->SetStatus(ImTextureStatus_OK);
-			tex->BackendUserData = (void*)(uintptr_t)th.idx;
 		}
 		else
 		if (tex->Status == ImTextureStatus_WantUpdates)
 		{
-			//stbi_write_tga("D:\\test.tga", tex->Width, tex->Height, 4, tex->Pixels);
-																										 
 			bgfx::TextureHandle th = { (uint16_t)(tex->TexID) };
+
+#ifdef IMGUI_BGFX_SINGLE_UPDATE
+			const bgfx::Memory* sourceData = bgfx::alloc(tex->UpdateRect.w * tex->UpdateRect.h * 4);
+			uint8_t* Pixels = (uint8_t*)tex->Pixels;
+			Pixels += tex->UpdateRect.y * 4 * tex->Width + (tex->UpdateRect.x * 4);
+
+			for (int32_t y = 0; y < tex->UpdateRect.h; ++y)
+			{
+				bx::memCopy(sourceData->data + y * tex->UpdateRect.w * 4,
+					Pixels + y * 4 * tex->Width,
+					tex->UpdateRect.w * 4);
+			}
+
+			bgfx::updateTexture2D(	th, 0, 0,
+									tex->UpdateRect.x, tex->UpdateRect.y,
+									tex->UpdateRect.w, tex->UpdateRect.h,
+									sourceData);
+
+			stbi_write_tga("D:\\test.tga", tex->Width, tex->Height, 4, tex->Pixels);
+#else
 			for (ImTextureRect& rect : tex->Updates)
 			{
 				const bgfx::Memory* sourceData = bgfx::alloc(rect.w * rect.h * 4);
-
+			
 				uint8_t* Pixels = (uint8_t*)tex->Pixels;
 				Pixels += rect.y * 4 * tex->Width + (rect.x * 4);
-
+			
 				for (int32_t y=0; y<rect.h; ++y)
 				{
 					bx::memCopy(sourceData->data + y * rect.w * 4,
@@ -99,11 +125,16 @@ struct OcornutImguiContext
 								rect.w * 4);
 				}
 
+				RTM_ASSERT(bgfx::isValid(th), "");
+			
 				bgfx::updateTexture2D(	th, 0, 0,
 										rect.x, rect.y,
 										rect.w,	rect.h,
 										sourceData );
 			}
+
+			//stbi_write_tga("D:\\test.tga", tex->Width, tex->Height, 4, tex->Pixels);
+#endif
 			tex->SetStatus(ImTextureStatus_OK);
 		}
 		else
@@ -112,6 +143,7 @@ struct OcornutImguiContext
 			bgfx::TextureHandle th = { (uint16_t)(tex->TexID) };
 			bgfx::destroy(th);
 
+			tex->SetTexID(ImTextureID_Invalid);
 			tex->SetStatus(ImTextureStatus_Destroyed);
 		}
 	}
@@ -188,8 +220,8 @@ struct OcornutImguiContext
 						| BGFX_STATE_WRITE_A
 						| BGFX_STATE_MSAA
 						;
-					ImGuiIO& io = ImGui::GetIO();
-					bgfx::TextureHandle th = { (uint16_t)(io.Fonts->TexData->TexID) };
+
+					bgfx::TextureHandle th = { (uint16_t)(cmd->GetTexID()) };
 					bgfx::ProgramHandle program = m_program;
 
 					if (0 != cmd->GetTexID())
@@ -266,7 +298,6 @@ struct OcornutImguiContext
 
 		ImGuiIO& io = ImGui::GetIO();
 
-		io.DisplaySize = ImVec2(1280.0f, 720.0f);
 		io.DeltaTime   = 1.0f / 60.0f;
 		io.IniFilename = NULL;
 
@@ -274,7 +305,6 @@ struct OcornutImguiContext
 
 		io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
 		io.BackendFlags |= ImGuiBackendFlags_RendererHasTextures;
-		//io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;
 
 		for (int32_t ii=0; ii<(int32_t)rapp::KeyboardKey::Count; ++ii)
 		{
@@ -397,31 +427,21 @@ struct OcornutImguiContext
 
 		// Load fonts and icons
 
+		m_font[ImGui::Font::Regular] = io.Fonts->AddFontDefault();
 		ImFontConfig config;
 		config.FontDataOwnedByAtlas	= false;
-		config.MergeMode			= false;
-		m_font[ImGui::Font::Regular]= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoRegularTtf, sizeof(s_robotoRegularTtf), 18.0f, &config, io.Fonts->GetGlyphRangesCyrillic());
-
 		config.MergeMode			= true;
-		config.DstFont				= m_font[ImGui::Font::Regular];
-		config.GlyphExcludeRanges	= nullptr;
-
+		//	config.GlyphRanges			= io.Fonts->GetGlyphRangesCyrillic();
+		io.Fonts->AddFontFromMemoryTTF((void*)s_robotoRegularTtf, sizeof(s_robotoRegularTtf), 0.0f, &config);           // Merge into first font to add e.g. Asian characters
 		for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
 		{
 			const FontRangeMerge& frm = s_fontRangeMerge[ii];
-
-			io.Fonts->AddFontFromMemoryTTF((void*)frm.data
-				, (int)frm.size
-				, 15.0f
-				, &config
-				, frm.ranges
-			);
+			io.Fonts->AddFontFromMemoryTTF((void*)frm.data, (int)frm.size, 0.0f, &config);
 		}
 
 		config.MergeMode			= false;
-		config.DstFont				= nullptr;
-		config.GlyphRanges			= io.Fonts->GetGlyphRangesCyrillic();
-		m_font[ImGui::Font::Mono]	= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 15.0f, &config);
+//		config.GlyphRanges			= io.Fonts->GetGlyphRangesCyrillic();
+		m_font[ImGui::Font::Mono]	= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 0.0f, &config);
 
 		io.Fonts->Build();
 	}

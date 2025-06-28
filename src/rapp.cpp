@@ -403,6 +403,9 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint3
 	init.resolution.width  = _width;
 	init.resolution.height = _height;
 	init.resolution.reset  = BGFX_RESET_VSYNC;
+#if RTM_DEBUG
+	init.debug = true;
+#endif
 	bgfx::init(init);
 
 #if !RTM_RETAIL
