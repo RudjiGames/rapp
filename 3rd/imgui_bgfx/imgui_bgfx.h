@@ -39,8 +39,10 @@ namespace ImGui
 	{
 		enum Enum
 		{
-			Regular,
-			Mono,
+			Roboto,
+			RobotoBold,
+			RobotoMono,
+			RobotoMonoBold,
 
 			Count
 		};
@@ -135,7 +137,7 @@ namespace ImGui
 	void PopEnabled();
 
 	/// 
-	void PushFont(Font::Enum);
+	void PushFont(Font::Enum _font, float _size = 0.0f);
 
 } // namespace ImGui
 

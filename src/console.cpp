@@ -158,7 +158,7 @@ void Console::draw()
     }
 
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4,1)); // Tighten spacing
-	ImGui::PushFont(ImGui::Font::Mono);
+	ImGui::PushFont(ImGui::Font::RobotoMono);
 
     if (copy_to_clipboard)
     {

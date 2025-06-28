@@ -21,7 +21,9 @@
 #include "fs_imgui_image.bin.h"
 
 #include "roboto_regular.ttf.h"
+#include "roboto_bold.ttf.h"
 #include "robotomono_regular.ttf.h"
+#include "robotomono_bold.ttf.h"
 #include "icons_kenney.ttf.h"
 #include "icons_font_awesome.ttf.h"
 
@@ -425,21 +427,38 @@ struct OcornutImguiContext
 
 		// Load fonts and icons
 
-		m_font[ImGui::Font::Regular] = io.Fonts->AddFontDefault();
+		m_font[ImGui::Font::Roboto] = io.Fonts->AddFontDefault();
 		ImFontConfig config;
 		config.FontDataOwnedByAtlas	= false;
 		config.MergeMode			= true;
-		//	config.GlyphRanges			= io.Fonts->GetGlyphRangesCyrillic();
-		io.Fonts->AddFontFromMemoryTTF((void*)s_robotoRegularTtf, sizeof(s_robotoRegularTtf), 0.0f, &config);           // Merge into first font to add e.g. Asian characters
+		io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoRegularTtf, sizeof(s_robotoRegularTtf), 0.0f, &config);
+		config.GlyphMinAdvanceX		= 15.0f;
+		config.RasterizerMultiply	= 2.0f;
 		for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
 		{
 			const FontRangeMerge& frm = s_fontRangeMerge[ii];
 			io.Fonts->AddFontFromMemoryTTF((void*)frm.data, (int)frm.size, 0.0f, &config);
 		}
 
+		m_font[ImGui::Font::RobotoBold] = io.Fonts->AddFontDefault();
+		config.FontDataOwnedByAtlas	= false;
+		config.MergeMode			= true;
+		io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoBoldTtf, sizeof(s_robotoBoldTtf), 0.0f, &config);
+		config.GlyphMinAdvanceX		= 15.0f;
+		config.RasterizerMultiply	= 2.0f;
+		for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
+		{
+			const FontRangeMerge& frm = s_fontRangeMerge[ii];
+			io.Fonts->AddFontFromMemoryTTF((void*)frm.data, (int)frm.size, 0.0f, &config);
+		}
+		
 		config.MergeMode			= false;
-//		config.GlyphRanges			= io.Fonts->GetGlyphRangesCyrillic();
-		m_font[ImGui::Font::Mono]	= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 0.0f, &config);
+		config.GlyphMinAdvanceX		= 0.0f;
+		m_font[ImGui::Font::RobotoMono]	= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 0.0f, &config);
+
+		config.MergeMode			= false;
+		config.GlyphMinAdvanceX		= 0.0f;
+		m_font[ImGui::Font::RobotoMonoBold] = io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoBoldTtf, sizeof(s_robotoMonoBoldTtf), 0.0f, &config);
 
 		io.Fonts->Build();
 	}
@@ -520,12 +539,10 @@ struct OcornutImguiContext
 		}
 
 		ImGui::NewFrame();
-		ImGui::PushFont(ImGui::Font::Regular);
 	}
 
 	void endFrame()
 	{
-		ImGui::PopFont();
 		ImGui::Render();
 		render(ImGui::GetDrawData());
 	}
@@ -580,9 +597,9 @@ void imguiEndFrame()
 
 namespace ImGui
 {
-	void PushFont(Font::Enum _font)
+	void PushFont(Font::Enum _font, float _size)
 	{
-		PushFont(s_ctx.m_font[_font], 0.0f);
+		PushFont(s_ctx.m_font[_font], _size);
 	}
 
 	void PushEnabled(bool _enabled)

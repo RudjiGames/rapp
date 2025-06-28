@@ -364,9 +364,17 @@ void appFrame(App* _app)
 }
 
 #ifdef RAPP_WITH_BGFX
-void ImGui_ImplWin32_EnableDpiAwareness()
+typedef DPI_AWARENESS_CONTEXT(WINAPI* PFN_SetThreadDpiAwarenessContext)(DPI_AWARENESS_CONTEXT); // User32.lib + dll, Windows 10 v1607+ (Creators Update)
+
+void ImGui_EnableDpiAwareness()
 {
 #if RTM_PLATFORM_WINDOWS
+	static HINSTANCE user32_dll = ::LoadLibraryA("user32.dll"); // Reference counted per-process
+	if (PFN_SetThreadDpiAwarenessContext SetThreadDpiAwarenessContextFn = (PFN_SetThreadDpiAwarenessContext)::GetProcAddress(user32_dll, "SetThreadDpiAwarenessContext"))
+	{
+		SetThreadDpiAwarenessContextFn(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+		return;
+	}
 #if _WIN32_WINNT >= 0x0600
 	::SetProcessDPIAware();
 #endif
@@ -385,7 +393,7 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint3
 
 	if (_mainwindowFlags & RAPP_WINDOW_FLAG_DPI_AWARE)
 	{
-		ImGui_ImplWin32_EnableDpiAwareness();
+		ImGui_EnableDpiAwareness();
 	}
 
 	WindowHandle win = rapp::windowCreate(	_app, 0, 0, _width, _height,
@@ -402,7 +410,7 @@ WindowHandle appGraphicsInit(App* _app, uint32_t _width, uint32_t _height, uint3
 	init.platformData.ndt  = rapp::windowGetNativeDisplayHandle();
 	init.resolution.width  = _width;
 	init.resolution.height = _height;
-	init.resolution.reset  = BGFX_RESET_VSYNC;
+	init.resolution.reset  = BGFX_RESET_VSYNC | BGFX_RESET_HIDPI;
 #if RTM_DEBUG
 	init.debug = true;
 #endif
