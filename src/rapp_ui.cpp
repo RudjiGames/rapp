@@ -49,6 +49,9 @@ namespace rapp {
 				// 144 = 0.564f
 				// 233 = 0.913f
 
+				#define RUDJI_COL(_C)				ImVec4(_C, 1.0f)
+				#define RUDJI_ALPHA(_C, _A)			ImVec4(_C.x, _C.y, _C.z, _A)
+
 				#define RUDJI_COL_WHITE				ImVec4(1.000f, 1.000f, 1.000f, 1.00f)
 				#define RUDJI_COL_BLACK				ImVec4(0.000f, 0.000f, 0.000f, 1.00f)
 				#define RUDJI_COL_PURPLE			ImVec4(0.082f, 0.082f, 0.133f, 1.00f)
@@ -64,8 +67,8 @@ namespace rapp {
 				ImGui::StyleColorsDark(&style);
 
 				style.Colors[ImGuiCol_Text]						= RUDJI_COL_WHITE;
-	//			style.Colors[ImGuiCol_TextDisabled]				= ;
-				style.Colors[ImGuiCol_WindowBg]					= RUDJI_COL_PURPLE;
+				style.Colors[ImGuiCol_TextDisabled]				= RUDJI_ALPHA(RUDJI_COL_WHITE,  0.6f);
+				style.Colors[ImGuiCol_WindowBg]					= RUDJI_ALPHA(RUDJI_COL_PURPLE, 0.9f);
 	//			style.Colors[ImGuiCol_ChildBg]					= ;
 	//			style.Colors[ImGuiCol_PopupBg]					= ;
 	//			style.Colors[ImGuiCol_Border]					= ;
@@ -123,8 +126,6 @@ namespace rapp {
 	//			style.Colors[ImGuiCol_NavWindowingHighlight]	= ;
 	//			style.Colors[ImGuiCol_NavWindowingDimBg]		= ;
 	//			style.Colors[ImGuiCol_ModalWindowDimBg]			= ;
-
-				style.Colors[ImGuiCol_WindowBg].w = 0.9f;
 			}
 			break;
 		};
@@ -138,6 +139,14 @@ namespace rapp {
 			}
 		}
 #endif
+	}
+
+	/// 
+	void uiSetScale(float _scale)
+	{
+#ifdef RAPP_WITH_BGFX
+		ImGuiStyle& style = ImGui::GetStyle();
+#endif // RAPP_WITH_BGFX
 	}
 
 } // namespace rapp
