@@ -466,6 +466,19 @@ namespace rapp {
 	void cmdConsoleSetToggleTime(float _time);
 
 	// ------------------------------------------------
+	/// UI/ImGui helper functions
+	// ------------------------------------------------
+
+	#define RAPP_STYLE_DARK		0
+	#define RAPP_STYLE_LIGHT	1
+	#define RAPP_STYLE_RUDJI	2
+
+	/// Set ImGui style based on predefined themes.
+	///
+	/// @param[in] _style          : Style to set.
+	void uiSetStyle(int _style, float _alpha = 1.0f);
+
+	// ------------------------------------------------
 	/// Window functions
 	// ------------------------------------------------
 

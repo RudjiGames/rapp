@@ -296,7 +296,7 @@ struct OcornutImguiContext
 		io.DeltaTime   = 1.0f / 60.0f;
 		io.IniFilename = NULL;
 
-		setupStyle(true);
+		rapp::uiSetStyle(RAPP_STYLE_RUDJI);
 
 		io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
 		io.BackendFlags |= ImGuiBackendFlags_RendererHasTextures;
@@ -449,11 +449,11 @@ struct OcornutImguiContext
 		
 		config.MergeMode			= false;
 		config.GlyphMinAdvanceX		= 0.0f;
-		m_font[ImGui::Font::RobotoMono]	= io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 0.0f, &config);
+		m_font[ImGui::Font::RobotoMono]	= io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 0.0f, &config);
 
 		config.MergeMode			= false;
 		config.GlyphMinAdvanceX		= 0.0f;
-		m_font[ImGui::Font::RobotoMonoBold] = io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoBoldTtf, sizeof(s_robotoMonoBoldTtf), 0.0f, &config);
+		m_font[ImGui::Font::RobotoMonoBold] = io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoMonoBoldTtf, sizeof(s_robotoMonoBoldTtf), 0.0f, &config);
 
 		io.Fonts->Build();
 	}
@@ -468,24 +468,6 @@ struct OcornutImguiContext
 		bgfx::destroy(m_program);
 
 		m_allocator = NULL;
-	}
-
-	void setupStyle(bool _dark)
-	{
-		// Doug Binks' darl color scheme
-		// https://gist.github.com/dougbinks/8089b4bbaccaaf6fa204236978d165a9
-		ImGuiStyle& style = ImGui::GetStyle();
-		if (_dark)
-		{
-			ImGui::StyleColorsDark(&style);
-		}
-		else
-		{
-			ImGui::StyleColorsLight(&style);
-		}
-
-		style.FrameRounding    = 4.0f;
-		style.WindowBorderSize = 0.0f;
 	}
 
 	void beginFrame(

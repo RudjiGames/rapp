@@ -51,6 +51,7 @@ function projectExtraConfig_rapp_bgfx()
 		rappPath .. "/3rd/imgui/imgui/**.cpp",
 		rappPath .. "/3rd/imgui/imgui/**.inl",
 		rappPath .. "/3rd/imgui/imgui.cpp",
+		rappPath .. "/3rd/imgui/imgui_demo.cpp",
 		rappPath .. "/3rd/imgui/imgui_draw.cpp",
 		rappPath .. "/3rd/imgui/imgui_tables.cpp",
 		rappPath .. "/3rd/imgui/imgui_widgets.cpp",
