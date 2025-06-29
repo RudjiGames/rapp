@@ -426,34 +426,34 @@ struct OcornutImguiContext
 		ImFontConfig config;
 		config.FontDataOwnedByAtlas	= false;
 		config.MergeMode			= true;
-		io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoRegularTtf, sizeof(s_robotoRegularTtf), 0.0f, &config);
+		io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoRegularTtf, sizeof(s_robotoRegularTtf), 18.0f, &config);
 		config.GlyphMinAdvanceX		= 15.0f;
 		config.RasterizerMultiply	= 2.0f;
 		for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
 		{
 			const FontRangeMerge& frm = s_fontRangeMerge[ii];
-			io.Fonts->AddFontFromMemoryTTF((void*)frm.data, (int)frm.size, 0.0f, &config);
+			io.Fonts->AddFontFromMemoryTTF((void*)frm.data, (int)frm.size, 18.0f, &config, frm.ranges);
 		}
 
 		m_font[ImGui::Font::RobotoBold] = io.Fonts->AddFontDefault();
 		config.FontDataOwnedByAtlas	= false;
 		config.MergeMode			= true;
-		io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoBoldTtf, sizeof(s_robotoBoldTtf), 0.0f, &config);
+		io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoBoldTtf, sizeof(s_robotoBoldTtf), 18.0f, &config);
 		config.GlyphMinAdvanceX		= 15.0f;
 		config.RasterizerMultiply	= 2.0f;
 		for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
 		{
 			const FontRangeMerge& frm = s_fontRangeMerge[ii];
-			io.Fonts->AddFontFromMemoryTTF((void*)frm.data, (int)frm.size, 0.0f, &config);
+			io.Fonts->AddFontFromMemoryTTF((void*)frm.data, (int)frm.size, 15.0f, &config);
 		}
 		
 		config.MergeMode			= false;
 		config.GlyphMinAdvanceX		= 0.0f;
-		m_font[ImGui::Font::RobotoMono]	= io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 0.0f, &config);
+		m_font[ImGui::Font::RobotoMono]	= io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 18.0f, &config);
 
 		config.MergeMode			= false;
 		config.GlyphMinAdvanceX		= 0.0f;
-		m_font[ImGui::Font::RobotoMonoBold] = io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoMonoBoldTtf, sizeof(s_robotoMonoBoldTtf), 0.0f, &config);
+		m_font[ImGui::Font::RobotoMonoBold] = io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoMonoBoldTtf, sizeof(s_robotoMonoBoldTtf), 18.0f, &config);
 
 		io.Fonts->Build();
 	}

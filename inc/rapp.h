@@ -481,7 +481,7 @@ namespace rapp {
 	/// Set ImGui scale.
 	///
 	/// @param[in] _scale          : Scale to set.
-	void uiSetStyle(float _scale = 1.0f);
+	void uiSetScale(float _scale = 1.0f);
 
 	// ------------------------------------------------
 	/// Window functions

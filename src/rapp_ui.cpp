@@ -63,23 +63,24 @@ namespace rapp {
 				#define RUDJI_COL_RED_DARK			ImVec4(0.349f, 0.082f, 0.082f, 1.00f)
 				#define RUDJI_COL_CYAN				ImVec4(0.215f, 0.564f, 0.564f, 1.00f)
 				#define RUDJI_COL_CYAN_DARK			ImVec4(0.349f, 0.913f, 0.913f, 1.00f)
+				#define RUDJI_COL_PINK				ImVec4(0.564f, 0.349f, 0.564f, 1.00f)
 
 				ImGui::StyleColorsDark(&style);
 
 				style.Colors[ImGuiCol_Text]						= RUDJI_COL_WHITE;
 				style.Colors[ImGuiCol_TextDisabled]				= RUDJI_ALPHA(RUDJI_COL_WHITE,  0.6f);
 				style.Colors[ImGuiCol_WindowBg]					= RUDJI_ALPHA(RUDJI_COL_PURPLE, 0.9f);
-	//			style.Colors[ImGuiCol_ChildBg]					= ;
-	//			style.Colors[ImGuiCol_PopupBg]					= ;
-	//			style.Colors[ImGuiCol_Border]					= ;
-	//			style.Colors[ImGuiCol_BorderShadow]				= ;
+				style.Colors[ImGuiCol_ChildBg]					= RUDJI_COL_PURPLE_DARK;
+				style.Colors[ImGuiCol_PopupBg]					= RUDJI_COL_PURPLE_DARK;
+				style.Colors[ImGuiCol_Border]					= RUDJI_ALPHA(RUDJI_COL_PURPLE_LIGHT, 0.66f);
+				style.Colors[ImGuiCol_BorderShadow]				= RUDJI_COL_WHITE;
 				style.Colors[ImGuiCol_FrameBg]					= RUDJI_COL_BLACK;
 				style.Colors[ImGuiCol_FrameBgHovered]			= RUDJI_COL_PURPLE_DARK;
 				style.Colors[ImGuiCol_FrameBgActive]			= RUDJI_COL_PURPLE;
 				style.Colors[ImGuiCol_TitleBg]					= RUDJI_COL_PURPLE_DARK;
 				style.Colors[ImGuiCol_TitleBgActive]			= RUDJI_COL_BLACK;
 				style.Colors[ImGuiCol_TitleBgCollapsed]			= RUDJI_COL_PURPLE;
-	//			style.Colors[ImGuiCol_MenuBarBg]				= RUDJI_COL_PURPLE_DARK;
+				style.Colors[ImGuiCol_MenuBarBg]				= RUDJI_COL_PURPLE_DARK;
 				style.Colors[ImGuiCol_ScrollbarBg]				= RUDJI_COL_PURPLE_DARK;
 	//			style.Colors[ImGuiCol_ScrollbarGrab]			= RUDJI_COL_PURPLE_LIGHT;
 	//			style.Colors[ImGuiCol_ScrollbarGrabHovered]		= RUDJI_COL_GREEN_DARK;
@@ -146,6 +147,8 @@ namespace rapp {
 	{
 #ifdef RAPP_WITH_BGFX
 		ImGuiStyle& style = ImGui::GetStyle();
+		float sc = ImGui::GetWindowDpiScale();
+		sc = 1.0f;
 #endif // RAPP_WITH_BGFX
 	}
 
