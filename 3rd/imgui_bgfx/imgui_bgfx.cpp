@@ -79,11 +79,6 @@ struct OcornutImguiContext
 	{
 		if (tex->Status == ImTextureStatus_WantCreate)
 		{
-			uint8_t* data;
-			int32_t width;
-			int32_t height;
-			ImGui::GetIO().Fonts->GetTexDataAsRGBA32(&data, &width, &height);
-
 			bgfx::TextureHandle th = bgfx::createTexture2D((uint16_t)tex->Width, (uint16_t)tex->Height
 				, false
 				, 1

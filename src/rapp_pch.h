@@ -17,6 +17,7 @@
 #include <rbase/inc/libhandler.h>
 #include <rbase/inc/atomic.h>
 #include <rbase/inc/itc.h>
+#include <rbase/inc/file.h>
 #include <rbase/inc/datastore.h>
 #include <rbase/inc/cpu.h>
 #include <rbase/inc/hash.h>

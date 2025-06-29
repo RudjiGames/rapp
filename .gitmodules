@@ -14,3 +14,6 @@
 [submodule "3rd/stb"]
 	path = 3rd/stb
 	url = https://github.com/nothings/stb.git
+[submodule "3rd/imgui_markdown"]
+	path = 3rd/imgui_markdown
+	url = https://github.com/enkisoftware/imgui_markdown.git
