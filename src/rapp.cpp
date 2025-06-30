@@ -363,8 +363,9 @@ void appFrame(App* _app)
 	s_commChannel.write(_app);
 }
 
-#ifdef RAPP_WITH_BGFX
+#if RTM_PLATFORM_WINDOWS
 typedef DPI_AWARENESS_CONTEXT(WINAPI* PFN_SetThreadDpiAwarenessContext)(DPI_AWARENESS_CONTEXT); // User32.lib + dll, Windows 10 v1607+ (Creators Update)
+#endif 
 
 void ImGui_EnableDpiAwareness()
 {
@@ -380,7 +381,6 @@ void ImGui_EnableDpiAwareness()
 #endif
 #endif // RTM_PLATFORM_WINDOWS
 }
-#endif
 
 #ifdef RAPP_WITH_BGFX
 static bx::DefaultAllocator allocator;
