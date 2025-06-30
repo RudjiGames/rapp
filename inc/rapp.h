@@ -483,6 +483,9 @@ namespace rapp {
 	/// @param[in] _scale          : Scale to set.
 	void uiSetScale(float _scale = 1.0f);
 
+	/// Returns current UI scale.
+	float uiGetScale();
+
 	// ------------------------------------------------
 	/// Window functions
 	// ------------------------------------------------

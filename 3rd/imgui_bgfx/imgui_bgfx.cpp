@@ -24,6 +24,8 @@
 #include "roboto_bold.ttf.h"
 #include "robotomono_regular.ttf.h"
 #include "robotomono_bold.ttf.h"
+#include "segoeui_regular.ttf.h"
+#include "segoeui_bold.ttf.h"
 #include "icons_kenney.ttf.h"
 #include "icons_font_awesome.ttf.h"
 
@@ -422,40 +424,33 @@ struct OcornutImguiContext
 
 		// Load fonts and icons
 
-		m_font[ImGui::Font::Roboto] = io.Fonts->AddFontDefault();
-		ImFontConfig config;
-		config.FontDataOwnedByAtlas	= false;
-		config.MergeMode			= true;
-		io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoRegularTtf, sizeof(s_robotoRegularTtf), 18.0f, &config);
-		config.GlyphMinAdvanceX		= 15.0f;
-		config.RasterizerMultiply	= 2.0f;
-		for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
-		{
-			const FontRangeMerge& frm = s_fontRangeMerge[ii];
-			io.Fonts->AddFontFromMemoryTTF((void*)frm.data, (int)frm.size, 18.0f, &config, frm.ranges);
-		}
-
-		m_font[ImGui::Font::RobotoBold] = io.Fonts->AddFontDefault();
-		config.FontDataOwnedByAtlas	= false;
-		config.MergeMode			= true;
-		io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoBoldTtf, sizeof(s_robotoBoldTtf), 18.0f, &config);
-		config.GlyphMinAdvanceX		= 15.0f;
-		config.RasterizerMultiply	= 2.0f;
-		for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
-		{
-			const FontRangeMerge& frm = s_fontRangeMerge[ii];
-			io.Fonts->AddFontFromMemoryTTF((void*)frm.data, (int)frm.size, 15.0f, &config);
-		}
-		
-		config.MergeMode			= false;
-		config.GlyphMinAdvanceX		= 0.0f;
-		m_font[ImGui::Font::RobotoMono]	= io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 18.0f, &config);
-
-		config.MergeMode			= false;
-		config.GlyphMinAdvanceX		= 0.0f;
-		m_font[ImGui::Font::RobotoMonoBold] = io.Fonts->AddFontFromMemoryCompressedTTF((void*)s_robotoMonoBoldTtf, sizeof(s_robotoMonoBoldTtf), 18.0f, &config);
+		addFontWithIcons(ImGui::Font::RobotoMono,		(void*)s_robotoMonoRegularTtf,	sizeof(s_robotoMonoRegularTtf));
+		addFontWithIcons(ImGui::Font::RobotoMonoBold,	(void*)s_robotoMonoBoldTtf,		sizeof(s_robotoMonoBoldTtf));
+		addFontWithIcons(ImGui::Font::Roboto,			(void*)s_robotoRegularTtf,		sizeof(s_robotoRegularTtf));
+		addFontWithIcons(ImGui::Font::RobotoBold,		(void*)s_robotoBoldTtf,			sizeof(s_robotoBoldTtf));
+		addFontWithIcons(ImGui::Font::SegoeUI,			(void*)s_segoeuiTtf,			sizeof(s_segoeuiTtf));
+		addFontWithIcons(ImGui::Font::SegoeUIBold,		(void*)s_segoeuiBoldTtf,		sizeof(s_segoeuiBoldTtf));
 
 		io.Fonts->Build();
+	}
+
+	void addFontWithIcons(ImGui::Font::Enum _font, void* _data, size_t _dataSize)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+
+		m_font[_font] = io.Fonts->AddFontDefault();
+
+		ImFontConfig config;
+		config.FontDataOwnedByAtlas = false;
+		config.MergeMode			= true;
+		io.Fonts->AddFontFromMemoryCompressedTTF(_data, int(_dataSize), 30.0f, &config);
+
+		config.GlyphMinAdvanceX		= 15.0f;
+		for (uint32_t ii = 0; ii < BX_COUNTOF(s_fontRangeMerge); ++ii)
+		{
+			const FontRangeMerge& frm = s_fontRangeMerge[ii];
+			io.Fonts->AddFontFromMemoryTTF((void*)frm.data, (int)frm.size, 15.0f, &config, frm.ranges);
+		}
 	}
 
 	void destroy()

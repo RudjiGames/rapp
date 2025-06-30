@@ -5,9 +5,6 @@
 
 include ../../../scripts/shader-embeded.mk
 
-droidsans.ttf.h: ../../runtime/font/droidsans.ttf
-	@bin2c -f $(<) -o $(@) -n s_droidSansTtf
-
 roboto_regular.ttf.h: ../../runtime/font/roboto-regular.ttf
 	@bin2c -f $(<) -o $(@) -n s_robotoRegularTtf
 

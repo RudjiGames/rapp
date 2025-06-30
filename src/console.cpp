@@ -158,7 +158,6 @@ void Console::draw()
     }
 
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4,1)); // Tighten spacing
-	ImGui::PushFont(ImGui::Font::RobotoMono);
 
     if (copy_to_clipboard)
     {
@@ -191,7 +190,7 @@ void Console::draw()
         ImGui::SetScrollHereY();
 
     m_scrollToBottom = false;
-    ImGui::PopFont();
+
     ImGui::PopStyleVar();
     ImGui::EndChild();
     ImGui::Separator();

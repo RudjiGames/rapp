@@ -147,10 +147,21 @@ namespace rapp {
 	/// 
 	void uiSetScale(float _scale)
 	{
+		RTM_UNUSED(_scale);
 #ifdef RAPP_WITH_BGFX
 		ImGuiStyle& style = ImGui::GetStyle();
-		float sc = ImGui::GetWindowDpiScale();
-		sc = 1.0f;
+		style.ScaleAllSizes(_scale);
+#endif // RAPP_WITH_BGFX
+	}
+
+	/// 
+	float uiGetScale()
+	{
+#ifdef RAPP_WITH_BGFX
+		ImGuiStyle& style = ImGui::GetStyle();
+		return style.FontScaleMain;
+#else
+		return 1.0f;
 #endif // RAPP_WITH_BGFX
 	}
 

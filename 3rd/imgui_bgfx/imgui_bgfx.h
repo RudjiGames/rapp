@@ -43,6 +43,8 @@ namespace ImGui
 			RobotoBold,
 			RobotoMono,
 			RobotoMonoBold,
+			SegoeUI,
+			SegoeUIBold,
 
 			Count
 		};
