@@ -276,8 +276,17 @@ void App::dialogOpen(DialogFn _func, void* _userData)
 #ifdef RAPP_WITH_BGFX
 	if (m_data)
 	{
-		m_data->m_dialog		= _func;
-		m_data->m_dialogData	= _userData;
+		RTM_ASSERT(m_data->m_numDialogs < MAX_DIALOGS, "Too many dialogs!");
+		// prevent multiple open calls on the same dialog
+		for (int32_t i=0; i<m_data->m_numDialogs; ++i)
+		{
+			if (m_data->m_dialogs[i].m_dialog == _func)
+				return;
+		}
+		Dialog& dialog = m_data->m_dialogs[m_data->m_numDialogs];
+		dialog.m_dialog		= _func;
+		dialog.m_dialogData = _userData;
+		++m_data->m_numDialogs;
 	}
 #endif // RAPP_WITH_BGFX
 }
@@ -285,13 +294,19 @@ void App::dialogOpen(DialogFn _func, void* _userData)
 void App::dialogShow()
 {
 #ifdef RAPP_WITH_BGFX
-	if (m_data && m_data->m_dialog)
+	if (m_data && m_data->m_numDialogs)
 	{
-		if (!m_data->m_dialog(m_data->m_dialogData))
+		for (int32_t i=m_data->m_numDialogs-1; i>=0; --i)
 		{
-			// close dialog
-			m_data->m_dialog		= nullptr;
-			m_data->m_dialogData	= nullptr;
+			Dialog& dialog = m_data->m_dialogs[i];
+
+			if (dialog.m_dialog && !dialog.m_dialog(dialog.m_dialogData))
+			{
+				// close dialog
+				--m_data->m_numDialogs;
+				dialog.m_dialog		= m_data->m_dialogs[m_data->m_numDialogs].m_dialog;
+				dialog.m_dialogData	= m_data->m_dialogs[m_data->m_numDialogs].m_dialogData;
+			}
 		}
 	}
 #endif // RAPP_WITH_BGFX

@@ -15,18 +15,31 @@
 
 namespace rapp {
 
+	struct Dialog
+	{
+		DialogFn		m_dialog;
+		void*			m_dialogData;
+
+		Dialog()
+			: m_dialog(0)
+			, m_dialogData(0)
+		{
+		}
+	};
+
+	constexpr int MAX_DIALOGS = 128;
+
 	struct AppData
 	{
 		Console*		m_console;
 		vg::Context*	m_vg;
-		DialogFn		m_dialog;
-		void*			m_dialogData;
+		Dialog			m_dialogs[MAX_DIALOGS+1]; // +1 to allow close by copy last
+		uint32_t		m_numDialogs;
 
 		AppData()
 			: m_console(0)
 			, m_vg(0)
-			, m_dialog(nullptr)
-			, m_dialogData(0)
+			, m_numDialogs(0)
 		{}
 	};
 
