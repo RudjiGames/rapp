@@ -84,8 +84,10 @@ struct rprofApp : public rapp::App
 	{
 #ifdef RAPP_WITH_RPROF
 		ProfilerFrame frame;
-		rprofGetFrame(&frame);
-		rprofDrawFrame(&frame);
+		if (rprofGetFrame(&frame))
+		{
+			rprofDrawFrame(&frame);
+		}
 #endif // RAPP_WITH_RPROF
 
 		ImGui::SetNextWindowPos(ImVec2(10.0f, 666.0f), ImGuiCond_FirstUseEver);
