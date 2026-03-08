@@ -486,7 +486,7 @@ namespace rapp
 	WindowHandle windowCreate(App* _app, int32_t _x, int32_t _y, uint32_t _width, uint32_t _height, uint32_t _flags, const char* _title)
 	{
 		RTM_UNUSED_6(_x, _y, _width, _height, _flags, _title);
-		WindowHandle handle = { UINT16_MAX };
+		WindowHandle handle = { UINT32_MAX };
 		return handle;
 	}
 
