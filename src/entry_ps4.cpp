@@ -301,7 +301,7 @@ namespace rapp
 		static void keyboardEvent(void* _arg, const SceImeEvent* _event)
 		{
 			//InputPS4* input = (InputPS4*)_arg;
-			WindowHandle handle = { UINT16_MAX };
+			WindowHandle handle = { UINT32_MAX };
 
 			switch (_event->id)
 			{
@@ -352,7 +352,7 @@ namespace rapp
 
 		void update(EventQueue& _eventQueue)
 		{
-			WindowHandle windowHandle = { UINT16_MAX };
+			WindowHandle windowHandle = { UINT32_MAX };
 
 			for (int i=0; i<SCE_USER_SERVICE_MAX_LOGIN_USERS; ++i)
 			{
@@ -452,7 +452,7 @@ namespace rapp
 			m_mouseHistory = sceMouseRead(m_mouseHandle, m_mouseData, RTM_NUM_ELEMENTS(m_mouseData));
 			if (m_mouseHistory >= SCE_OK)
 			{
-				WindowHandle handle = { UINT16_MAX };
+				WindowHandle handle = { UINT32_MAX };
 
 				for(int i=0;i<m_mouseHistory;i++)
 				{
@@ -611,7 +611,7 @@ namespace rapp
 	{
 		RTM_UNUSED(_app);
 		RTM_UNUSED_6(_x, _y, _width, _height, _flags, _title);
-		WindowHandle handle = { UINT16_MAX };
+		WindowHandle handle = { UINT32_MAX };
 		return handle;
 	}
 

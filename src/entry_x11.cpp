@@ -699,7 +699,7 @@ namespace rapp
 				}
 			}
 
-			WindowHandle invalid = { UINT16_MAX };
+			WindowHandle invalid = { UINT32_MAX };
 			return invalid;
 		}
 

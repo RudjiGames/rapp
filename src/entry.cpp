@@ -154,7 +154,7 @@ namespace rapp
 	{
 		uint32_t reset = g_reset;
 
-		WindowHandle handle = { UINT16_MAX };
+		WindowHandle handle = { UINT32_MAX };
 
 		const Event* ev;
 		do

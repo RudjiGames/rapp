@@ -551,7 +551,7 @@ namespace rapp
 	{
 		RTM_UNUSED_4(_app, _x, _y, _width);
 		RTM_UNUSED_3(_height, _flags, _title);
-		WindowHandle handle = { UINT16_MAX };
+		WindowHandle handle = { UINT32_MAX };
 		return handle;
 	}
 
