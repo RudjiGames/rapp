@@ -82,7 +82,10 @@ void dbgPrintfVargs(const char* _format, va_list _argList)
 {
 	char temp[8192];
 	char* out = temp;
-	int32_t len = vsnprintf(out, sizeof(temp), _format, _argList);
+	va_list argCopy;
+	va_copy(argCopy, _argList);
+	int32_t len = vsnprintf(out, sizeof(temp), _format, argCopy);
+	va_end(argCopy);
 	if ( (int32_t)sizeof(temp) < len)
 	{
 		out = (char*)alloca(len+1);

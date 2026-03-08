@@ -58,7 +58,7 @@ void Console::clearLog()
 	uint32_t numLogs = (m_itemsEnd - m_itemsStart) & s_bufferMask;
     for (uint32_t i=0; i<numLogs; ++i)
 	{
-		uint32_t index = (m_itemsStart + i) % s_bufferMask;
+		uint32_t index = (m_itemsStart + i) & s_bufferMask;
 		rtm_free(m_items[index]);
 		m_items[index] = 0;
 	}
