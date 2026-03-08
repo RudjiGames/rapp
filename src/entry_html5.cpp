@@ -560,7 +560,7 @@ namespace rapp
 		RTM_UNUSED(_handle);
 	}
 
-	void setWindowPos(WindowHandle _handle, int32_t _x, int32_t _y)
+	void windowSetPos(WindowHandle _handle, int32_t _x, int32_t _y)
 	{
 		RTM_UNUSED_3(_handle, _x, _y);
 	}
@@ -578,7 +578,7 @@ namespace rapp
 		emscripten_set_window_title(_title);
 	}
 
-	void setWindowFlags(WindowHandle _handle, uint32_t _flags, bool _enabled)
+	void windowSetFlags(WindowHandle _handle, uint32_t _flags, bool _enabled)
 	{
 		RTM_UNUSED_3(_handle, _flags, _enabled);
 	}
