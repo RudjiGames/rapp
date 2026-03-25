@@ -59,7 +59,7 @@ for:
       - git clone https://github.com/bkaradzic/bgfx.git bgfx
      
     install:
-      - build\tools\bin\windows\genie.exe --file=rapp\genie\genie.lua --with-samples vs2022
+      - build\tools\bin\windows\genie.exe --file=rapp\scripts\genie.lua --with-samples vs2022
       
     build: 
       project: .build\windows\vs2022\rapp\projects\rapp.sln
@@ -87,10 +87,10 @@ for:
       - mkdir glfwbuild && cd glfwbuild && cmake ../glfw -DGLFW_BUILD_TESTS=OFF && make -j4 && sudo make install && cd ..
 
     install:
-      - ./GENie/bin/linux/genie --file=rapp/genie/genie.lua --with-samples --gcc=linux-gcc gmake
+      - ./GENie/bin/linux/genie --file=rapp/scripts/genie.lua --with-samples --gcc=linux-gcc gmake
   
     build_script:
-      - cd ./.build/linux/linux-gcc/rapp/projects/
+      - cd ./.zidar/linux/linux-gcc/rapp/projects/
       - make config=${buildcfg}
 
 # ======================================
@@ -113,8 +113,8 @@ for:
       - cd GENie && make && cd ..
     
     install:
-      - ./GENie/bin/darwin/genie --file=rapp/genie/genie.lua --with-samples --gcc=osx-x64 gmake
+      - ./GENie/bin/darwin/genie --file=rapp/scripts/genie.lua --with-samples --gcc=osx-x64 gmake
     
     build_script:
-      - cd ./.build/osx/clang/rapp/projects/
+      - cd ./.zidar/osx/clang/rapp/projects/
       - make config=${buildcfg}
